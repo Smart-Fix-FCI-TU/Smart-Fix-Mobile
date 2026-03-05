@@ -1,0 +1,73 @@
+name: PR Build Check
+
+# ─────────────────────────────────────────────
+# TRIGGER: Only on Pull Requests targeting
+# develop or main branches
+# ─────────────────────────────────────────────
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+# Cancel any previous run for the same PR
+# if a new commit is pushed (saves CI minutes)
+concurrency:
+  group: pr-check-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: 🔨 Build & Merge Simulation
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ── Step 1: Checkout the PR branch ──────
+      - name: 📥 Checkout PR Branch
+        uses: actions/checkout@v4
+        with:
+          # Fetches full history so merge simulation works correctly
+          fetch-depth: 0
+
+      # ── Step 2: Simulate the merge ──────────
+      - name: 🔀 Simulate Merge with Target Branch
+        run: |
+          git config user.email "ci@github.com"
+          git config user.name "GitHub CI"
+          git fetch origin ${{ github.base_ref }}
+          git merge origin/${{ github.base_ref }} --no-edit
+        # If this fails → there are MERGE CONFLICTS
+        # The PR will be blocked immediately here
+
+      # ── Step 3: Setup Java ──────────────────
+      - name: ☕ Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      # ── Step 4: Cache Gradle dependencies ───
+      # This is critical — without caching,
+      # every run re-downloads all dependencies
+      # (can take 3-5 min extra every single time)
+      - name: 📦 Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      # ── Step 5: Grant execute permission ────
+      - name: 🔑 Make Gradlew Executable
+        run: chmod +x ./gradlew
+
+      # ── Step 6: Build the APK ───────────────
+      - name: 🏗️ Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace
+        # assembleDebug builds the debug variant
+        # Change to assembleRelease if needed
+        # --stacktrace gives you full error details on failure
