@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                         name = "Smart Fix || FCI Tanta",
                         modifier = Modifier.padding(innerPadding)
                     )
-                    println("Hello speed")
+                    println("Hello speed")ff
                 }
             }
         }
