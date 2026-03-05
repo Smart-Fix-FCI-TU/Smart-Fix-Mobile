@@ -24,7 +24,6 @@ class MainActivity : ComponentActivity() {
                         name = "Smart Fix || FCI Tanta",
                         modifier = Modifier.padding(innerPadding)
                     )
-                    println("Hello speed")ff
                 }
             }
         }
@@ -39,10 +38,3 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SmartFixTheme {
-        Greeting("Android")
-    }
-}
