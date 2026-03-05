@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             SmartFixTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "Smart Fix || FCI Tanta",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -34,14 +34,7 @@ class MainActivity : ComponentActivity() {
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
-        modifier = modifier
+        modifier = modifierddddd
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SmartFixTheme {
-        Greeting("Android")
-    }
-}
