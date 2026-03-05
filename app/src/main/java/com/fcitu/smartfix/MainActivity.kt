@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             SmartFixTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "test",
+                        name = "test",;;;
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
