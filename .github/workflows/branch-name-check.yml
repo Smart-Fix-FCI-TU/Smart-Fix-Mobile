@@ -1,0 +1,71 @@
+name: Branch Name Check
+
+# ─────────────────────────────────────────────
+# TRIGGER: Only on Pull Requests targeting
+# develop or main branches
+# ─────────────────────────────────────────────
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  branch-name:
+    name: 🏷️ Validate Branch Name
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: 🔍 Check Branch Name Convention
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          echo "Branch name: $BRANCH"
+
+          # ─────────────────────────────────────
+          # ALLOWED PATTERNS:
+          # feature/your-feature-name
+          # fix/your-fix-name
+          # experimental/your-experiment-name
+          # test/your-test-name
+          # refactor/your-refactor-name
+          #
+          # RULES:
+          # - Must start with an allowed prefix
+          # - Followed by a slash /
+          # - Then lowercase letters, numbers, or hyphens only
+          # - No spaces, no uppercase, no special characters
+          # ─────────────────────────────────────
+          PATTERN="^(feature|fix|experimental|test|refactor)\/[a-z0-9]+([a-z0-9-]*[a-z0-9]+)?$"
+
+          if [[ "$BRANCH" =~ $PATTERN ]]; then
+            echo "✅ Branch name '$BRANCH' follows the naming convention."
+          else
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo "❌ Branch name '$BRANCH' is INVALID."
+            echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+            echo ""
+            echo "✅ Allowed formats:"
+            echo "   feature/your-feature-name"
+            echo "   fix/your-fix-name"
+            echo "   experimental/your-experiment-name"
+            echo "   test/your-test-name"
+            echo "   refactor/your-refactor-name"
+            echo ""
+            echo "📌 Rules:"
+            echo "   - Must start with an allowed prefix"
+            echo "   - Use hyphens to separate words (no spaces, no underscores)"
+            echo "   - Lowercase letters and numbers only"
+            echo ""
+            echo "💡 Examples of VALID names:"
+            echo "   feature/user-login"
+            echo "   fix/crash-on-startup"
+            echo "   refactor/database-layer"
+            echo ""
+            echo "💡 Examples of INVALID names:"
+            echo "   Feature/UserLogin       ← uppercase not allowed"
+            echo "   my-feature              ← missing prefix"
+            echo "   feature/user_login      ← underscores not allowed"
+            echo "   fix/                    ← empty name after prefix"
+            exit 1
+          fi
