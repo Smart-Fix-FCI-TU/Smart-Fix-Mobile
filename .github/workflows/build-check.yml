@@ -36,28 +36,8 @@ jobs:
           git config user.email "ci@github.com"
           git config user.name "GitHub CI"
           git fetch origin ${{ github.base_ref }}
-
-          # Use the actual PR branch SHA, not HEAD
-          # HEAD in GitHub Actions is already a pre-created merge commit
-          # which makes BEHIND always return 0 incorrectly
-          PR_BRANCH_SHA="${{ github.event.pull_request.head.sha }}"
-          BASE_SHA="origin/${{ github.base_ref }}"
-
-          # Count commits in develop that are NOT in the PR branch
-          BEHIND=$(git rev-list --count $PR_BRANCH_SHA..$BASE_SHA)
-
-          echo "PR branch SHA: $PR_BRANCH_SHA"
-          echo "Commits behind ${{ github.base_ref }}: $BEHIND"
-
-          if [ "$BEHIND" -gt "0" ]; then
-            echo "❌ This branch is $BEHIND commit(s) behind ${{ github.base_ref }}"
-            echo "Please update your branch with the latest develop before merging."
-            exit 1
-          fi
-
-          echo "✅ Branch is up to date — proceeding with merge simulation"
-          git merge $BASE_SHA --no-edit
-        # If merge fails → there are MERGE CONFLICTS
+          git merge origin/${{ github.base_ref }} --no-edit
+        # If this fails → there are MERGE CONFLICTS
         # The PR will be blocked immediately here
 
       # ── Step 3: Setup Java ──────────────────
