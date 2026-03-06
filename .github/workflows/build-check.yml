@@ -36,7 +36,18 @@ jobs:
           git config user.email "ci@github.com"
           git config user.name "GitHub CI"
           git fetch origin ${{ github.base_ref }}
+
+          # Count how many commits develop has that don't exist in this branch
+          BEHIND=$(git rev-list --count HEAD..origin/${{ github.base_ref }})
+
+          if [ "$BEHIND" -gt "0" ]; then
+            echo "❌ This branch is $BEHIND commit(s) behind ${{ github.base_ref }}"
+            echo "Please update your branch with the latest develop before merging."
+            exit 1
+          fi
+
           git merge origin/${{ github.base_ref }} --no-edit
+          echo "✅ Merge simulation successful — branch is up to date"
         # If this fails → there are MERGE CONFLICTS
         # The PR will be blocked immediately here
 
