@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             SmartFixTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "Smart Fix || FCI TU",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
