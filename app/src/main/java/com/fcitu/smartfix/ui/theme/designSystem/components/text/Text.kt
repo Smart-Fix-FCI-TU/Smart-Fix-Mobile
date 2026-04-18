@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.designSystem.components
+package com.fcitu.smartfix.ui.theme.designSystem.components.text
 
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.LocalContentColor
