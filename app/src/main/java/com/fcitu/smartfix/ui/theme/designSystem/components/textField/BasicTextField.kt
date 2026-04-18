@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.designSystem.components
+package com.fcitu.smartfix.ui.theme.designSystem.components.textField
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.Image
@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.R
 import com.fcitu.smartfix.ui.theme.Cairo
+import com.fcitu.smartfix.ui.theme.designSystem.components.text.Text
 
 @Composable
 fun BasicTextField(
