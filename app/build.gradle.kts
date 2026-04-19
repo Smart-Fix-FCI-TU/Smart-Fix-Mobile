@@ -60,6 +60,9 @@ dependencies {
     implementation(libs.compose.navigation)
     implementation(libs.compose.lifecycle.runtime)
 
+    // ── Squircle Shape ───────────────────────────────────────
+    implementation(libs.squircle.shape)
+
     // ── Koin ──────────────────────────────────────────
     implementation(libs.koin.android)
     implementation(libs.koin.compose)

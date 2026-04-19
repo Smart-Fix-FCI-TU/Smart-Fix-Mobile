@@ -10,6 +10,9 @@ activityCompose = "1.12.4"
 composeBom = "2024.09.00"
 composeNavigation = "2.7.7"
 
+# ── Squircle Shape ───────────────────────────────────────
+squircleShape = "4.0.0"
+
 # ── Koin ──────────────────────────────────────────────
 koin = "4.1.1"
 koinCompose = "4.1.1"
@@ -54,6 +57,9 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "composeNavigation" }
 compose-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
+
+# ── Squircle Shape ───────────────────────────────────────
+squircle-shape = { module = "com.stoyanvuchev:squircle-shape", version.ref = "squircleShape" }
 
 # ── Koin ──────────────────────────────────────────────
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
