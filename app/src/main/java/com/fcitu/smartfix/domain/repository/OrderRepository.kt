@@ -1,6 +1,7 @@
 package com.fcitu.smartfix.domain.repository
 
 import com.fcitu.smartfix.domain.entity.ServiceRequest
+import com.fcitu.smartfix.domain.model.OrderStatus
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -16,5 +17,9 @@ interface OrderRepository {
 
     suspend fun declineOrder(orderId: Uuid)
 
-    suspend fun markOrderCompleted(orderId: Uuid)
+    suspend fun updateOrderStatus(orderId: Uuid, status: OrderStatus)
+
+    suspend fun uploadBeforeRepairPhotos(orderId: Uuid, photos: List<String>)
+
+    suspend fun uploadAfterRepairPhotos(orderId: Uuid, photos: List<String>)
 }

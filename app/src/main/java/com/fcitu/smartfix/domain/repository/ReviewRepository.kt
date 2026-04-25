@@ -8,7 +8,7 @@ import kotlin.uuid.Uuid
 interface ReviewRepository {
     suspend fun submitReview(
         orderId: Uuid,
-        revieweeId: Uuid,
+        technicianId: Uuid,
         rating: Int,
         comment: String
     )

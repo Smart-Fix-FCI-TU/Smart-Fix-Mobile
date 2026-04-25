@@ -8,8 +8,8 @@ import kotlin.uuid.Uuid
 data class Review(
     val id: Uuid,
     val orderId: Uuid,
-    val reviewerId: Uuid,
-    val revieweeId: Uuid,
+    val customerId: Uuid,
+    val technicianId: Uuid,
     val rating: Int,
     val comment: String,
     val createdAt: LocalDateTime
