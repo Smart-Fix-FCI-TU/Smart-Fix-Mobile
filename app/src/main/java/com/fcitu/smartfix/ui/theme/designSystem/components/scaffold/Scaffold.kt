@@ -23,7 +23,7 @@ import com.fcitu.smartfix.ui.theme.designSystem.util.applyIf
 @Composable
 fun Scaffold(
     modifier: Modifier = Modifier,
-    backgroundColor: Color = Color(0xFFFF2F4F7),
+    backgroundColor: Color = Color(0xF2F4F7FF),
     statusBarColor: Color = backgroundColor,
     fullScreen: Boolean = false,
     topBar: @Composable () -> Unit = {},
