@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Smart Fix</string>
+
+    <!-- Navigation Menu Items -->
+    <string name="home">Home</string>
+    <string name="chat">Chat</string>
+    <string name="orders">Orders</string>
+    <string name="profile">Profile</string>
+
 </resources>
