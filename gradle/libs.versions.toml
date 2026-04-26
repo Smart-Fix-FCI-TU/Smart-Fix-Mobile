@@ -5,10 +5,11 @@ kotlin = "2.1.0"
 coreKtx = "1.17.0"
 lifecycle = "2.10.0"
 activityCompose = "1.12.4"
+kotlinxDatetime = "0.7.1"
 
 # ── Compose ───────────────────────────────────────────
-composeBom = "2024.09.00"
-composeNavigation = "2.7.7"
+composeBom = "2025.05.00"
+composeNavigation = "2.9.8"
 
 # ── Squircle Shape ───────────────────────────────────────
 squircleShape = "4.0.0"
@@ -24,9 +25,8 @@ okhttp = "4.12.0"
 # ── Serialization ─────────────────────────────────────
 kotlinSerialization = "1.7.3"
 
-# ── Room ──────────────────────────────────────────────
-room = "2.8.4"
-ksp = "2.1.0-1.0.29"
+# ── Data Store ──────────────────────────────────────────────
+datastore = "1.1.4"
 
 # ── Coroutines ────────────────────────────────────────
 coroutines = "1.10.2"
@@ -45,6 +45,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 
 # ── Compose ───────────────────────────────────────────
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
@@ -67,17 +68,15 @@ koin-compose = { group = "io.insert-koin", name = "koin-androidx-compose", versi
 
 # ── Networking ────────────────────────────────────────
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+retrofit2-kotlinx-serialization-converter = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
 # ── Serialization ─────────────────────────────────────
 kotlinx-serialization-json      = { group = "org.jetbrains.kotlinx",       name = "kotlinx-serialization-json", version.ref = "kotlinSerialization" }
 
-# ── Room ──────────────────────────────────────────────
-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+# ── Data Store ──────────────────────────────────────────────
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 
 # ── Coroutines ────────────────────────────────────────
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
@@ -95,5 +94,4 @@ androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-co
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-kotlin-serialization            = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

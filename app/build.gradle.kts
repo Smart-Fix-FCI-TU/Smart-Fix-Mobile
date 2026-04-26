@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
 }
 
 android {
@@ -50,6 +49,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.kotlinx.datetime)
 
     // ── Compose ───────────────────────────────────────
     implementation(platform(libs.androidx.compose.bom))
@@ -69,17 +69,15 @@ dependencies {
 
     // ── Networking ────────────────────────────────────
     implementation(libs.retrofit.core)
-    implementation(libs.retrofit.gson)
     implementation(libs.okhttp.core)
+    implementation(libs.retrofit2.kotlinx.serialization.converter)
     implementation(libs.okhttp.logging)
 
     // ── Serialization ─────────────────────────────────
     implementation(libs.kotlinx.serialization.json)
 
-    // ── Room ──────────────────────────────────────────
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
+    // ── DataStore ─────────────────────────────────────
+    implementation(libs.androidx.datastore.preferences)
 
     // ── Coroutines ────────────────────────────────────
     implementation(libs.coroutines.core)
