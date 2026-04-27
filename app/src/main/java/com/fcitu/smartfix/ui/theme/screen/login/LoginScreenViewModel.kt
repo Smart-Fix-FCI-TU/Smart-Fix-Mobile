@@ -9,6 +9,7 @@ import com.fcitu.smartfix.domain.model.UserRole
 import com.fcitu.smartfix.domain.repository.IdentityRepository
 import com.fcitu.smartfix.domain.useCase.LoginUseCase
 import com.fcitu.smartfix.ui.theme.shared.BaseViewModel
+import kotlinx.coroutines.delay
 
 class LoginScreenViewModel(
     private val loginUseCase: LoginUseCase,
@@ -58,6 +59,7 @@ class LoginScreenViewModel(
         identityRepository.saveSession(role = state.value.userRole, isLoggedIn = true)
         updateState { it.copy(isLoading = false) }
         emitEffect(LoginScreenUiEffect.ShowSnackBar("Login successful", isError = false))
+        delay(100)
         emitEffect(LoginScreenUiEffect.NavigateToHome(state.value.userRole))
     }
 
@@ -101,7 +103,6 @@ class LoginScreenViewModel(
             }
 
             else -> {
-                println("onLoginError ${throwable.message}")
                 emitEffect(
                     LoginScreenUiEffect.ShowSnackBar(
                         message = "An unknown error occurred",
