@@ -7,26 +7,38 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.fcitu.smartfix.domain.model.UserRole
+import com.fcitu.smartfix.domain.repository.IdentityRepository
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import org.koin.compose.koinInject
 
 @Composable
 fun SplashScreen(
     onNavigateToLogin: () -> Unit,
     onNavigateToCustomerHome: () -> Unit,
     onNavigateToTechnicianHome: () -> Unit,
+    identityRepository: IdentityRepository = koinInject()
 ) {
     LaunchedEffect(Unit) {
         delay(1500)
-        // TODO: check session from DataStore and route accordingly
-        // For now always go to Login
-        onNavigateToLogin()
+        val isLoggedIn = identityRepository.getIsLoggedIn().first()
+        if (isLoggedIn) {
+            val role = identityRepository.getUserRole().first()
+            if (role == UserRole.CUSTOMER) {
+                onNavigateToCustomerHome()
+            } else {
+                onNavigateToTechnicianHome()
+            }
+        } else {
+            onNavigateToLogin()
+        }
     }
 
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        // TODO: replace with real branding
         Text("SmartFix")
     }
 }
