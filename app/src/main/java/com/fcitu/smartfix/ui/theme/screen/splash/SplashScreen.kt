@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.navigation
+package com.fcitu.smartfix.ui.theme.screen.splash
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +13,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import org.koin.compose.koinInject
 
+// TODO: this is a temp splash screen, replace it with a real one later.
+//  is used to check if the user is logged in and navigate to the appropriate screen
 @Composable
 fun SplashScreen(
     onNavigateToLogin: () -> Unit,
