@@ -10,3 +10,4 @@ data class LoginScreenUiState(
     val isLoading: Boolean = false,
     val isLoginEnabled: Boolean = false,
 )
+// TODO : Add error message for phone number and password

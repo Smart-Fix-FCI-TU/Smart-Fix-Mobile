@@ -65,12 +65,14 @@ private fun LoginScreenContent(
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
+        // TODO : Show error message if phone number is invalid
         LabeledInputPhoneNumber(
             value = uiState.phoneNumber,
             onValueChange = { interactionListener.onPhoneNumberChanged(it) },
             label = "Phone Number",
         )
 
+        // TODO : Show error message if password is invalid
         LabeledInputPassword(
             value = uiState.password,
             onValueChange = { interactionListener.onPasswordChanged(it) },
