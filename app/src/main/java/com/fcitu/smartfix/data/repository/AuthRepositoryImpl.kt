@@ -1,0 +1,39 @@
+package com.fcitu.smartfix.data.repository
+
+import com.fcitu.smartfix.domain.entity.User
+import com.fcitu.smartfix.domain.exception.UserNotRegisteredException
+import com.fcitu.smartfix.domain.model.UserRole
+import com.fcitu.smartfix.domain.repository.AuthRepository
+import kotlinx.coroutines.delay
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
+class AuthRepositoryImpl : AuthRepository {
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun login(
+        phoneNumber: String,
+        password: String,
+        role: UserRole
+    ): User {
+        // Simulate network delay
+        delay(1000)
+
+        // Simulate "User Not Registered" error if phone starts with "000"
+        if (phoneNumber.endsWith("000")) {
+            throw UserNotRegisteredException()
+        }
+
+        // Return a mock user
+        return User(
+            id = Uuid.random(),
+            phoneNumber = phoneNumber,
+            firstName = "Mock",
+            lastName = "User",
+            username = "mockuser",
+            email = "mock@example.com",
+            role = role,
+            profilePhotoUrl = "",
+            location = null
+        )
+    }
+}
