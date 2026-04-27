@@ -24,8 +24,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.fcitu.smartfix.R
-import net.thechance.mena.designsystem.presentation.component.bottomNavigation.BottomNavigationBarItem
-import kotlin.collections.forEachIndexed
 
 @Composable
 fun BottomNavigationBarContent(
