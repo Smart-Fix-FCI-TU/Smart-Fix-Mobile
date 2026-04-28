@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -225,25 +226,25 @@ private fun BottomBar(
             bottomNavigationItem(
                 selectedIcon = painterResource(R.drawable.ic_home_selected),
                 notSelectedIcon = painterResource(R.drawable.ic_home),
-                title = "Home",
+                title = stringResource(R.string.home),
                 entry = { navController.navigateToTab(tabRoutes[0]) }
             )
             bottomNavigationItem(
                 selectedIcon = painterResource(R.drawable.ic_chat_selected),
                 notSelectedIcon = painterResource(R.drawable.ic_chat),
-                title = "Chat",
+                title = stringResource(R.string.chat),
                 entry = { navController.navigateToTab(tabRoutes[1]) }
             )
             bottomNavigationItem(
                 selectedIcon = painterResource(R.drawable.ic_orders_selected),
                 notSelectedIcon = painterResource(R.drawable.ic_orders),
-                title = "Orders",
+                title = stringResource(R.string.orders),
                 entry = { navController.navigateToTab(tabRoutes[2]) }
             )
             bottomNavigationItem(
                 selectedIcon = painterResource(R.drawable.ic_profile_selected),
                 notSelectedIcon = painterResource(R.drawable.ic_profile),
-                title = "Profile",
+                title = stringResource(R.string.profile),
                 entry = { navController.navigateToTab(tabRoutes[3]) }
             )
         }

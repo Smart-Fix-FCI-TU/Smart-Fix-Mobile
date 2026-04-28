@@ -55,6 +55,7 @@ fun LabeledInputPhoneNumber(
                 countryCode = "+20",
                 countryPainter = painterResource(R.drawable.ic_egypt_flag),
             )
+            // TODO: The hint shows a spaced phone number ("012 3456 7890"), but MobileNumberValidator expects a digits-only string
             TextField(
                 value = value,
                 onValueChanged = onValueChange,
