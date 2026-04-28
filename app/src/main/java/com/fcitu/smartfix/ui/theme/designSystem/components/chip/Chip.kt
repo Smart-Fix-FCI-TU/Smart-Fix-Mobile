@@ -38,19 +38,23 @@ fun Chip(
     painter: Painter? = null,
     iconSize: Dp = 16.dp,
     isEnabled: Boolean = true,
+    containerColor: Color = Color.Transparent,
+    disabledContainerColor: Color = Color.Transparent,
+    contentColor: Color = Color.Transparent,
+    disabledContentColor: Color = Color.Transparent,
     shape: Shape = RoundedCornerShape(100.dp)
 ) {
     val transition = updateTransition(isSelected)
     val containerColor by transition.animateColor(
         targetValueByState = { isCurrentSelected ->
-            if (isCurrentSelected) Color(0xFF111D2E)
-            else Color(0xFFFFFFFF)
+            if (isCurrentSelected) containerColor
+            else disabledContainerColor
         }
     )
     val contentColor by transition.animateColor(
         targetValueByState = { isCurrentSelected ->
-            if (isCurrentSelected) Color(0xFFFFFFFF)
-            else Color(0xFF3E4252)
+            if (isCurrentSelected) contentColor
+            else disabledContentColor
         }
     )
 

@@ -29,6 +29,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.painter.Painter
@@ -54,6 +55,7 @@ fun BasicTextField(
     trailingIcon: Painter? = null,
     title: String? = null,
     leadingIconTint: Color = Color(0xFF0E1017),
+    trailingIconTint: Color = Color(0xFF818599),
     singleLine: Boolean = true,
     minLines: Int = 1,
     maxLines: Int = Int.MAX_VALUE,
@@ -128,7 +130,8 @@ fun BasicTextField(
                         trailingIcon = trailingIcon,
                         onTrailingIconClick = onTrailingIconClick,
                         showTrailingDivider = showTrailingDivider,
-                        leadingIconTint = leadingIconTint
+                        leadingIconTint = leadingIconTint,
+                        trailingIconTint = trailingIconTint
                     )
                 },
                 visualTransformation = visualTransformation,
@@ -170,6 +173,7 @@ private fun TextFieldContent(
     leadingIcon: Painter?,
     trailingIcon: Painter?,
     leadingIconTint: Color,
+    trailingIconTint: Color,
     isError: Boolean,
     singleLine: Boolean,
     showTrailingDivider: Boolean = true,
@@ -211,6 +215,7 @@ private fun TextFieldContent(
                 VerticalDivider()
             Image(
                 painter = trailingIcon,
+                colorFilter = ColorFilter.tint(trailingIconTint),
                 contentDescription = null,
                 modifier = Modifier
                     .size(24.dp)
