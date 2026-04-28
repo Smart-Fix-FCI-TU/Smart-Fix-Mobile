@@ -18,7 +18,7 @@ class AuthRepositoryImpl : AuthRepository {
         // Simulate network delay
         delay(1000)
 
-        // Simulate "User Not Registered" error if phone starts with "000"
+        // Simulate "User Not Registered" error if phone ends with "000"
         if (phoneNumber.endsWith("000")) {
             throw UserNotRegisteredException()
         }

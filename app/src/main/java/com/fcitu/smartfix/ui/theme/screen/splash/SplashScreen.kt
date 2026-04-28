@@ -27,10 +27,16 @@ fun SplashScreen(
         val isLoggedIn = identityRepository.getIsLoggedIn().first()
         if (isLoggedIn) {
             val role = identityRepository.getUserRole().first()
-            if (role == UserRole.CUSTOMER) {
-                onNavigateToCustomerHome()
-            } else {
-                onNavigateToTechnicianHome()
+            when (role) {
+                UserRole.CUSTOMER -> {
+                    onNavigateToCustomerHome()
+                }
+                UserRole.TECHNICIAN -> {
+                    onNavigateToTechnicianHome()
+                }
+                else -> {
+                    onNavigateToLogin()
+                }
             }
         } else {
             onNavigateToLogin()
