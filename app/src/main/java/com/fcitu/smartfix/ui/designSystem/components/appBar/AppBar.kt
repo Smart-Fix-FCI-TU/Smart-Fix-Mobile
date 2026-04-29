@@ -20,8 +20,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.R
-import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 
 @Composable
 fun AppBar(
@@ -41,13 +41,13 @@ fun AppBar(
             .padding(contentPadding)
     ) {
         leadingContent?.let { content ->
-            _root_ide_package_.com.fcitu.smartfix.ui.designSystem.components.appBar.AppBarOptionContainer(
+            AppBarOptionContainer(
                 onClick = onLeadingClick,
                 modifier = Modifier.padding(end = 8.dp),
                 content = content
             )
         }
-        _root_ide_package_.com.fcitu.smartfix.ui.designSystem.components.text.Text(
+        Text(
             text = title,
             color = titleColor,
             style = TextStyle(

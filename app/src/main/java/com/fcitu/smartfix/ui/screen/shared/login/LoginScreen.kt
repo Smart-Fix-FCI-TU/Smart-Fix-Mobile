@@ -19,6 +19,11 @@ import com.fcitu.smartfix.domain.model.UserRole
 import com.fcitu.smartfix.ui.designSystem.components.button.PrimaryButton
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarData
+import com.fcitu.smartfix.ui.screen.shared.login.component.AuthPrompt
+import com.fcitu.smartfix.ui.screen.shared.login.component.LabeledInputPassword
+import com.fcitu.smartfix.ui.screen.shared.login.component.LabeledInputPhoneNumber
+import com.fcitu.smartfix.ui.screen.shared.login.component.RoleSelector
+import com.fcitu.smartfix.ui.screen.shared.login.component.WelcomeMessage
 import com.fcitu.smartfix.ui.utils.EffectHandler
 import kotlinx.coroutines.flow.SharedFlow
 import org.koin.compose.viewmodel.koinViewModel
@@ -26,17 +31,17 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun LoginScreen(
     onLoginSuccess: (UserRole) -> Unit,
-    viewModel: com.fcitu.smartfix.ui.screen.shared.login.LoginScreenViewModel = koinViewModel<com.fcitu.smartfix.ui.screen.shared.login.LoginScreenViewModel>()
+    viewModel: LoginScreenViewModel = koinViewModel<LoginScreenViewModel>()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val effects = viewModel.effect
 
-    _root_ide_package_.com.fcitu.smartfix.ui.screen.shared.login.EffectsHandler(
+    EffectsHandler(
         effects = effects,
         onLoginSuccess = onLoginSuccess
     )
 
-    _root_ide_package_.com.fcitu.smartfix.ui.screen.shared.login.LoginScreenContent(
+    LoginScreenContent(
         uiState = state,
         interactionListener = viewModel,
     )
@@ -44,8 +49,8 @@ fun LoginScreen(
 
 @Composable
 private fun LoginScreenContent(
-    uiState: com.fcitu.smartfix.ui.screen.shared.login.LoginScreenUiState,
-    interactionListener: com.fcitu.smartfix.ui.screen.shared.login.LoginScreenInteractionListener,
+    uiState: LoginScreenUiState,
+    interactionListener: LoginScreenInteractionListener,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -55,25 +60,25 @@ private fun LoginScreenContent(
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        _root_ide_package_.com.fcitu.smartfix.ui.screen.shared.login.component.WelcomeMessage(
+        WelcomeMessage(
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        _root_ide_package_.com.fcitu.smartfix.ui.screen.shared.login.component.RoleSelector(
+        RoleSelector(
             selectedRole = uiState.userRole,
             onRoleSelected = { interactionListener.onUserRoleSelected(it) },
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
         // TODO : Show error message if phone number is invalid
-        _root_ide_package_.com.fcitu.smartfix.ui.screen.shared.login.component.LabeledInputPhoneNumber(
+        LabeledInputPhoneNumber(
             value = uiState.phoneNumber,
             onValueChange = { interactionListener.onPhoneNumberChanged(it) },
             label = "Phone Number",
         )
 
         // TODO : Show error message if password is invalid
-        _root_ide_package_.com.fcitu.smartfix.ui.screen.shared.login.component.LabeledInputPassword(
+        LabeledInputPassword(
             value = uiState.password,
             onValueChange = { interactionListener.onPasswordChanged(it) },
             label = "Password",
@@ -100,7 +105,7 @@ private fun LoginScreenContent(
                 .padding(vertical = 12.dp)
         )
 
-        _root_ide_package_.com.fcitu.smartfix.ui.screen.shared.login.component.AuthPrompt(
+        AuthPrompt(
             message = "You are new?",
             actionLabel = "Register Now",
             onActionClick = { /* TODO : Not implemented yet */ },
@@ -111,7 +116,7 @@ private fun LoginScreenContent(
 
 @Composable
 private fun EffectsHandler(
-    effects: SharedFlow<com.fcitu.smartfix.ui.screen.shared.login.LoginScreenUiEffect>,
+    effects: SharedFlow<LoginScreenUiEffect>,
     onLoginSuccess: (UserRole) -> Unit
 ) {
     val snackBarHostController = LocalSnackBarHostController.current

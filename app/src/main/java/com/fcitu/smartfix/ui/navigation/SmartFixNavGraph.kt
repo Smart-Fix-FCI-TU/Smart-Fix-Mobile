@@ -25,6 +25,9 @@ import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.AnimatedSnackBarHost
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
+import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
+import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
+
 
 val LocalNavController = staticCompositionLocalOf<NavController> {
     error("No NavController provided")
@@ -82,7 +85,7 @@ fun SmartFixNavGraph() {
                 // TODO: the current graph is just a placeholder to setup navigation structure, remove it later when real screens are implemented
                 // ── Auth ───────────────────────────────────
                 composable<Route.Splash> {
-                    _root_ide_package_.com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen(
+                    SplashScreen(
                         onNavigateToLogin = {
                             navController.navigate(Route.Login) {
                                 popUpTo(Route.Splash) { inclusive = true }
@@ -102,7 +105,7 @@ fun SmartFixNavGraph() {
                 }
 
                 composable<Route.Login> {
-                    _root_ide_package_.com.fcitu.smartfix.ui.screen.shared.login.LoginScreen(
+                    LoginScreen(
                         onLoginSuccess = { role ->
                             val destination = if (role == UserRole.CUSTOMER) Route.CustomerGraph
                             else Route.TechnicianGraph
