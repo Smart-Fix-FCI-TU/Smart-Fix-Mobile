@@ -26,9 +26,7 @@ used in the project. If it is lower than 9, stop and ask the user to run the AGP
 Upgrade Assistant in Android Studio to update to the latest stable version of
 AGP, and confirm when done. The user may also request that this requirement be
 skipped; if this is the case, you should update the version of AGP to the latest
-stable version as part of the AGP 9 migration. See the
-[AGP 9 migration guide](references/android/build/releases/agp-9-0-0-release-notes.md)
-for how to do this.
+stable version as part of the AGP 9 migration. See the [AGP 9 migration guide](references/android/build/releases/agp-9-0-0-release-notes.md) for how to do this.
 
 Each version of AGP has its own set of compatibilities with other tools, such as
 Gradle, JDK, and Kotlin. The release notes for each of these versions will
@@ -62,8 +60,7 @@ that is compatible with AGP 9 and the new DSL.
 ### Step 4. Migrate kapt to KSP or legacy-kapt
 
 If KSP (`com.google.devtools.ksp`) or kapt (`org.jetbrains.kotlin.kapt`) are
-used in the project, [KSP, kapt, and legacy-kapt](references/ksp-kapt.md)
-for detailed migration steps.
+used in the project, see [KSP, kapt, and legacy-kapt](references/ksp-kapt.md) for detailed migration steps.
 
 ### Step 5. BuildConfig
 
