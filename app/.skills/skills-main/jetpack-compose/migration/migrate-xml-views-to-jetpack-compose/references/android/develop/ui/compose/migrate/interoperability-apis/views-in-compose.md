@@ -264,7 +264,7 @@ launches a different activity:
 class OtherInteractionsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // get data from savedInstanceState
+        // get data-layer from savedInstanceState
         setContent {
             MaterialTheme {
                 ExampleComposable(data, onButtonClick = {
