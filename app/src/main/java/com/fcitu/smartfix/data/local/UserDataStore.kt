@@ -18,14 +18,24 @@ class UserDataStore(private val context: Context) {
     companion object {
         private val IS_LOGGED_IN = booleanPreferencesKey("is_logged_in")
         private val USER_ROLE = stringPreferencesKey("user_role")
+        private val ACCESS_TOKEN = stringPreferencesKey("access_token")
+        private val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
     }
 
-    suspend fun saveSession(role: UserRole, isLoggedIn: Boolean) {
+    suspend fun saveSession(role: UserRole, isLoggedIn: Boolean, accessToken: String, refreshToken: String) {
         context.dataStore.edit { preferences ->
             preferences[IS_LOGGED_IN] = isLoggedIn
             preferences[USER_ROLE] = role.name
+            preferences[ACCESS_TOKEN] = accessToken
+            preferences[REFRESH_TOKEN] = refreshToken
         }
     }
+
+    val accessToken: Flow<String?> = context.dataStore.data
+        .map { it[ACCESS_TOKEN] }
+
+    val refreshToken: Flow<String?> = context.dataStore.data
+        .map { it[REFRESH_TOKEN] }
 
     val isLoggedIn: Flow<Boolean> = context.dataStore.data
         .map { preferences ->
