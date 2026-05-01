@@ -1,19 +1,20 @@
 package com.fcitu.smartfix.ui.screen.shared.login
 
 import com.fcitu.smartfix.domain.entity.User
+import com.fcitu.smartfix.domain.exception.BadRequestException
 import com.fcitu.smartfix.domain.exception.InvalidMobileNumberException
 import com.fcitu.smartfix.domain.exception.InvalidPasswordException
 import com.fcitu.smartfix.domain.exception.NoNetworkException
+import com.fcitu.smartfix.domain.exception.NotFoundException
+import com.fcitu.smartfix.domain.exception.UnauthorizedException
 import com.fcitu.smartfix.domain.exception.UserNotRegisteredException
 import com.fcitu.smartfix.domain.model.UserRole
-import com.fcitu.smartfix.domain.repository.IdentityRepository
 import com.fcitu.smartfix.domain.useCase.LoginUseCase
 import com.fcitu.smartfix.ui.shared.BaseViewModel
 import kotlinx.coroutines.delay
 
 class LoginScreenViewModel(
     private val loginUseCase: LoginUseCase,
-    private val identityRepository: IdentityRepository,
 ) : BaseViewModel<LoginScreenUiState, LoginScreenUiEffect>(
     LoginScreenUiState()
 ), LoginScreenInteractionListener {
@@ -45,6 +46,15 @@ class LoginScreenViewModel(
         )
     }
 
+    private fun changeIsLoginEnabled() {
+        updateState {
+            val mobileNumberValid =
+                loginUseCase.isMobileNumberValid(phoneNumber = state.value.phoneNumber)
+            val passwordValid = loginUseCase.isPasswordValid(password = state.value.password)
+            it.copy(isLoginEnabled = passwordValid && mobileNumberValid)
+        }
+    }
+
     private fun onLoginStart() {
         updateState { it.copy(isLoading = true) }
     }
@@ -56,7 +66,6 @@ class LoginScreenViewModel(
     )
 
     private suspend fun onLoginSuccess(user: User) {
-        identityRepository.saveSession(role = state.value.userRole, isLoggedIn = true)
         updateState { it.copy(isLoading = false) }
         emitEffect(LoginScreenUiEffect.ShowSnackBar("Login successful", isError = false))
         delay(100)
@@ -65,6 +74,10 @@ class LoginScreenViewModel(
 
     private fun onLoginError(throwable: Throwable) {
         updateState { it.copy(isLoading = false) }
+        mapError(throwable)
+    }
+
+    private fun mapError(throwable: Throwable) {
         when (throwable) {
             is InvalidMobileNumberException -> {
                 emitEffect(
@@ -93,6 +106,33 @@ class LoginScreenViewModel(
                 )
             }
 
+            is UnauthorizedException -> {
+                emitEffect(
+                    LoginScreenUiEffect.ShowSnackBar(
+                        message = "Incorrect phone number or password",
+                        isError = true
+                    )
+                )
+            }
+
+            is NotFoundException -> {
+                emitEffect(
+                    LoginScreenUiEffect.ShowSnackBar(
+                        message = "No account found with this phone number",
+                        isError = true
+                    )
+                )
+            }
+
+            is BadRequestException -> {
+                emitEffect(
+                    LoginScreenUiEffect.ShowSnackBar(
+                        message = "Invalid request. Please check your inputs.",
+                        isError = true
+                    )
+                )
+            }
+
             is NoNetworkException -> {
                 emitEffect(
                     LoginScreenUiEffect.ShowSnackBar(
@@ -110,15 +150,6 @@ class LoginScreenViewModel(
                     )
                 )
             }
-        }
-    }
-
-    private fun changeIsLoginEnabled() {
-        updateState {
-            val mobileNumberValid =
-                loginUseCase.isMobileNumberValid(phoneNumber = state.value.phoneNumber)
-            val passwordValid = loginUseCase.isPasswordValid(password = state.value.password)
-            it.copy(isLoginEnabled = passwordValid && mobileNumberValid)
         }
     }
 }
