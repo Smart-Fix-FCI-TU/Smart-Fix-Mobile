@@ -65,7 +65,12 @@ jobs:
       - name: 🔑 Make Gradlew Executable
         run: chmod +x ./gradlew
 
-      # ── Step 6: Build the APK ───────────────
+      # ── Step 6: Create local.properties ────
+      - name: 🔐 Create local.properties
+        run: |
+          echo "BASE_URL=${{ secrets.BASE_URL }}" > local.properties
+
+      # ── Step 7: Build the APK ───────────────
       - name: 🏗️ Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
         # assembleDebug builds the debug variant
