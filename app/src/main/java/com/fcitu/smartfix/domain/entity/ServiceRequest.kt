@@ -8,9 +8,9 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class ServiceRequest(
-    val id: Uuid,
-    val customerId: Uuid,
-    val technicianId: Uuid,
+    val id: String,
+    val customerId: String,
+    val technicianId: String,
     val serviceCategory: ServiceCategory,
     val title: String,
     val description: String,

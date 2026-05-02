@@ -25,7 +25,7 @@ class AuthRepositoryImpl : AuthRepository {
 
         // Return a mock user
         return User(
-            id = Uuid.random(),
+            id = Uuid.random().toString(),
             phoneNumber = phoneNumber,
             firstName = "Mock",
             lastName = "User",
