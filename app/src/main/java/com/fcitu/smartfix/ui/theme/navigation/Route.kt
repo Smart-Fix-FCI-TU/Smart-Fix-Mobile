@@ -14,7 +14,8 @@ sealed interface Route {
     @Serializable data object CustomerChat : Route
     @Serializable data object CustomerOrders : Route
     @Serializable data object CustomerProfile : Route
-    @Serializable data object Booking : Route
+    @Serializable data class Booking(val serviceId: String) : Route
+    @Serializable data object Map : Route
     @Serializable data object TechnicianList : Route
     @Serializable data class OrderDetail(val orderId: String) : Route
     @Serializable data class Tracking(val orderId: String) : Route

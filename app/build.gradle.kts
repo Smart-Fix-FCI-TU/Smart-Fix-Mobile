@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.compose.navigation)
     implementation(libs.compose.lifecycle.runtime)
 
@@ -85,6 +86,7 @@ dependencies {
 
     // ── Image Loading ─────────────────────────────────
     implementation(libs.coil.compose)
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     // ── Testing ───────────────────────────────────────
     testImplementation(libs.junit)

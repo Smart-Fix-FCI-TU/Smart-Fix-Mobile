@@ -9,6 +9,7 @@ val appModule =
             repositoriesModule,
             validatorsModule,
             useCasesModule,
-            viewModelsModule
+            viewModelsModule,
+            BookingModule
         )
     }

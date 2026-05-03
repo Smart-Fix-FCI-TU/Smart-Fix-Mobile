@@ -25,6 +25,7 @@ import com.fcitu.smartfix.ui.theme.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.theme.designSystem.components.snackBar.AnimatedSnackBarHost
 import com.fcitu.smartfix.ui.theme.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.theme.designSystem.components.snackBar.SnackBarHostController
+import com.fcitu.smartfix.ui.theme.screen.describeProblem.BookingScreen
 import com.fcitu.smartfix.ui.theme.screen.login.LoginScreen
 import com.fcitu.smartfix.ui.theme.screen.splash.SplashScreen
 
@@ -121,18 +122,44 @@ fun SmartFixNavGraph() {
                 ) {
                     composable<Route.CustomerHome> {
                         CustomerHomeScreen(
-                            onServiceSelected = {
-                                navController.navigate(Route.Booking)
+                            onServiceSelected = { serviceId ->
+                                navController.navigate(Route.Booking(serviceId))
                             }
                         )
                     }
 
-                    composable<Route.Booking> {
+                    composable<Route.Booking> { backStackEntry ->
+                        val route = backStackEntry.toRoute<Route.Booking>()
+                        
+                        // استلام البيانات من الخريطة
+                        val address = backStackEntry.savedStateHandle.get<String>("selected_location")
+                        val lat = backStackEntry.savedStateHandle.get<Double>("selected_lat")
+                        val lng = backStackEntry.savedStateHandle.get<Double>("selected_lng")
+                        
                         BookingScreen(
-                            onFindTechnician = {
-                                navController.navigate(Route.TechnicianList)
+                            serviceId = route.serviceId,
+                            selectedLocation = address,
+                            latitude = lat,
+                            longitude = lng,
+                            onNavigateBack = { navController.popBackStack() },
+                            onNavigateToMap = {
+                                navController.navigate(Route.Map)
                             },
-                            onBack = { navController.popBackStack() }
+                            onProblemSubmitted = {
+                                navController.navigate(Route.TechnicianList)
+                            }
+                        )
+                    }
+
+                    composable<Route.Map> {
+                        MapScreen(
+                            onBack = { navController.popBackStack() },
+                            onLocationSelected = { address, lat, lng ->
+                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_location", address)
+                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_lat", lat)
+                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_lng", lng)
+                                navController.popBackStack()
+                            }
                         )
                     }
 
