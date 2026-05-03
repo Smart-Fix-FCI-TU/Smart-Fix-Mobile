@@ -9,3 +9,9 @@ enum class OrderStatus {
     COMPLETED,
     CANCELLED
 }
+
+val OrderStatus.isActive: Boolean
+    get() = this != OrderStatus.COMPLETED
+
+val OrderStatus.isCompleted: Boolean
+    get() = this == OrderStatus.COMPLETED
