@@ -1,14 +1,14 @@
 package com.fcitu.smartfix.domain.repository
 
-import com.fcitu.smartfix.domain.entity.ServiceRequest
+import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.model.OrderStatus
 
 interface OrderRepository {
-    suspend fun getCustomerOrders(): List<ServiceRequest>
+    suspend fun getCustomerOrders(): List<Order>
 
-    suspend fun getTechnicianOrders(): List<ServiceRequest>
+    suspend fun getTechnicianOrders(): List<Order>
 
-    suspend fun getOrderDetails(orderId: String): ServiceRequest
+    suspend fun getOrderDetails(orderId: String): Order
 
     suspend fun acceptOrder(orderId: String)
 

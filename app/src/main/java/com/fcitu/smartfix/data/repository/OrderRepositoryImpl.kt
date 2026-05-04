@@ -1,0 +1,84 @@
+package com.fcitu.smartfix.data.repository
+
+import com.fcitu.smartfix.domain.entity.Address
+import com.fcitu.smartfix.domain.entity.Order
+import com.fcitu.smartfix.domain.model.OrderStatus
+import com.fcitu.smartfix.domain.model.ServiceCategory
+import com.fcitu.smartfix.domain.repository.OrderRepository
+import kotlinx.datetime.LocalDateTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
+class OrderRepositoryImpl : OrderRepository {
+
+    @OptIn(ExperimentalUuidApi::class)
+    override suspend fun getCustomerOrders(): List<Order> {
+        // Fake Data
+        return List(4) {
+            Order(
+                id = Uuid.random().toString(),
+                customer = Order.UserInfo(id = Uuid.random().toString(), name = "Fouad"),
+                technician = Order.UserInfo(id = Uuid.random().toString(), name = "Ahmed Mohamed"),
+                details = Order.OrderDetails(
+                    serviceCategory = ServiceCategory.ELECTRICITY,
+                    title = "change lamb",
+                    "the lamb is broken", problemPhotoUrls = emptyList(),
+                    address = Address(
+                        id = Uuid.random().toString(),
+                        fullAddress = "Tanta",
+                        location = Address.Location(40.0, 41.0),
+                        floor = "2",
+                        apartmentNo = "3"
+                    ), additionalNotes = ""
+                ),
+                repairPhotos = Order.RepairPhotos(
+                    beforeRepairUrls = emptyList(),
+                    afterRepairUrls = emptyList()
+                ),
+                status = OrderStatus.ON_WAY, timeline = Order.OrderTimeline(
+                    createdAt = LocalDateTime(0, 0, 0, 0, 0),
+                    LocalDateTime(0, 0, 0, 0, 0),
+                    LocalDateTime(0, 0, 0, 0, 0),
+                    LocalDateTime(0, 0, 0, 0, 0), LocalDateTime(0, 0, 0, 0, 0)
+                )
+            )
+        }
+    }
+
+    override suspend fun getTechnicianOrders(): List<Order> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getOrderDetails(orderId: String): Order {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun acceptOrder(orderId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun declineOrder(orderId: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateOrderStatus(
+        orderId: String,
+        status: OrderStatus
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun uploadBeforeRepairPhotos(
+        orderId: String,
+        photos: List<String>
+    ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun uploadAfterRepairPhotos(
+        orderId: String,
+        photos: List<String>
+    ) {
+        TODO("Not yet implemented")
+    }
+}
