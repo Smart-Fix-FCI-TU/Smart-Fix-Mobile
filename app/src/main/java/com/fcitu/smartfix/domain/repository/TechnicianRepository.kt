@@ -1,12 +1,12 @@
 package com.fcitu.smartfix.domain.repository
 
-import com.fcitu.smartfix.domain.entity.Location
+import com.fcitu.smartfix.domain.entity.Address
 import com.fcitu.smartfix.domain.entity.Technician
 import com.fcitu.smartfix.domain.model.ServiceCategory
 
 interface TechnicianRepository {
     suspend fun getAvailableTechnicians(
-        location: Location,
+        location: Address.Location,
         serviceCategory: ServiceCategory
     ): List<Technician>
 
