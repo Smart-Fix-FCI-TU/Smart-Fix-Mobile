@@ -1,8 +1,9 @@
 package com.fcitu.smartfix.domain.model
 
 enum class OrderStatus {
-    WAITING_RESPONSE,
-    CONFIRMED,
+    PENDING_ASSIGNMENT ,
+    PENDING_CONFIRMATION,
+    ASSIGNED ,
     ON_WAY,
     ARRIVED,
     IN_PROGRESS,
