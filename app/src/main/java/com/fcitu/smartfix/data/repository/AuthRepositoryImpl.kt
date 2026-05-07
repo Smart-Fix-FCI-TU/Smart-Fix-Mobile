@@ -8,7 +8,6 @@ import com.fcitu.smartfix.domain.model.UserRole
 import com.fcitu.smartfix.domain.repository.AuthRepository
 import com.fcitu.smartfix.domain.repository.IdentityRepository
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class AuthRepositoryImpl(
     private val authService: AuthService,
@@ -16,41 +15,40 @@ class AuthRepositoryImpl(
 ) : AuthRepository {
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun login(
-        phoneNumber: String,
-        password: String,
-        role: UserRole
+        email: String,
+        password: String
     ): User {
-        val userType = when (role) {
-            UserRole.CUSTOMER -> "customer"
-            UserRole.TECHNICIAN -> "technician"
-        }
-
         val response = safeApiCall {
             authService.login(
-                userType = userType,
-                request = LoginRequest(phone = phoneNumber, password = password)
+                request = LoginRequest(email = email, password = password)
             )
         }
 
         val loginData = response.data
+        val userDto = loginData.user
+
+        val role = when (userDto.role.lowercase()) {
+            "customer" -> UserRole.CUSTOMER
+            "technician" -> UserRole.TECHNICIAN
+            else -> UserRole.CUSTOMER // Default or throw error
+        }
+
         identityRepository.saveSession(
             role = role,
             isLoggedIn = true,
-            accessToken = loginData.tokens.accessToken,
-            refreshToken = loginData.tokens.refreshToken
+            accessToken = loginData.accessToken,
+            refreshToken = loginData.refreshToken
         )
 
-        // TODO: i need to handle the case when the id is not a valid UUID
-        val userDto = loginData.user
         return User(
-            id = try { Uuid.parse(userDto.id) } catch (e: Exception) { Uuid.random() },
+            id = userDto.id,
             phoneNumber = userDto.phone,
-            firstName = userDto.fullName.split(" ").firstOrNull() ?: "",
-            lastName = userDto.fullName.split(" ").drop(1).joinToString(" "),
-            username = userDto.email.split("@").firstOrNull() ?: userDto.fullName,
+            firstName = userDto.name.split(" ").firstOrNull() ?: "",
+            lastName = userDto.name.split(" ").drop(1).joinToString(" "),
+            username = userDto.email.split("@").firstOrNull() ?: userDto.name,
             email = userDto.email,
             role = role,
-            profilePhotoUrl = "",
+            profilePhotoUrl = userDto.avatarUrl ?: "",
             location = null
         )
     }
