@@ -14,7 +14,7 @@ class NotFoundException(message: String = "No account found") : SmartFixExceptio
 class BadRequestException(message: String = "Invalid request body") : SmartFixException(message)
 class InvalidCountryCodeException(countryCode: String) :
     AuthenticationException("country code: $countryCode is not valid or not supported yet")
-class InvalidMobileNumberException(
-    mobileNumber: String
-) : AuthenticationException("mobile number: $mobileNumber doesn't match validation")
+class InvalidEmailException(
+    email: String
+) : AuthenticationException("mobile number: $email doesn't match validation")
 class InvalidPasswordException : AuthenticationException("password doesn't match validations")
