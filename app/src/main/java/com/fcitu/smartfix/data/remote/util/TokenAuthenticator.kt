@@ -10,14 +10,11 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
 class TokenAuthenticator(
     private val userDataStore: UserDataStore,
-) : Authenticator, KoinComponent {
-
-    private val authService: AuthService by inject()
+    private val authService: AuthService
+) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {
         // Only attempt to refresh if the response code is 401

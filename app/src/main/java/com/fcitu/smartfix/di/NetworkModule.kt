@@ -1,5 +1,6 @@
 package com.fcitu.smartfix.di
 
+import com.fcitu.smartfix.BuildConfig
 import com.fcitu.smartfix.data.remote.NetworkConstants
 import com.fcitu.smartfix.data.remote.service.AuthService
 import com.fcitu.smartfix.data.remote.util.AuthInterceptor
@@ -8,6 +9,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -23,13 +25,45 @@ val networkModule = module {
 
     single {
         HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
+            if (BuildConfig.DEBUG) {
+                redactHeader("Authorization")
+                redactHeader("Cookie")
+            }
         }
     }
 
     single { AuthInterceptor(get()) }
-    single { TokenAuthenticator(get()) }
 
+    // ── Dedicated Auth Client (No Authenticator to avoid deadlock) ──
+    single(named("AuthClient")) {
+        OkHttpClient.Builder()
+            .addInterceptor(get<HttpLoggingInterceptor>())
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .build()
+    }
+
+    single(named("AuthRetrofit")) {
+        val contentType = "application/json".toMediaType()
+        Retrofit.Builder()
+            .baseUrl(NetworkConstants.BASE_URL)
+            .client(get(named("AuthClient")))
+            .addConverterFactory(get<Json>().asConverterFactory(contentType))
+            .build()
+    }
+
+    single(named("RefreshAuthService")) {
+        get<Retrofit>(named("AuthRetrofit")).create(AuthService::class.java)
+    }
+
+    single { TokenAuthenticator(get(), get(named("RefreshAuthService"))) }
+
+    // ── Main Client (With Authenticator) ──
     single {
         OkHttpClient.Builder()
             .addInterceptor(get<AuthInterceptor>())
