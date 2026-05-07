@@ -20,9 +20,8 @@ import com.fcitu.smartfix.ui.designSystem.components.button.PrimaryButton
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarData
 import com.fcitu.smartfix.ui.screen.shared.login.component.AuthPrompt
+import com.fcitu.smartfix.ui.screen.shared.login.component.LabeledInputEmail
 import com.fcitu.smartfix.ui.screen.shared.login.component.LabeledInputPassword
-import com.fcitu.smartfix.ui.screen.shared.login.component.LabeledInputPhoneNumber
-import com.fcitu.smartfix.ui.screen.shared.login.component.RoleSelector
 import com.fcitu.smartfix.ui.screen.shared.login.component.WelcomeMessage
 import com.fcitu.smartfix.ui.utils.EffectHandler
 import kotlinx.coroutines.flow.SharedFlow
@@ -64,20 +63,13 @@ private fun LoginScreenContent(
             modifier = Modifier.padding(bottom = 24.dp)
         )
 
-        RoleSelector(
-            selectedRole = uiState.userRole,
-            onRoleSelected = { interactionListener.onUserRoleSelected(it) },
-            modifier = Modifier.padding(bottom = 12.dp)
+        LabeledInputEmail(
+            value = uiState.email,
+            onValueChange = { interactionListener.onEmailChanged(it) },
+            label = "Email",
+            hint = "example@gmail.com"
         )
 
-        // TODO : Show error message if phone number is invalid
-        LabeledInputPhoneNumber(
-            value = uiState.phoneNumber,
-            onValueChange = { interactionListener.onPhoneNumberChanged(it) },
-            label = "Phone Number",
-        )
-
-        // TODO : Show error message if password is invalid
         LabeledInputPassword(
             value = uiState.password,
             onValueChange = { interactionListener.onPasswordChanged(it) },
@@ -124,6 +116,7 @@ private fun EffectsHandler(
     EffectHandler(effects = effects) { effect ->
         when (effect) {
             is LoginScreenUiEffect.NavigateToHome -> {
+                println("Role: ${effect.role}")
                 onLoginSuccess(effect.role)
             }
 
