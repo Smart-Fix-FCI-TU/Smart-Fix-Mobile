@@ -116,7 +116,6 @@ private fun EffectsHandler(
     EffectHandler(effects = effects) { effect ->
         when (effect) {
             is LoginScreenUiEffect.NavigateToHome -> {
-                println("Role: ${effect.role}")
                 onLoginSuccess(effect.role)
             }
 

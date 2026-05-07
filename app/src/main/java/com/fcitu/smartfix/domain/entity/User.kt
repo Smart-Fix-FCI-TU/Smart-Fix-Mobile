@@ -1,10 +1,7 @@
 package com.fcitu.smartfix.domain.entity
 
 import com.fcitu.smartfix.domain.model.UserRole
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class User(
     val id: String,
     val phoneNumber: String,
