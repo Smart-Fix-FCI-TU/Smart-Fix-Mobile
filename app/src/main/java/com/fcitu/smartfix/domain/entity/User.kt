@@ -12,6 +12,6 @@ data class User(
     val nationalId: String,
     val email: String,
     val role: UserRole,
-    val profilePhotoUrl: String,
+    val profilePhotoUrl: String? = null,
     val address: Address,
 )

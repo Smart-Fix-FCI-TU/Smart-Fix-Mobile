@@ -7,7 +7,6 @@ interface HomeInteractionListener {
     fun onCategorySelected(category: String)
     fun onChooseServiceClicked()
     fun onOrderClicked(orderId: String)
-    fun onSearchClicked()
     fun onNotificationClicked()
 
     fun onViewAllOrdersClicked(order: List<Order>)

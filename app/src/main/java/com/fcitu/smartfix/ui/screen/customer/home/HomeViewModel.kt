@@ -1,12 +1,49 @@
 package com.fcitu.smartfix.ui.screen.customer.home
 
+import com.fcitu.smartfix.R
 import com.fcitu.smartfix.domain.entity.Order
+import com.fcitu.smartfix.domain.entity.ServiceItem
 import com.fcitu.smartfix.domain.model.ServiceCategory
 import com.fcitu.smartfix.domain.useCase.GetCustomerOrdersUseCase
 import com.fcitu.smartfix.ui.shared.BaseViewModel
 
 class HomeViewModel(private val getCustomerOrdersUseCase: GetCustomerOrdersUseCase) :
     BaseViewModel<HomeUiState, HomeUiEffect>(HomeUiState()), HomeInteractionListener {
+    //----List of All Services------------------
+    val servicesList = listOf(
+        ServiceItem(
+            serviceCategory = ServiceCategory.ELECTRICITY,
+            serviceName = "Electricity",
+            R.drawable.electricity_icon_active,
+            R.drawable.electricity_icon
+        ),
+        ServiceItem(
+            serviceCategory = ServiceCategory.PLUMBING,
+            "Plumbing",
+            R.drawable.plumbing_icon_active,
+            R.drawable.plumbing_icon
+        ),
+        ServiceItem(
+            serviceCategory = ServiceCategory.CONDITIONING,
+            "Conditioning",
+            R.drawable.conditioning_icon_active,
+            R.drawable.conditioning_icon
+        ),
+        ServiceItem(
+            serviceCategory = ServiceCategory.PAINTING,
+            "Paints",
+            R.drawable.painting_icon_active,
+            R.drawable.painting_icon
+        ),
+        ServiceItem(
+            serviceCategory = ServiceCategory.CARPENTRY,
+            "Carpentry",
+            R.drawable.carpentry_icon_active,
+            R.drawable.carpentry_icon
+        ),
+
+        )
+
     init {
         loadActiveOrders()
     }
@@ -54,10 +91,6 @@ class HomeViewModel(private val getCustomerOrdersUseCase: GetCustomerOrdersUseCa
 
     override fun onOrderClicked(orderId: String) {
         emitEffect(HomeUiEffect.NavigateToOrderDetails(orderId))
-    }
-
-    override fun onSearchClicked() {
-        emitEffect(HomeUiEffect.NavigateToSearch)
     }
 
     override fun onNotificationClicked() {
