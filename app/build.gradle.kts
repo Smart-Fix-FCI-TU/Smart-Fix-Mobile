@@ -1,9 +1,19 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { localProperties.load(it) }
+}
+val baseUrl = localProperties.getProperty("BASE_URL")
+    ?: throw GradleException("BASE_URL is missing in local.properties")
 
 android {
     namespace = "com.fcitu.smartfix"
@@ -17,6 +27,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
@@ -40,6 +51,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
