@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.screen.describeProblem
+package com.fcitu.smartfix.ui.theme.screen.booking
 
 import android.net.Uri
 
@@ -14,8 +14,6 @@ interface BookingInteractionListener {
     fun onAdditionalNotesChanged(notes: String)
     fun onFindServiceClicked()
     fun onMapPlaceholderClicked()
-    fun onHomeChipClicked()
-    fun onWorkChipClicked()
     fun onBottomSheetDismissed()
     fun onFindAvailableTechnicianClicked()
     fun onLocationSelected(location: String, latitude: Double? = null, longitude: Double? = null)
