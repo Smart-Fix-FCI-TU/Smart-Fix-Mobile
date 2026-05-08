@@ -25,7 +25,7 @@ import com.fcitu.smartfix.ui.theme.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.theme.designSystem.components.snackBar.AnimatedSnackBarHost
 import com.fcitu.smartfix.ui.theme.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.theme.designSystem.components.snackBar.SnackBarHostController
-import com.fcitu.smartfix.ui.theme.screen.describeProblem.BookingScreen
+import com.fcitu.smartfix.ui.theme.screen.booking.BookingScreen
 import com.fcitu.smartfix.ui.theme.screen.login.LoginScreen
 import com.fcitu.smartfix.ui.theme.screen.splash.SplashScreen
 
