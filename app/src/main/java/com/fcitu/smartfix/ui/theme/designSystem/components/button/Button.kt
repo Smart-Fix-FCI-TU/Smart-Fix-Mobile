@@ -102,8 +102,7 @@ fun Button(
     }
 }
 
-@Preview(showBackground = true,
-    showSystemUi = true)
+@Preview(showBackground = true)
 @Composable
 private fun ButtonPreview() {
     Button(onClick = {}) {

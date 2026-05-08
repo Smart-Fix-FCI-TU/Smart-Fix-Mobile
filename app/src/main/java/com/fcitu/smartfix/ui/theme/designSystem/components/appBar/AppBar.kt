@@ -86,9 +86,7 @@ private fun AppBarPreview() {
 
 @Preview
 @Composable
-private fun AppBarWithBackNavigationPreview(
-
-) {
+private fun AppBarWithBackNavigationPreview() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
