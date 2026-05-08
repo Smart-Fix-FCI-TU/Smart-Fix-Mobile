@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.screen.describeProblem
+package com.fcitu.smartfix.ui.theme.screen.booking
 
 import android.net.Uri
 
