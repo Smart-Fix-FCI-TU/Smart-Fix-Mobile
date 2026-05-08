@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.screen.describeProblem.components
+package com.fcitu.smartfix.ui.theme.screen.booking.components
 
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -17,13 +17,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,10 +28,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.fcitu.smartfix.R
+import com.fcitu.smartfix.ui.theme.Cairo
+import com.fcitu.smartfix.ui.theme.designSystem.components.text.Text
 
 private const val MAX_PHOTOS = 5
 
@@ -50,8 +50,11 @@ fun ProblemPhotoPickerSection(
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
             text = "Problem Photos",
-            style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Bold
+            style = TextStyle(
+                fontFamily = Cairo,
+                fontWeight = FontWeight.Bold,
+                fontSize = 14.sp
+            )
         )
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -100,7 +103,7 @@ private fun PhotoThumbnailItem(
                 .background(Color.White.copy(alpha = 0.8f))
         ) {
             Icon(
-                imageVector = Icons.Filled.Close,
+                painter = painterResource(id = R.drawable.ic_cancel),
                 contentDescription = "Remove photo",
                 tint = Color.Red,
                 modifier = Modifier.size(16.dp)
@@ -135,7 +138,7 @@ private fun AddPhotoItem(
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Icon(
-                imageVector = Icons.Outlined.PhotoCamera,
+                painter = painterResource(id = R.drawable.ic_camera),
                 contentDescription = "Add Photo",
                 tint = dashedColor,
                 modifier = Modifier.size(24.dp)
@@ -143,9 +146,12 @@ private fun AddPhotoItem(
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "Add Photo",
-                color = dashedColor,
-                fontSize = 10.sp,
-                fontWeight = FontWeight.Medium
+                style = TextStyle(
+                    fontFamily = Cairo,
+                    color = dashedColor,
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Medium
+                )
             )
         }
     }

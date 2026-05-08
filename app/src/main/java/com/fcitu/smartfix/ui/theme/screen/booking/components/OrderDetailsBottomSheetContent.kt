@@ -1,8 +1,10 @@
-package com.fcitu.smartfix.ui.theme.screen.describeProblem.components
+package com.fcitu.smartfix.ui.theme.screen.booking.components
 
 import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,24 +17,25 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
+import com.fcitu.smartfix.R
+import com.fcitu.smartfix.ui.theme.Cairo
 import com.fcitu.smartfix.ui.theme.SmartFixTheme
 import com.fcitu.smartfix.ui.theme.designSystem.components.button.PrimaryButton
+import com.fcitu.smartfix.ui.theme.designSystem.components.text.Text
 
 @Composable
 fun OrderDetailsBottomSheetContent(
@@ -52,8 +55,11 @@ fun OrderDetailsBottomSheetContent(
         // Sheet Title
         Text(
             text = "Orders Details",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
+            style = TextStyle(
+                fontFamily = Cairo,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
+            ),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(bottom = 16.dp)
@@ -62,12 +68,19 @@ fun OrderDetailsBottomSheetContent(
         // Problem Title
         Text(
             text = "Title",
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold
+            style = TextStyle(
+                fontFamily = Cairo,
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp
+            )
         )
         Text(
             text = shortTitle,
-            style = MaterialTheme.typography.bodyMedium,
+            style = TextStyle(
+                fontFamily = Cairo,
+                fontWeight = FontWeight.Normal,
+                fontSize = 14.sp
+            ),
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
@@ -75,8 +88,11 @@ fun OrderDetailsBottomSheetContent(
         if (problemPhotos.isNotEmpty()) {
             Text(
                 text = "Problem photo",
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold
+                style = TextStyle(
+                    fontFamily = Cairo,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 12.sp
+                )
             )
             Spacer(modifier = Modifier.height(8.dp))
             LazyRow(
@@ -84,10 +100,11 @@ fun OrderDetailsBottomSheetContent(
                 modifier = Modifier.padding(bottom = 12.dp)
             ) {
                 items(problemPhotos, key = { it.toString() }) { uri ->
-                    Card(
-                        modifier = Modifier.size(80.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color(0xFFF2F4F7))
                     ) {
                         Image(
                             painter = rememberAsyncImagePainter(uri),
@@ -103,12 +120,19 @@ fun OrderDetailsBottomSheetContent(
         // Description
         Text(
             text = "Description",
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold
+            style = TextStyle(
+                fontFamily = Cairo,
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp
+            )
         )
         Text(
             text = detailedDescription,
-            style = MaterialTheme.typography.bodySmall,
+            style = TextStyle(
+                fontFamily = Cairo,
+                fontWeight = FontWeight.Normal,
+                fontSize = 12.sp
+            ),
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
@@ -119,7 +143,7 @@ fun OrderDetailsBottomSheetContent(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
-                    imageVector = Icons.Filled.LocationOn,
+                    painter = painterResource(id = R.drawable.ic_location),
                     contentDescription = null,
                     tint = Color(0xFFFFA500),
                     modifier = Modifier.size(16.dp)
@@ -127,19 +151,25 @@ fun OrderDetailsBottomSheetContent(
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = "3.2 km away",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFFFFA500)
+                    style = TextStyle(
+                        fontFamily = Cairo,
+                        fontSize = 12.sp,
+                        color = Color(0xFFFFA500)
+                    )
                 )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = location,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
+                    style = TextStyle(
+                        fontFamily = Cairo,
+                        fontSize = 12.sp,
+                        color = Color.Gray
+                    )
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
-                    imageVector = Icons.Filled.LocationOn,
+                    painter = painterResource(id = R.drawable.ic_location),
                     contentDescription = null,
                     tint = Color.Red,
                     modifier = Modifier.size(16.dp)
@@ -161,7 +191,10 @@ fun OrderDetailsBottomSheetContent(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Submitting...",
-                style = MaterialTheme.typography.bodySmall,
+                style = TextStyle(
+                    fontFamily = Cairo,
+                    fontSize = 12.sp
+                ),
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }

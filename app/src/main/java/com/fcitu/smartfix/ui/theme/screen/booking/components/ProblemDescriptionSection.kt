@@ -1,16 +1,18 @@
-package com.fcitu.smartfix.ui.theme.screen.describeProblem.components
+package com.fcitu.smartfix.ui.theme.screen.booking.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.fcitu.smartfix.ui.theme.Cairo
+import com.fcitu.smartfix.ui.theme.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.theme.designSystem.components.textField.MultiLineTextField
 import com.fcitu.smartfix.ui.theme.designSystem.components.textField.TextField
 
@@ -43,8 +45,11 @@ fun ProblemDescriptionSection(
         )
         Text(
             text = "${detailedDescription.length} / 500",
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.Gray,
+            style = TextStyle(
+                fontFamily = Cairo,
+                fontSize = 11.sp,
+                color = Color.Gray
+            ),
             modifier = Modifier.align(Alignment.End)
         )
     }

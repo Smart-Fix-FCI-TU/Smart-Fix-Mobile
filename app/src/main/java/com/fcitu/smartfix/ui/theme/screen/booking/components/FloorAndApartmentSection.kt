@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.screen.describeProblem.components
+package com.fcitu.smartfix.ui.theme.screen.booking.components
 
 
 import androidx.compose.foundation.layout.Arrangement
