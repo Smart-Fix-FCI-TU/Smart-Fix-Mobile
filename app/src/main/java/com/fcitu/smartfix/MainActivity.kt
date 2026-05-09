@@ -20,7 +20,6 @@ class MainActivity : ComponentActivity() {
             val snackBarHostController = remember { SnackBarHostController() }
 
             SmartFixTheme {
-                // 2. بنزود الـ Controller لكل الـ Children اللي جوه التطبيق
                 CompositionLocalProvider(
                     LocalSnackBarHostController provides snackBarHostController
                 ) {
