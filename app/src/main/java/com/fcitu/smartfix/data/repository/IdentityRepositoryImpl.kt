@@ -9,8 +9,8 @@ class IdentityRepositoryImpl(
     private val userDataStore: UserDataStore
 ) : IdentityRepository {
 
-    override suspend fun saveSession(role: UserRole, isLoggedIn: Boolean) {
-        userDataStore.saveSession(role, isLoggedIn)
+    override suspend fun saveSession(role: UserRole, isLoggedIn: Boolean, accessToken: String, refreshToken: String) {
+        userDataStore.saveSession(role, isLoggedIn, accessToken, refreshToken)
     }
 
     override fun getIsLoggedIn(): Flow<Boolean> {
