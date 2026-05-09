@@ -8,10 +8,13 @@ class InvalidRequestException() : SmartFixException("Invalid request")
 class UnknownException : SmartFixException("Unknown Exception")
 
 open class AuthenticationException(message: String) : SmartFixException(message)
-class UserNotRegisteredException : AuthenticationException("Phone number not registered")
+class UserNotRegisteredException : AuthenticationException("email not registered")
+class UnauthorizedException(message: String = "Incorrect email or password") : AuthenticationException(message)
+class NotFoundException(message: String = "No account found") : SmartFixException(message)
+class BadRequestException(message: String = "Invalid request body") : SmartFixException(message)
 class InvalidCountryCodeException(countryCode: String) :
     AuthenticationException("country code: $countryCode is not valid or not supported yet")
-class InvalidMobileNumberException(
-    mobileNumber: String
-) : AuthenticationException("mobile number: $mobileNumber doesn't match validation")
+class InvalidEmailException(
+    email: String
+) : AuthenticationException("email: $email doesn't match validation")
 class InvalidPasswordException : AuthenticationException("password doesn't match validations")
