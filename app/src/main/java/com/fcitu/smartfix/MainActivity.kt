@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                 CompositionLocalProvider(
                     LocalSnackBarHostController provides snackBarHostController
                 ) {
-                    HomeScreen()
+                    SmartFixNavGraph()
                 }
         }
     }
