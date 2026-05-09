@@ -1,9 +1,8 @@
 package com.fcitu.smartfix.domain.model
 
 enum class OrderStatus {
-    PENDING_ASSIGNMENT ,
-    PENDING_CONFIRMATION,
-    ASSIGNED ,
+    WAITING_RESPONSE,
+    ASSIGNED,
     ON_WAY,
     ARRIVED,
     IN_PROGRESS,
@@ -12,7 +11,11 @@ enum class OrderStatus {
 }
 
 val OrderStatus.isActive: Boolean
-    get() = this != OrderStatus.COMPLETED
+    get() = this != OrderStatus.COMPLETED && this != OrderStatus.WAITING_RESPONSE
 
 val OrderStatus.isCompleted: Boolean
     get() = this == OrderStatus.COMPLETED
+
+
+val OrderStatus.isPendingRequest: Boolean
+    get() = this == OrderStatus.WAITING_RESPONSE

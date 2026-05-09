@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
@@ -25,19 +26,22 @@ import com.fcitu.smartfix.domain.entity.User
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 
 @Composable
-fun UserProfileHeader(user: User) {
+fun UserProfileHeader(user: User, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.padding(vertical = 12.dp).fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(modifier = Modifier.weight(0.5f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(
+            modifier = Modifier.weight(0.5f),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             Text(
                 text = "Hello ${user.firstName}",
                 style = TextStyle(
                     color = Color(0xFF1C1B1F),
                     fontWeight = FontWeight.Black,
-                    fontSize = 24.sp,
+                    fontSize = 30.sp,
                     lineHeight = 32.sp
                 )
 
@@ -47,7 +51,7 @@ fun UserProfileHeader(user: User) {
                 style = TextStyle(
                     color = Color.Black,
                     fontWeight = FontWeight.Medium,
-                    fontSize = 14.sp,
+                    fontSize = 17.sp,
                     lineHeight = 20.sp
                 )
             )
@@ -72,9 +76,9 @@ private fun ProfilePhoto(imageUrl: String?, modifier: Modifier = Modifier) {
             modifier = imageModifier,
             contentScale = ContentScale.Fit
         )
-    }else{
+    } else {
         AsyncImage(
-            model =imageUrl  ,
+            model = imageUrl,
             contentDescription = "Profile Photo",
             contentScale = ContentScale.Fit,
             modifier = imageModifier,

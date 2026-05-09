@@ -1,5 +1,6 @@
 package com.fcitu.smartfix.di
 
+import com.fcitu.smartfix.ui.utils.networkAvailabilityModule
 import org.koin.dsl.module
 
 val appModule =
@@ -9,6 +10,7 @@ val appModule =
             repositoriesModule,
             validatorsModule,
             useCasesModule,
-            viewModelsModule
+            viewModelsModule,
+            networkAvailabilityModule
         )
     }

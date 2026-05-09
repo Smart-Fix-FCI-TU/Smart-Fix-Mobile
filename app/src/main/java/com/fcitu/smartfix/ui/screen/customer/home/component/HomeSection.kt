@@ -3,7 +3,6 @@ package com.fcitu.smartfix.ui.screen.customer.home.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.R
@@ -22,11 +20,12 @@ import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 
 @Composable
 fun HomeSection(
+    modifier: Modifier = Modifier,
     title: String,
-    actionName: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+    actionName: String? = null,
+    onActionNameClick: () -> Unit={},
+
+    ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -42,34 +41,24 @@ fun HomeSection(
             ),
             modifier = Modifier.weight(0.7f)
         )
-
-        Button(onClick = { onClick() }) {
-            Text(
-                text = actionName,
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    color = Color(0xFFFF6D00)
+        if (actionName != null) {
+            Button(onClick = { onActionNameClick() }) {
+                Text(
+                    text = actionName,
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                        color = Color(0xFFFF6D00)
+                    )
                 )
-            )
 
-            Image(
-                painter = painterResource(R.drawable.ic_orange_arrow_left),
-                contentDescription = "",
-                modifier = Modifier.padding(start = 5.dp)
-            )
+                Image(
+                    painter = painterResource(R.drawable.ic_orange_arrow_left),
+                    contentDescription = "",
+                    modifier = Modifier.padding(start = 5.dp)
+                )
+            }
         }
     }
-}
-
-@Preview
-@Composable
-private fun PreviewSection() {
-    HomeSection(
-        modifier = Modifier.fillMaxWidth(),
-        title = "Active Orders",
-        actionName = "View all",
-        onClick = {}
-    )
 }

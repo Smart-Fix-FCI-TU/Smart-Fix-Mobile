@@ -3,56 +3,103 @@ package com.fcitu.smartfix.ui.screen.customer.home
 import com.fcitu.smartfix.R
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.entity.ServiceItem
+import com.fcitu.smartfix.domain.entity.User
 import com.fcitu.smartfix.domain.model.ServiceCategory
+import com.fcitu.smartfix.domain.repository.CustomerRepository
 import com.fcitu.smartfix.domain.useCase.GetCustomerOrdersUseCase
 import com.fcitu.smartfix.ui.shared.BaseViewModel
+import com.fcitu.smartfix.ui.utils.InternetConnectionAvailability
 
-class HomeViewModel(private val getCustomerOrdersUseCase: GetCustomerOrdersUseCase) :
+class HomeViewModel(
+    private val getCustomerOrdersUseCase: GetCustomerOrdersUseCase,
+    private val networkConnection: InternetConnectionAvailability,
+    private val customerRepository: CustomerRepository
+) :
     BaseViewModel<HomeUiState, HomeUiEffect>(HomeUiState()), HomeInteractionListener {
-    //----List of All Services------------------
-    val servicesList = listOf(
-        ServiceItem(
-            serviceCategory = ServiceCategory.ELECTRICITY,
-            serviceName = "Electricity",
-            R.drawable.electricity_icon_active,
-            R.drawable.electricity_icon
-        ),
-        ServiceItem(
-            serviceCategory = ServiceCategory.PLUMBING,
-            "Plumbing",
-            R.drawable.plumbing_icon_active,
-            R.drawable.plumbing_icon
-        ),
-        ServiceItem(
-            serviceCategory = ServiceCategory.CONDITIONING,
-            "Conditioning",
-            R.drawable.conditioning_icon_active,
-            R.drawable.conditioning_icon
-        ),
-        ServiceItem(
-            serviceCategory = ServiceCategory.PAINTING,
-            "Paints",
-            R.drawable.painting_icon_active,
-            R.drawable.painting_icon
-        ),
-        ServiceItem(
-            serviceCategory = ServiceCategory.CARPENTRY,
-            "Carpentry",
-            R.drawable.carpentry_icon_active,
-            R.drawable.carpentry_icon
-        ),
 
-        )
 
     init {
+        //----List of All Services------------------
+        updateState {
+            it.copy(
+                servicesList = listOf(
+                    ServiceItem(
+                        serviceCategory = ServiceCategory.ELECTRICITY,
+                        serviceName = "Electricity",
+                        R.drawable.electricity_icon_active,
+                        R.drawable.electricity_icon
+                    ),
+                    ServiceItem(
+                        serviceCategory = ServiceCategory.PLUMBING,
+                        "Plumbing",
+                        R.drawable.plumbing_icon_active,
+                        R.drawable.plumbing_icon
+                    ),
+                    ServiceItem(
+                        serviceCategory = ServiceCategory.CONDITIONING,
+                        "Conditioning",
+                        R.drawable.conditioning_icon_active,
+                        R.drawable.conditioning_icon
+                    ),
+                    ServiceItem(
+                        serviceCategory = ServiceCategory.PAINTING,
+                        "Paints",
+                        R.drawable.painting_icon_active,
+                        R.drawable.painting_icon
+                    ),
+                    ServiceItem(
+                        serviceCategory = ServiceCategory.CARPENTRY,
+                        "Carpentry",
+                        R.drawable.carpentry_icon_active,
+                        R.drawable.carpentry_icon
+                    ),
+
+                    )
+            )
+        }
+        //------------------------------------
+        observeNetwork()
+        loadCustomerInfo()
         loadActiveOrders()
+        loadPendingOrder()
     }
 
-    //TODO Create Impl for this function to load customer Info
+    //Loading User Information
     fun loadCustomerInfo() {
-        TODO("Not yet implemented")
+        tryToExecute(
+            onStart = ::onGetUserInfoStart,
+            execute = ::getUserInfo,
+            onSuccess = ::onGetUserInfoSuccess,
+            onError = ::onGetUserInfoError
+        )
     }
 
+    private fun onGetUserInfoStart() {
+        updateState { it.copy(isLoadingCustomerInfo = true) }
+    }
+
+    private fun onGetUserInfoSuccess(user: User) {
+        updateState { it.copy(isLoadingCustomerInfo = false, user = user) }
+    }
+
+    private fun onGetUserInfoError(throwable: Throwable) {
+        updateState {
+            it.copy(
+                isLoadingCustomerInfo = false,
+                error = throwable.message ?: "Failed to Load User Information"
+            )
+        }
+        emitEffect(HomeUiEffect.ShowError(throwable.message ?: "Failed to Load User Info"))
+
+    }
+
+    private suspend fun getUserInfo(): User {
+        return customerRepository.getProfile()
+    }
+    //------------------------------------------------------------------------------------
+
+
+    //Loading Active Orders---------------------------------------------------------------------------------
     private fun loadActiveOrders() {
         tryToExecute(
             onStart = ::onGetOrdersStart,
@@ -78,14 +125,72 @@ class HomeViewModel(private val getCustomerOrdersUseCase: GetCustomerOrdersUseCa
         updateState { it.copy(error = throwable.message, isLoadingOrders = false) }
         emitEffect(HomeUiEffect.ShowError(throwable.message ?: "Failed to Load Active Orders"))
     }
+//-------------------------------------------------------------------------------------------------------
+
+    // Loading Pending Order----------------------------------------------------------------------------
+    private fun onStartLoadingPendingOrder() {
+        updateState { it.copy(isLoadingOrders = true) }
+
+    }
+
+    private suspend fun getPendingOrder(): String? {
+        return getCustomerOrdersUseCase.getCustomerPendingRequest()?.id
+    }
+
+    private fun onGetPendingOrdersSuccess(orderId: String?) {
+        updateState { it.copy(isLoadingPendingOrder = false, pendingOrderId = orderId) }
+    }
+
+    private fun onGetPendingOrderError(throwable: Throwable) {
+        updateState {
+            it.copy(
+                isLoadingPendingOrder = false,
+                error = throwable.message ?: "Failed to Load Pending Order"
+            )
+        }
+        emitEffect(HomeUiEffect.ShowError(throwable.message ?: "Failed to Load Pending Order"))
+    }
+
+    private fun loadPendingOrder() {
+        tryToExecute(
+            onStart = ::onStartLoadingPendingOrder,
+            execute = ::getPendingOrder,
+            onSuccess = ::onGetPendingOrdersSuccess,
+            onError = ::onGetPendingOrderError
+
+
+        )
+    }
+
+    //---------------------------------------------------------------------------------------------
+// Check Network Availability-----------------------------------------------------------------------
+    private fun observeNetwork() {
+        tryToCollect(
+            collect = { networkConnection.observeNetworkConnection() },
+            onCollect = { isConnected ->
+                updateState { it.copy(hasNetworkConnection = isConnected) }
+
+                if (isConnected) {
+                    loadActiveOrders()
+                    loadPendingOrder()
+                    loadCustomerInfo()
+                }
+            },
+            onError = {
+                updateState { it.copy(hasNetworkConnection = false) }
+            },
+        )
+    }
+
+    //--------------------------------------------------------------------
 
     //----------------Listeners----------------------------
     override fun onCategorySelected(category: String) {
-        updateState { it.copy(selectedCategory = category) }
+        updateState { it.copy(selectedCategory = if (category == it.selectedCategory) null else category) }
     }
 
     override fun onChooseServiceClicked() {
-        val category = state.value.selectedCategory!!
+        val category = state.value.selectedCategory ?: return
         emitEffect(HomeUiEffect.NavigateToBooking(category))
     }
 
@@ -97,8 +202,12 @@ class HomeViewModel(private val getCustomerOrdersUseCase: GetCustomerOrdersUseCa
         emitEffect(HomeUiEffect.NavigateToNotifications)
     }
 
-    override fun onViewAllOrdersClicked(order: List<Order>) {
-        emitEffect(HomeUiEffect.NavigateToAllActiveOrders(order))
+    override fun onViewAllOrdersClicked(orders: List<Order>) {
+        emitEffect(HomeUiEffect.NavigateToAllActiveOrders(orders))
+    }
+
+    override fun onResumePendingOrderClicked(orderId: String) {
+        emitEffect(HomeUiEffect.NavigateToResumePendingOrder(orderId))
     }
     //---------------------------------------------------------------
 }
