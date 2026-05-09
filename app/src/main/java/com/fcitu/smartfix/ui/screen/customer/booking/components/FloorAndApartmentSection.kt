@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.screen.booking.components
+package com.fcitu.smartfix.ui.screen.customer.booking.components
 
 
 import androidx.compose.foundation.layout.Arrangement
@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.fcitu.smartfix.ui.theme.designSystem.components.textField.TextField
+import com.fcitu.smartfix.ui.designSystem.components.textField.TextField
 
 @Composable
 fun FloorAndApartmentSection(

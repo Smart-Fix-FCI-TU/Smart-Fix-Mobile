@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.screen.booking.components
+package com.fcitu.smartfix.ui.screen.customer.booking.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.fcitu.smartfix.R
-import com.fcitu.smartfix.ui.theme.designSystem.components.textField.TextField
+import com.fcitu.smartfix.ui.designSystem.components.textField.TextField
 
 @Composable
 fun LocationSelectionSection(

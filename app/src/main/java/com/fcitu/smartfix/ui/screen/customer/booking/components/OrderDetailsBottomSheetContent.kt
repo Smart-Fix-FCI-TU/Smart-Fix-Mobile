@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.screen.booking.components
+package com.fcitu.smartfix.ui.screen.customer.booking.components
 
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -32,10 +32,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.fcitu.smartfix.R
-import com.fcitu.smartfix.ui.theme.Cairo
-import com.fcitu.smartfix.ui.theme.SmartFixTheme
-import com.fcitu.smartfix.ui.theme.designSystem.components.button.PrimaryButton
-import com.fcitu.smartfix.ui.theme.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.designSystem.components.button.PrimaryButton
+import com.fcitu.smartfix.ui.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.designSystem.theme.Cairo
+import com.fcitu.smartfix.ui.designSystem.theme.SmartFixTheme
 
 @Composable
 fun OrderDetailsBottomSheetContent(

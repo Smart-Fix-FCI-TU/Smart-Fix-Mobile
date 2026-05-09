@@ -20,14 +20,28 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.fcitu.smartfix.R
 import com.fcitu.smartfix.domain.model.UserRole
-import com.fcitu.smartfix.ui.theme.designSystem.components.bottomNavigation.BottomNavigationBar
-import com.fcitu.smartfix.ui.theme.designSystem.components.scaffold.Scaffold
-import com.fcitu.smartfix.ui.theme.designSystem.components.snackBar.AnimatedSnackBarHost
-import com.fcitu.smartfix.ui.theme.designSystem.components.snackBar.LocalSnackBarHostController
-import com.fcitu.smartfix.ui.theme.designSystem.components.snackBar.SnackBarHostController
-import com.fcitu.smartfix.ui.theme.screen.booking.BookingScreen
-import com.fcitu.smartfix.ui.theme.screen.login.LoginScreen
-import com.fcitu.smartfix.ui.theme.screen.splash.SplashScreen
+import com.fcitu.smartfix.ui.designSystem.components.bottomNavigation.BottomNavigationBar
+import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
+import com.fcitu.smartfix.ui.designSystem.components.snackBar.AnimatedSnackBarHost
+import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
+import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
+import com.fcitu.smartfix.ui.navigation.CustomerChatScreen
+import com.fcitu.smartfix.ui.navigation.CustomerHomeScreen
+import com.fcitu.smartfix.ui.navigation.CustomerOrderDetailScreen
+import com.fcitu.smartfix.ui.navigation.CustomerOrdersScreen
+import com.fcitu.smartfix.ui.navigation.CustomerProfileScreen
+import com.fcitu.smartfix.ui.navigation.MapScreen
+import com.fcitu.smartfix.ui.navigation.Route
+import com.fcitu.smartfix.ui.navigation.TechnicianChatScreen
+import com.fcitu.smartfix.ui.navigation.TechnicianHomeScreen
+import com.fcitu.smartfix.ui.navigation.TechnicianListScreen
+import com.fcitu.smartfix.ui.navigation.TechnicianOrderDetailScreen
+import com.fcitu.smartfix.ui.navigation.TechnicianOrdersScreen
+import com.fcitu.smartfix.ui.navigation.TechnicianProfileScreen
+import com.fcitu.smartfix.ui.navigation.TrackingScreen
+import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
+import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
+import com.fcitu.smartfix.ui.screen.customer.booking.BookingScreen
 
 val LocalNavController = staticCompositionLocalOf<NavController> {
     error("No NavController provided")

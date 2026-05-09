@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.screen.booking.components
+package com.fcitu.smartfix.ui.screen.customer.booking.components
 
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -35,8 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import com.fcitu.smartfix.R
-import com.fcitu.smartfix.ui.theme.Cairo
-import com.fcitu.smartfix.ui.theme.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 
 private const val MAX_PHOTOS = 5
 
@@ -130,7 +131,7 @@ private fun AddPhotoItem(
                         width = 2.dp.toPx(),
                         pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
                     ),
-                    cornerRadius = androidx.compose.ui.geometry.CornerRadius(12.dp.toPx())
+                    cornerRadius = CornerRadius(12.dp.toPx())
                 )
             }
             .clickable(onClick = onClick),

@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.screen.booking.components
+package com.fcitu.smartfix.ui.screen.customer.booking.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,9 +10,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.fcitu.smartfix.ui.theme.Cairo
-import com.fcitu.smartfix.ui.theme.designSystem.components.text.Text
-import com.fcitu.smartfix.ui.theme.designSystem.components.textField.MultiLineTextField
+import com.fcitu.smartfix.ui.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.designSystem.components.textField.MultiLineTextField
+import com.fcitu.smartfix.ui.designSystem.theme.Cairo
+
 
 @Composable
 fun AdditionalNotesSection(
