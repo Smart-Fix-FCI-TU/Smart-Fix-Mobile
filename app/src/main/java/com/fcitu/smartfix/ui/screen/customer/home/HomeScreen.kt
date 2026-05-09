@@ -44,10 +44,10 @@ fun HomeScreen(
                 is HomeUiEffect.ShowError -> {
                     snackBarHostController.showSnackBar(
                         snackBarData = SnackBarData(
-                            title = "Error", // أو أي عنوان
-                            message = effect.message, // الرسالة الجاية من الـ ViewModel
-                            isError = true, // ✅ ده اللي هيخلي الأيقونة تظهر كـ Error (أحمر أو زي ما انت مصممها)
-                            duration = 3000 // تختفي بعد 3 ثواني
+                            title = "Error",
+                            message = effect.message,
+                            isError = true,
+                            duration = 3000
                         )
                     )
                 }
