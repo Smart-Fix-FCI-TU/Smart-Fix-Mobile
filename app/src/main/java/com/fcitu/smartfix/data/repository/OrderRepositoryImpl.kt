@@ -1,6 +1,5 @@
 package com.fcitu.smartfix.data.repository
 
-import android.util.Log
 import com.fcitu.smartfix.domain.entity.Address
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.model.OrderStatus
