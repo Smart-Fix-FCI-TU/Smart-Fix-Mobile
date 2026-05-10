@@ -2,7 +2,6 @@ package com.fcitu.smartfix.ui.screen.customer.booking
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.location.Geocoder
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -23,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fcitu.smartfix.ui.designSystem.components.bottomSheet.BottomSheet
 import com.fcitu.smartfix.ui.designSystem.components.button.PrimaryButton
@@ -40,9 +38,6 @@ import com.fcitu.smartfix.ui.screen.customer.booking.components.OrderDetailsBott
 import com.fcitu.smartfix.ui.screen.customer.booking.components.ProblemDescriptionSection
 import com.fcitu.smartfix.ui.screen.customer.booking.components.ProblemHeaderSection
 import com.fcitu.smartfix.ui.screen.customer.booking.components.ProblemPhotoPickerSection
-import com.fcitu.smartfix.ui.screen.customer.booking.BookingUiEffect
-import com.fcitu.smartfix.ui.screen.customer.booking.BookingUiState
-import com.fcitu.smartfix.ui.screen.customer.booking.BookingViewModel
 import com.fcitu.smartfix.ui.utils.EffectHandler
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -51,12 +46,13 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.flow.SharedFlow
 import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
+import androidx.compose.ui.tooling.preview.Preview
+import android.net.Uri
 
 @Composable
 fun BookingScreen(
     serviceId: String,
     onNavigateBack: () -> Unit,
-    onNavigateToMap: () -> Unit,
     onProblemSubmitted: () -> Unit,
     viewModel: BookingViewModel = koinViewModel<BookingViewModel>(),
     selectedLocation: String? = null,
@@ -78,7 +74,6 @@ fun BookingScreen(
 
     EffectsHandler(
         effects = effects,
-        onNavigateToMap = onNavigateToMap,
         onProblemSubmitted = onProblemSubmitted,
         viewModel = viewModel
     )
@@ -120,7 +115,7 @@ private fun BookingScreenContent(
                             isLoading = uiState.isLoading,
                             onFindAvailableTechnicianClicked = interactionListener::onFindAvailableTechnicianClicked
                         )
-                    }
+                    }, skipPartiallyExpanded = true
                 )
             }
         }
@@ -157,7 +152,7 @@ private fun BookingScreenContent(
             LocationSelectionSection(
                 location = uiState.location,
                 onLocationChanged = { interactionListener.onLocationSelected(it) },
-                onMapPlaceholderClicked = interactionListener::onMapPlaceholderClicked
+                onMapPlaceholderClicked = interactionListener::onGetCurrentLocationClick
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -179,7 +174,7 @@ private fun BookingScreenContent(
             Spacer(modifier = Modifier.height(24.dp))
 
             PrimaryButton(
-                text = "Find Service",
+                text = "Confirm",
                 onClick = interactionListener::onFindServiceClicked,
                 isEnabled = uiState.isFindServiceButtonEnabled,
                 containerColor = Color(0xFFFF5500),
@@ -195,7 +190,6 @@ private fun BookingScreenContent(
 @Composable
 private fun EffectsHandler(
     effects: SharedFlow<BookingUiEffect>,
-    onNavigateToMap: () -> Unit,
     onProblemSubmitted: () -> Unit,
     viewModel: BookingViewModel
 ) {
@@ -231,22 +225,7 @@ private fun EffectsHandler(
 
     EffectHandler(effects = effects) { effect ->
         when (effect) {
-            BookingUiEffect.NavigateToMap -> {
-                onNavigateToMap()
-                val gmmIntentUri = "geo:0,0?q=my+location".toUri()
-                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri).apply {
-                    setPackage("com.google.android.apps.maps")
-                }
-                try {
-                    context.startActivity(mapIntent)
-                } catch (_: Exception) {
-                    val webIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        "https://www.google.com/maps/search/?api=1&query=my+location".toUri()
-                    )
-                    context.startActivity(webIntent)
-                }
-
+            BookingUiEffect.RequestLocation -> {
                 locationPermissionLauncher.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -277,6 +256,35 @@ private fun EffectsHandler(
             BookingUiEffect.ProblemSubmittedSuccessfully -> onProblemSubmitted()
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun BookingScreenContentPreview() {
+    BookingScreenContent(
+        uiState = BookingUiState(
+            shortTitle = "Fix my sink",
+            detailedDescription = "It is leaking since yesterday.",
+            location = "Cairo, Egypt"
+        ),
+        interactionListener = object : BookingInteractionListener {
+            override fun onShortTitleChanged(title: String) {}
+            override fun onDetailedDescriptionChanged(description: String) {}
+            override fun onProblemPhotoAdded(uris: List<Uri>) {}
+            override fun onProblemPhotoRemoved(uri: Uri) {}
+            override fun onAddPhotoClicked() {}
+            override fun onLocationClicked() {}
+            override fun onFloorChanged(floor: String) {}
+            override fun onApartmentNoChanged(apartmentNo: String) {}
+            override fun onAdditionalNotesChanged(notes: String) {}
+            override fun onFindServiceClicked() {}
+            override fun onGetCurrentLocationClick() {}
+            override fun onBottomSheetDismissed() {}
+            override fun onFindAvailableTechnicianClicked() {}
+            override fun onLocationSelected(location: String, latitude: Double?, longitude: Double?) {}
+        },
+        onNavigateBack = {}
+    )
 }
 
 @SuppressLint("MissingPermission")

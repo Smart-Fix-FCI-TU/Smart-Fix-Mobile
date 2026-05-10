@@ -13,7 +13,7 @@ interface BookingInteractionListener {
     fun onApartmentNoChanged(apartmentNo: String)
     fun onAdditionalNotesChanged(notes: String)
     fun onFindServiceClicked()
-    fun onMapPlaceholderClicked()
+    fun onGetCurrentLocationClick()
     fun onBottomSheetDismissed()
     fun onFindAvailableTechnicianClicked()
     fun onLocationSelected(location: String, latitude: Double? = null, longitude: Double? = null)

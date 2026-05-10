@@ -66,7 +66,7 @@ class BookingViewModel(
     }
 
     override fun onLocationClicked() {
-        emitEffect(BookingUiEffect.NavigateToMap)
+        emitEffect(BookingUiEffect.RequestLocation)
     }
 
     override fun onFloorChanged(floor: String) {
@@ -95,8 +95,8 @@ class BookingViewModel(
         }
     }
 
-    override fun onMapPlaceholderClicked() {
-        emitEffect(BookingUiEffect.NavigateToMap)
+    override fun onGetCurrentLocationClick() {
+        emitEffect(BookingUiEffect.RequestLocation)
     }
 
     override fun onBottomSheetDismissed() {
