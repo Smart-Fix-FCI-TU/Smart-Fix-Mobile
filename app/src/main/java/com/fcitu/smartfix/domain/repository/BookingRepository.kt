@@ -1,15 +1,12 @@
 package com.fcitu.smartfix.domain.repository
 
-import com.fcitu.smartfix.domain.entity.ServiceRequest
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+import com.fcitu.smartfix.domain.entity.Order
 
-@OptIn(ExperimentalUuidApi::class)
 interface BookingRepository {
-    suspend fun createServiceRequest(request: ServiceRequest): ServiceRequest
+    suspend fun createServiceRequest(request: Order.OrderDetails): Unit
 
     suspend fun sendBookingRequest(
-        orderId: Uuid,
-        technicianId: Uuid
+        orderId: String,
+        technicianId: String
     )
 }
