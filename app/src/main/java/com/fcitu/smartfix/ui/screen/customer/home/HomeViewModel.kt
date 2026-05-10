@@ -19,7 +19,16 @@ class HomeViewModel(
 
 
     init {
-        //----List of All Services------------------
+
+        observeNetwork()
+        loadServicesList()
+        loadCustomerInfo()
+        loadActiveOrders()
+        loadPendingOrder()
+    }
+
+    //Loading Services List
+    private fun loadServicesList() {
         updateState {
             it.copy(
                 servicesList = listOf(
@@ -57,11 +66,6 @@ class HomeViewModel(
                     )
             )
         }
-        //------------------------------------
-        observeNetwork()
-        loadCustomerInfo()
-        loadActiveOrders()
-        loadPendingOrder()
     }
 
     //Loading User Information
@@ -75,18 +79,17 @@ class HomeViewModel(
     }
 
     private fun onGetUserInfoStart() {
-        updateState { it.copy(isLoadingCustomerInfo = true) }
+        updateState { it.copy(userState = UserProfileState.Loading) }
     }
 
     private fun onGetUserInfoSuccess(user: User) {
-        updateState { it.copy(isLoadingCustomerInfo = false, user = user) }
+        updateState { it.copy(userState = UserProfileState.Success(user)) }
     }
 
     private fun onGetUserInfoError(throwable: Throwable) {
         updateState {
             it.copy(
-                isLoadingCustomerInfo = false,
-                error = throwable.message ?: "Failed to Load User Information"
+                userState = UserProfileState.Error(throwable.message ?: "Failed")
             )
         }
         emitEffect(HomeUiEffect.ShowError(throwable.message ?: "Failed to Load User Info"))
@@ -206,8 +209,8 @@ class HomeViewModel(
         emitEffect(HomeUiEffect.NavigateToAllActiveOrders(orders))
     }
 
-    override fun onResumePendingOrderClicked(orderId: String) {
-        emitEffect(HomeUiEffect.NavigateToResumePendingOrder(orderId))
+    override fun onNavigateToAvailableTechnicianList(orderId: String) {
+        emitEffect(HomeUiEffect.NavigateToAvailableTechnicianList(orderId))
     }
     //---------------------------------------------------------------
 }

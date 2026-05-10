@@ -22,7 +22,7 @@ class CustomerRepositoryImpl: CustomerRepository {
             nationalId = "25362627246",
             email = "fouad@gmail.com",
             role = UserRole.CUSTOMER,
-            profilePhotoUrl = null,
+            profilePhotoUrl = "",
             address = Address(
                 id = "523455",
                 fullAddress = "Tanta",

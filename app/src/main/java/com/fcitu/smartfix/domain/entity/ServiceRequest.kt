@@ -35,10 +35,10 @@ data class Order(
     )
 
     data class OrderTimeline(
-        val createdAt: LocalDateTime?,
-        val acceptedAt: LocalDateTime?,
-        val arrivedAt: LocalDateTime?,
-        val startedAt: LocalDateTime?,
-        val completedAt: LocalDateTime?,
+        val createdAt: LocalDateTime,
+        val acceptedAt: LocalDateTime,
+        val arrivedAt: LocalDateTime,
+        val startedAt: LocalDateTime,
+        val completedAt: LocalDateTime,
     )
 }

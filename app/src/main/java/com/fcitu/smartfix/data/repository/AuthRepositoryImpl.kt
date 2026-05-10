@@ -3,16 +3,20 @@ package com.fcitu.smartfix.data.repository
 import com.fcitu.smartfix.data.remote.dto.auth.LoginRequest
 import com.fcitu.smartfix.data.remote.service.AuthService
 import com.fcitu.smartfix.data.remote.util.safeApiCall
+import com.fcitu.smartfix.domain.entity.Address
 import com.fcitu.smartfix.domain.entity.User
 import com.fcitu.smartfix.domain.exception.UnauthorizedException
 import com.fcitu.smartfix.domain.model.UserRole
 import com.fcitu.smartfix.domain.repository.AuthRepository
 import com.fcitu.smartfix.domain.repository.IdentityRepository
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class AuthRepositoryImpl(
     private val authService: AuthService,
     private val identityRepository: IdentityRepository
 ) : AuthRepository {
+    @OptIn(ExperimentalUuidApi::class)
     override suspend fun login(
         email: String,
         password: String
@@ -52,7 +56,15 @@ class AuthRepositoryImpl(
             email = userDto.email,
             role = role,
             profilePhotoUrl = userDto.avatarUrl ?: "",
-            location = null
+            birthOfDate = "2/3/2002",
+            nationalId = "5252352552355",
+            address = Address(
+                id = Uuid.random().toString(),
+                fullAddress = "Tanta",
+                Address.Location(30.0, 31.0)
+                , floor = "1",
+                apartmentNo = "2"
+            )
         )
     }
 }

@@ -40,7 +40,7 @@ class OrderRepositoryImpl : OrderRepository {
                         acceptedAt  = LocalDateTime(2024, 1, 15, 11, 0),
                         arrivedAt   = LocalDateTime(2024, 1, 15, 12, 0),
                         startedAt   = LocalDateTime(2024, 1, 15, 12, 30),
-                        completedAt = null
+                        completedAt = LocalDateTime(2024, 1, 15, 12, 30),
                     )
                 )
         }
