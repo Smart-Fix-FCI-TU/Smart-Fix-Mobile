@@ -182,22 +182,10 @@ fun OrderDetailsBottomSheetContent(
         PrimaryButton(
             text = "Find Available Technician",
             onClick = onFindAvailableTechnicianClicked,
-            isEnabled = !isLoading,
+            isLoading = isLoading,
             containerColor = Color(0xFFFF5500),
             modifier = Modifier.fillMaxWidth()
         )
-
-        if (isLoading) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Submitting...",
-                style = TextStyle(
-                    fontFamily = Cairo,
-                    fontSize = 12.sp
-                ),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-        }
     }
 }
 
