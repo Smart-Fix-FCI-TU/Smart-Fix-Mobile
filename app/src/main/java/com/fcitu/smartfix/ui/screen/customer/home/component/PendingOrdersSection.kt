@@ -81,7 +81,7 @@ fun PendingOrderCard(modifier: Modifier = Modifier, orderId: String, onClick: (S
                     text = "You have a pending request",
                     style = TextStyle(
                         color = Color.White,
-                        fontSize = 20.sp,
+                        fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
                         lineHeight = 37.5.sp,
 
@@ -92,7 +92,7 @@ fun PendingOrderCard(modifier: Modifier = Modifier, orderId: String, onClick: (S
                     text = "Tap to choose a technician ",
                     style = TextStyle(
                         color = Color.White.copy(alpha = 0.8f),
-                        fontSize = 14.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         lineHeight = 20.sp
                     )

@@ -19,14 +19,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.fcitu.smartfix.R
-import com.fcitu.smartfix.domain.entity.Address
-import com.fcitu.smartfix.domain.entity.User
-import com.fcitu.smartfix.domain.model.UserRole
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.screen.customer.home.UserProfileState
 
@@ -122,8 +118,8 @@ private fun ProfilePhoto(imageUrl: String?, modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(R.drawable.icon_profile),
             contentDescription = "Profile Icon",
+            contentScale = ContentScale.Fit,
             modifier = imageModifier,
-            contentScale = ContentScale.Fit
         )
     } else {
         AsyncImage(
@@ -134,28 +130,3 @@ private fun ProfilePhoto(imageUrl: String?, modifier: Modifier = Modifier) {
         )
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-private fun Test() {
-   UserProfileHeader(userState = UserProfileState.Success(user = User(
-       id = "5425425",
-       phoneNumber = "563767567262",
-       firstName = "Fouad",
-       lastName = "Elmeligy",
-       username = "Fouad Elmeligy",
-       birthOfDate = "2/2/2002",
-       nationalId = "25362627246",
-       email = "fouad@gmail.com",
-       role = UserRole.CUSTOMER,
-       profilePhotoUrl = "",
-       address = Address(
-           id = "523455",
-           fullAddress = "Tanta",
-           location = Address.Location(30.0, 31.0),
-           floor = "1",
-           apartmentNo = "2"
-       )
-   )))
-}
-
