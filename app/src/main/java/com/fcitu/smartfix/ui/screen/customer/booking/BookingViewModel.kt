@@ -1,13 +1,11 @@
 package com.fcitu.smartfix.ui.screen.customer.booking
 
 import android.net.Uri
-import androidx.lifecycle.viewModelScope
 import com.fcitu.smartfix.domain.useCase.BookingUseCase
 import com.fcitu.smartfix.ui.shared.BaseViewModel
-import kotlinx.coroutines.launch
 
 class BookingViewModel(
-    private val bookingUseCase: BookingUseCase
+    private val bookingUseCase: BookingUseCase,
 ) : BaseViewModel<BookingUiState, BookingUiEffect>(BookingUiState()), BookingInteractionListener {
 
     private var serviceId: String = ""
@@ -104,28 +102,41 @@ class BookingViewModel(
     }
 
     override fun onFindAvailableTechnicianClicked() {
-        viewModelScope.launch {
-            updateState { it.copy(isLoading = true) }
-            val currentState = state.value
-            val result = bookingUseCase(
-                serviceId = serviceId,
-                shortTitle = currentState.shortTitle,
-                detailedDescription = currentState.detailedDescription,
-                problemPhotos = currentState.problemPhotos,
-                location = currentState.location,
-                floor = currentState.floor.ifBlank { null },
-                apartmentNo = currentState.apartmentNo.ifBlank { null },
-                additionalNotes = currentState.additionalNotes.ifBlank { null }
-            )
-            result.onSuccess {
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        showOrderDetailsBottomSheet = false
+        tryToExecute(
+            onStart = { updateState { it.copy(isLoading = true) } },
+            execute = {
+                val currentState = state.value
+                bookingUseCase(
+                    serviceId = serviceId,
+                    shortTitle = currentState.shortTitle,
+                    detailedDescription = currentState.detailedDescription,
+                    problemPhotos = currentState.problemPhotos,
+                    location = currentState.location,
+                    floor = currentState.floor.ifBlank { null },
+                    apartmentNo = currentState.apartmentNo.ifBlank { null },
+                    additionalNotes = currentState.additionalNotes.ifBlank { null }
+                )
+            },
+            onSuccess = { result ->
+                result.onSuccess {
+                    updateState {
+                        it.copy(
+                            isLoading = false,
+                            showOrderDetailsBottomSheet = false
+                        )
+                    }
+                    emitEffect(BookingUiEffect.ProblemSubmittedSuccessfully)
+                }.onFailure { error ->
+                    updateState { it.copy(isLoading = false, errorMessage = error.message) }
+                    emitEffect(
+                        BookingUiEffect.ShowSnackBar(
+                            error.message ?: "Unknown error occurred",
+                            isError = true
+                        )
                     )
                 }
-                emitEffect(BookingUiEffect.ProblemSubmittedSuccessfully)
-            }.onFailure { error ->
+            },
+            onError = { error ->
                 updateState { it.copy(isLoading = false, errorMessage = error.message) }
                 emitEffect(
                     BookingUiEffect.ShowSnackBar(
@@ -134,7 +145,7 @@ class BookingViewModel(
                     )
                 )
             }
-        }
+        )
     }
 
     override fun onLocationSelected(location: String, latitude: Double?, longitude: Double?) {
