@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,14 +31,20 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.R
+import com.fcitu.smartfix.domain.entity.Address
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.model.OrderStatus
+import com.fcitu.smartfix.domain.model.ServiceCategory
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.screen.customer.home.HomeInteractionListener
 import com.fcitu.smartfix.ui.screen.customer.home.HomeUiState
+import kotlinx.datetime.LocalDateTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @Composable
 fun OrderSection(
@@ -157,8 +164,10 @@ fun EmptyOrderCard() {
 @Composable
 fun ActiveOrderCard(order: Order, onClick: () -> Unit) {
     Box(
-        modifier = Modifier.padding(horizontal = 5.dp)
-            .fillMaxWidth()
+        modifier = Modifier
+            .padding(5.dp)
+            .width(350.dp)
+            .height(150.dp)
             .background(color = Color(0xFFFF4501), shape = RoundedCornerShape(16.dp))
             .clickable(
                 enabled = true,
@@ -224,9 +233,8 @@ fun ActiveOrderCard(order: Order, onClick: () -> Unit) {
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         lineHeight = 37.5.sp,
-
-
-                        )
+                    ),
+                    maxLines = 1
                 )
                 Text(
                     text = "Technician: ${order.technician.name}",
@@ -271,4 +279,40 @@ private fun StatusChip(status: OrderStatus) {
             )
         )
     }
+}
+
+@OptIn(ExperimentalUuidApi::class)
+@Preview(showBackground = true)
+@Composable
+private fun Test() {
+    ActiveOrderCard(
+        order = Order(
+            id = Uuid.random().toString(),
+            customer = Order.UserInfo(id = Uuid.random().toString(), name = "Fouad"),
+            technician = Order.UserInfo(id = Uuid.random().toString(), name = "Ahmed Mohamed"),
+            details = Order.OrderDetails(
+                serviceCategory = ServiceCategory.ELECTRICITY,
+                title = "change lamb",
+                "the lamb is broken", problemPhotoUrls = emptyList(),
+                address = Address(
+                    id = Uuid.random().toString(),
+                    fullAddress = "Tanta",
+                    location = Address.Location(40.0, 41.0),
+                    floor = "2",
+                    apartmentNo = "3"
+                ), additionalNotes = ""
+            ),
+            repairPhotos = Order.RepairPhotos(
+                beforeRepairUrls = emptyList(),
+                afterRepairUrls = emptyList()
+            ),
+            status = OrderStatus.ON_WAY, timeline = Order.OrderTimeline(
+                createdAt = LocalDateTime(2024, 1, 15, 10, 30),
+                acceptedAt = LocalDateTime(2024, 1, 15, 11, 0),
+                arrivedAt = LocalDateTime(2024, 1, 15, 12, 0),
+                startedAt = LocalDateTime(2024, 1, 15, 12, 30),
+                completedAt = LocalDateTime(2024, 1, 15, 12, 30),
+            )
+        )
+    ) { }
 }

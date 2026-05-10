@@ -8,5 +8,5 @@ interface HomeInteractionListener {
     fun onOrderClicked(orderId: String)
     fun onNotificationClicked()
     fun onViewAllOrdersClicked(orders: List<Order>)
-    fun onResumePendingOrderClicked(orderId: String)
+    fun onNavigateToAvailableTechnicianList(orderId: String)
 }

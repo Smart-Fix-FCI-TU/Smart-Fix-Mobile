@@ -59,13 +59,13 @@ data class OrderDto(
         @SerialName("createdAt")
         val createdAt: String,
         @SerialName("acceptedAt")
-        val acceptedAt: String?,
+        val acceptedAt: String,
         @SerialName("arrivedAt")
-        val arrivedAt: String?,
+        val arrivedAt: String,
         @SerialName("startedAt")
-        val startedAt: String?,
+        val startedAt: String,
         @SerialName("completedAt")
-        val completedAt: String?,
+        val completedAt: String,
     )
     @Serializable
     data class AddressDto(

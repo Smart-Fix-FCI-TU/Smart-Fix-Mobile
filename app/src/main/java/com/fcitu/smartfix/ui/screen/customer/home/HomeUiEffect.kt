@@ -15,7 +15,7 @@ sealed interface HomeUiEffect {
 
     data object NavigateToNotifications : HomeUiEffect
 
-    data class NavigateToResumePendingOrder(val orderId: String) : HomeUiEffect
+    data class NavigateToAvailableTechnicianList(val orderId: String) : HomeUiEffect
 
     data class ShowError(
         val message: String,

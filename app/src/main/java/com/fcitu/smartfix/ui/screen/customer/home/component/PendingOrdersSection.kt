@@ -75,7 +75,7 @@ fun PendingOrderCard(modifier: Modifier = Modifier, orderId: String, onClick: (S
             Column(
                 modifier = Modifier.padding(horizontal = 8.dp),
                 verticalArrangement = Arrangement.SpaceBetween,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = "You have a pending request",

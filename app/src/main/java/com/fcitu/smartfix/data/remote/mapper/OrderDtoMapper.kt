@@ -44,8 +44,8 @@ fun OrderDto.AddressDto.LocationDto.toEntity(): Address.Location =
 
 fun OrderDto.OrderTimelineDto.toDomain(): Order.OrderTimeline = Order.OrderTimeline(
     createdAt = LocalDateTime.parse(createdAt),
-    acceptedAt = acceptedAt?.let { LocalDateTime.parse(it) },
-    arrivedAt = arrivedAt?.let { LocalDateTime.parse(it) },
-    startedAt = startedAt?.let { LocalDateTime.parse(it) },
-    completedAt = completedAt?.let { LocalDateTime.parse(it) },
+    acceptedAt = LocalDateTime.parse(acceptedAt),
+    arrivedAt = LocalDateTime.parse(arrivedAt),
+    startedAt = LocalDateTime.parse(startedAt),
+    completedAt = LocalDateTime.parse(completedAt),
 )
