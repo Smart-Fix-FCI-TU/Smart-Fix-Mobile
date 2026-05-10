@@ -148,15 +148,6 @@ fun OrderDetailsBottomSheetContent(
                     tint = Color(0xFFFFA500),
                     modifier = Modifier.size(16.dp)
                 )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "3.2 km away",
-                    style = TextStyle(
-                        fontFamily = Cairo,
-                        fontSize = 12.sp,
-                        color = Color(0xFFFFA500)
-                    )
-                )
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
