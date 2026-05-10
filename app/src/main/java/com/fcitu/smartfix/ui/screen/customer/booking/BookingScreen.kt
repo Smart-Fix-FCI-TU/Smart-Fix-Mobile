@@ -39,10 +39,7 @@ import com.fcitu.smartfix.ui.screen.customer.booking.components.ProblemDescripti
 import com.fcitu.smartfix.ui.screen.customer.booking.components.ProblemHeaderSection
 import com.fcitu.smartfix.ui.screen.customer.booking.components.ProblemPhotoPickerSection
 import com.fcitu.smartfix.ui.utils.EffectHandler
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
-import com.google.android.gms.tasks.CancellationTokenSource
+import com.fcitu.smartfix.ui.utils.LocationUtils
 import kotlinx.coroutines.flow.SharedFlow
 import org.koin.compose.viewmodel.koinViewModel
 import java.util.Locale
@@ -195,8 +192,6 @@ private fun EffectsHandler(
 ) {
     val context = LocalContext.current
     val snackBarHostController = LocalSnackBarHostController.current
-    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
-    val geocoder = remember { Geocoder(context, Locale.getDefault()) }
 
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -205,9 +200,9 @@ private fun EffectsHandler(
             permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
         ) {
             // Permission granted, trigger location fetch
-            getCurrentLocation(fusedLocationClient, geocoder) { address, lat, lng ->
+            LocationUtils.getCurrentLocation(context, onResult = { address, lat, lng ->
                 viewModel.onLocationSelected(address, lat, lng)
-            }
+            })
         }
     }
 
@@ -258,59 +253,3 @@ private fun EffectsHandler(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun BookingScreenContentPreview() {
-    BookingScreenContent(
-        uiState = BookingUiState(
-            shortTitle = "Fix my sink",
-            detailedDescription = "It is leaking since yesterday.",
-            location = "Cairo, Egypt"
-        ),
-        interactionListener = object : BookingInteractionListener {
-            override fun onShortTitleChanged(title: String) {}
-            override fun onDetailedDescriptionChanged(description: String) {}
-            override fun onProblemPhotoAdded(uris: List<Uri>) {}
-            override fun onProblemPhotoRemoved(uri: Uri) {}
-            override fun onAddPhotoClicked() {}
-            override fun onLocationClicked() {}
-            override fun onFloorChanged(floor: String) {}
-            override fun onApartmentNoChanged(apartmentNo: String) {}
-            override fun onAdditionalNotesChanged(notes: String) {}
-            override fun onFindServiceClicked() {}
-            override fun onGetCurrentLocationClick() {}
-            override fun onBottomSheetDismissed() {}
-            override fun onFindAvailableTechnicianClicked() {}
-            override fun onLocationSelected(location: String, latitude: Double?, longitude: Double?) {}
-        },
-        onNavigateBack = {}
-    )
-}
-
-@SuppressLint("MissingPermission")
-private fun getCurrentLocation(
-    fusedLocationClient: FusedLocationProviderClient,
-    geocoder: Geocoder,
-    onResult: (String, Double, Double) -> Unit
-) {
-    val cancellationTokenSource = CancellationTokenSource()
-    fusedLocationClient.getCurrentLocation(
-        Priority.PRIORITY_HIGH_ACCURACY,
-        cancellationTokenSource.token
-    ).addOnSuccessListener { location ->
-        location?.let {
-            try {
-                @Suppress("DEPRECATION")
-                val addresses = geocoder.getFromLocation(it.latitude, it.longitude, 1)
-                val addressLine = addresses?.firstOrNull()?.getAddressLine(0) ?: "Location Found"
-                onResult(addressLine, it.latitude, it.longitude)
-            } catch (_: Exception) {
-                onResult(
-                    "Location Found (${it.latitude}, ${it.longitude})",
-                    it.latitude,
-                    it.longitude
-                )
-            }
-        }
-    }
-}
