@@ -156,9 +156,6 @@ fun SmartFixNavGraph() {
                             latitude = lat,
                             longitude = lng,
                             onNavigateBack = { navController.popBackStack() },
-                            onNavigateToMap = {
-                                navController.navigate(Route.Map)
-                            },
                             onProblemSubmitted = {
                                 navController.navigate(Route.TechnicianList)
                             }

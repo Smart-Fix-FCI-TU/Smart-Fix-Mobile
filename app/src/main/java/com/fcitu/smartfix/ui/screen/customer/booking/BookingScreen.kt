@@ -2,7 +2,6 @@ package com.fcitu.smartfix.ui.screen.customer.booking
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.location.Geocoder
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -42,9 +41,7 @@ import com.fcitu.smartfix.ui.utils.EffectHandler
 import com.fcitu.smartfix.ui.utils.LocationUtils
 import kotlinx.coroutines.flow.SharedFlow
 import org.koin.compose.viewmodel.koinViewModel
-import java.util.Locale
-import androidx.compose.ui.tooling.preview.Preview
-import android.net.Uri
+
 
 @Composable
 fun BookingScreen(
