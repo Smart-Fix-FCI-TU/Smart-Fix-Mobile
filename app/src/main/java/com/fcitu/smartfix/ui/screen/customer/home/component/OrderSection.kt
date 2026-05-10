@@ -53,7 +53,7 @@ fun OrderSection(
             actionName = if (state.hasActiveOrders && state.activeOrders.size > 1) "View All" else null,
             onActionNameClick = { listener.onViewAllOrdersClicked(state.activeOrders) })
         when {
-            state.isLoadingOrders -> {
+            state.isLoadingActiveOrders -> {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.Center,

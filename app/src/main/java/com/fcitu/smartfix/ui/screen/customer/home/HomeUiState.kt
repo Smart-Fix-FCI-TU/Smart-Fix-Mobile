@@ -12,7 +12,7 @@ data class HomeUiState(
     val pendingOrderId: String? = null,
 
     // Loading States--------------------
-    val isLoadingOrders: Boolean = false,
+    val isLoadingActiveOrders: Boolean = false,
     val isLoadingPendingOrder: Boolean = false,
 //Error
     val error: String? = null,

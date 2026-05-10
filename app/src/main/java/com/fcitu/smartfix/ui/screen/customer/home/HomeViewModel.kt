@@ -113,7 +113,7 @@ class HomeViewModel(
     }
 
     private fun onGetOrdersStart() {
-        updateState { it.copy(isLoadingOrders = true) }
+        updateState { it.copy(isLoadingActiveOrders = true) }
     }
 
     private suspend fun getActiveOrders(): List<Order> {
@@ -121,18 +121,18 @@ class HomeViewModel(
     }
 
     private fun onGetActiveOrderSuccess(orders: List<Order>) {
-        updateState { it.copy(activeOrders = orders, isLoadingOrders = false) }
+        updateState { it.copy(activeOrders = orders, isLoadingActiveOrders = false) }
     }
 
     private fun onGetActiveOrdersError(throwable: Throwable) {
-        updateState { it.copy(error = throwable.message, isLoadingOrders = false) }
+        updateState { it.copy(error = throwable.message, isLoadingActiveOrders = false) }
         emitEffect(HomeUiEffect.ShowError(throwable.message ?: "Failed to Load Active Orders"))
     }
 //-------------------------------------------------------------------------------------------------------
 
     // Loading Pending Order----------------------------------------------------------------------------
     private fun onStartLoadingPendingOrder() {
-        updateState { it.copy(isLoadingOrders = true) }
+        updateState { it.copy(isLoadingPendingOrder = true) }
 
     }
 
