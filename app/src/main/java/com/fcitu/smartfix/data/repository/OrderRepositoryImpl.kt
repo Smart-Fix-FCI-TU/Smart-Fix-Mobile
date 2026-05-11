@@ -51,8 +51,56 @@ class OrderRepositoryImpl : OrderRepository {
         TODO("Not yet implemented")
     }
 
+    @OptIn(ExperimentalUuidApi::class)
     override suspend fun getOrderDetails(orderId: String): Order {
-        TODO("Not yet implemented")
+        return Order(
+            id = orderId,
+            customer = Order.UserInfo(
+                id = Uuid.random().toString(),
+                name = "Fouad"
+            ),
+            technician = Order.UserInfo(
+                id = Uuid.random().toString(),
+                name = "Ahmed Mohamed"
+            ),
+            details = Order.OrderDetails(
+                serviceCategory = ServiceCategory.ELECTRICITY,
+                title = "change lamb",
+                description = "the lamb is broken",
+                problemPhotoUrls = listOf(
+                    "https://cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
+                    "https:listOf//cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
+                    "https://cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
+                ),
+                address = Address(
+                    id = Uuid.random().toString(),
+                    fullAddress = "Tanta, Egypt",
+                    location = null,
+                    floor = "2",
+                    apartmentNo = "3"
+                ),
+                additionalNotes = "Please be careful when changing the lamb, it's a bit tricky to access it."
+            ),
+            repairPhotos = Order.RepairPhotos(
+                beforeRepairUrls = listOf(
+                    "https://cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
+                    "https://cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
+                ),
+                afterRepairUrls = listOf(
+                    "https://cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
+                    "https://cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
+                )
+            ),
+            status = OrderStatus.COMPLETED,
+            timeline = Order.OrderTimeline(
+                createdAt = LocalDateTime(2024, 1, 15, 10, 30),
+                acceptedAt = LocalDateTime(2024, 1, 15, 11, 0),
+                onWayAt = LocalDateTime(2024, 1, 15, 11, 30),
+                arrivedAt = LocalDateTime(2024, 1, 15, 12, 0),
+                startedAt = LocalDateTime(2024, 1, 15, 12, 30),
+                completedAt = LocalDateTime(2024, 1, 15, 12, 30),
+            )
+        )
     }
 
     override suspend fun acceptOrder(orderId: String) {
