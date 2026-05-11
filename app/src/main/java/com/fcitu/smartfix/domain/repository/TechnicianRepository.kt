@@ -10,7 +10,7 @@ interface TechnicianRepository {
         serviceCategory: ServiceCategory
     ): List<Technician>
 
-    suspend fun getTechnicianDetails(technicianId: String): Technician
+    suspend fun getTechnicianDetails(technicianId: String): Technician?
 
     suspend fun updateAvailabilityStatus(isAvailable: Boolean)
 }

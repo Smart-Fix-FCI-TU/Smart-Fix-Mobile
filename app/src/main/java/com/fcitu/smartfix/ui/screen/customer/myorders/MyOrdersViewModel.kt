@@ -1,13 +1,16 @@
 package com.fcitu.smartfix.ui.screen.customer.myorders
 
+import com.fcitu.smartfix.domain.entity.Technician
+import com.fcitu.smartfix.domain.repository.TechnicianRepository
 import com.fcitu.smartfix.domain.useCase.GetCustomerOrdersUseCase
 import com.fcitu.smartfix.ui.shared.BaseViewModel
 import com.fcitu.smartfix.ui.utils.InternetConnectionAvailability
 
 class MyOrdersViewModel(
     private val getCustomerOrdersUseCase: GetCustomerOrdersUseCase,
+    private val technicianRepository: TechnicianRepository,
     private val networkConnection: InternetConnectionAvailability,
-): BaseViewModel<MyOrdersUiState, MyOrdersUiEffect>(MyOrdersUiState()),
+) : BaseViewModel<MyOrdersUiState, MyOrdersUiEffect>(MyOrdersUiState()),
     MyOrdersInteractionListener {
 
 
@@ -16,8 +19,61 @@ class MyOrdersViewModel(
         loadOrders()
     }
 
+
+    //── Load Orders ───────────────────────────────────────────────────────────────
     private fun loadOrders() {
-        TODO("Not yet implemented")
+        loadActiveOrders()
+        loadHistoryOrders()
+    }
+
+    private fun loadHistoryOrders() {
+        tryToExecute(
+            onStart = { updateState { it.copy(isLoadingHistory = true) } },
+            execute = {
+                getCustomerOrdersUseCase.getCustomerCompletedOrders()
+            },
+            onSuccess = { completedOrders ->
+                updateState {
+                    it.copy(
+                        isLoadingHistory = false,
+                        historyOrders = completedOrders,
+                        error = null
+                    )
+                }
+            },
+            onError = { error ->
+                updateState {
+                    it.copy(
+                        error = error.message ?: "Failed to Loading History Orders"
+                    )
+                }
+                emitEffect(
+                    MyOrdersUiEffect.ShowError(
+                        error.message ?: "Failed to Loading History Orders"
+                    )
+                )
+            }
+        )
+
+    }
+
+    private fun loadActiveOrders() {
+        tryToExecute(
+            onStart = { updateState { it.copy(isLoadingActive = true) } },
+            execute = { getCustomerOrdersUseCase.getCustomerActiveOrders() },
+            onSuccess = { orders ->
+                updateState {
+                    it.copy(
+                        activeOrders = orders,
+                        isLoadingActive = false,
+                        error = null,
+                    )
+                }
+            },
+            onError = { error ->
+                updateState { it.copy(isLoadingActive = false, error = error.message) }
+                emitEffect(MyOrdersUiEffect.ShowError(error.message ?: "Failed to load orders"))
+            })
     }
 
 
@@ -34,24 +90,35 @@ class MyOrdersViewModel(
             },
         )
     }
+
     //Load
     override fun onTabSelected(tab: OrdersTab) {
-        TODO("Not yet implemented")
+        updateState { it.copy(selectedTab = tab) }
     }
 
     override fun onCompletedOrderClicked(orderId: String) {
-        TODO("Not yet implemented")
+        emitEffect(MyOrdersUiEffect.NavigateToCompletedOrderDetails(orderId))
     }
 
     override fun onActiveOrderClicked(orderId: String) {
-        TODO("Not yet implemented")
+        emitEffect(MyOrdersUiEffect.NavigateToTrackingActiveOrder(orderId))
     }
 
     override fun onNotificationClicked() {
-        TODO("Not yet implemented")
+        emitEffect(MyOrdersUiEffect.NavigateToNotifications)
     }
 
     override fun onBackClicked() {
-        TODO("Not yet implemented")
+        emitEffect(MyOrdersUiEffect.NavigateBack)
     }
+
+    override fun onGetTechnicianInfo(technicianId: String): Technician? {
+        var technician: Technician? = null
+       tryToExecute(
+            execute = { technicianRepository.getTechnicianDetails(technicianId = technicianId) },
+           onSuccess = { technician = it}
+        )
+        return technician
+    }
+
 }
