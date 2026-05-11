@@ -124,7 +124,11 @@ fun SmartFixNavGraph() {
                 ) {
                     //TODO: Once all the screens that the Home Screen navigates to are built, the code for navigating to these screens will be written.
                     composable<Route.CustomerHome> {
-                        HomeScreen()
+                        HomeScreen(
+                            onNavigateToOrderDetails = {
+                                navController.navigate(Route.OrderDetail(orderId = "sample_order_id"))
+                            }
+                        )
                     }
 
                     composable<Route.Booking> {
@@ -190,7 +194,7 @@ fun SmartFixNavGraph() {
                         )
                     }
 
-                    composable<Route.TechnicianOrderDetail> {
+                    composable<Route.OrderDetail> {
                         OrderDetailsScreen(
                             userRole = UserRole.TECHNICIAN,
                             onBackClicked = { navController.popBackStack() }

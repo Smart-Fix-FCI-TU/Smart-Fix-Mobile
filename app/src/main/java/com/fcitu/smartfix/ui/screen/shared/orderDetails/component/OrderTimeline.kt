@@ -1,5 +1,6 @@
 package com.fcitu.smartfix.ui.screen.shared.orderDetails.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +35,7 @@ fun OrderTimeline(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
+            .background(Color.White)
             .padding(16.dp),
     ) {
         Text(

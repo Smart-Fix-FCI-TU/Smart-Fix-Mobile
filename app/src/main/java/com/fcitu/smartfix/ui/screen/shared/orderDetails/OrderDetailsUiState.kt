@@ -17,7 +17,7 @@ data class OrderDetailsUiState(
         apartmentNo = ""
     ),
     val problemPhotoUrls: List<String> = emptyList(),
-    val timeLine: Order.OrderTimeline = Order.OrderTimeline(
+    val timeline: Order.OrderTimeline = Order.OrderTimeline(
         createdAt = LocalDateTime.now(),
         acceptedAt = LocalDateTime.now(),
         onWayAt = LocalDateTime.now(),

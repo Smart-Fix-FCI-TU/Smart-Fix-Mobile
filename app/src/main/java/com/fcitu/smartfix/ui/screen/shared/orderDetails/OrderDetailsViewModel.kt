@@ -16,7 +16,6 @@ class OrderDetailsViewModel(
 
     init {
         val orderId = savedStateHandle.toRoute<Route.OrderDetail>().orderId
-        println("Order Id: $orderId")
         updateState { it.copy(orderId = orderId) }
         loadOrderDetails(orderId)
     }
