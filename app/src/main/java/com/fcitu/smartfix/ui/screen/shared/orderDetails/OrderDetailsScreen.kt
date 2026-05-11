@@ -83,7 +83,7 @@ private fun OrderDetailsContent(
                 orderId = uiState.orderId,
                 title = uiState.title,
                 description = uiState.description,
-                createdAt = uiState.timeLine.createdAt.format(),
+                createdAt = uiState.timeline.createdAt.format(),
                 address = uiState.address.fullAddress,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
@@ -92,7 +92,7 @@ private fun OrderDetailsContent(
                 photos = uiState.problemPhotoUrls
             )
             OrderTimeline(
-                timeline = uiState.timeLine,
+                timeline = uiState.timeline,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
             PhotosSection(
