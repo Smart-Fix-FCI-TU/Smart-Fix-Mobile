@@ -27,6 +27,7 @@ import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostC
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
 import com.fcitu.smartfix.ui.screen.customer.home.HomeScreen
 import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
+import com.fcitu.smartfix.ui.screen.shared.orderDetails.OrderDetailsScreen
 import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
 
 
@@ -149,11 +150,10 @@ fun SmartFixNavGraph() {
                         )
                     }
 
-                    composable<Route.OrderDetail> { backStackEntry ->
-                        val route = backStackEntry.toRoute<Route.OrderDetail>()
-                        CustomerOrderDetailScreen(
-                            orderId = route.orderId,
-                            onBack = { navController.popBackStack() }
+                    composable<Route.OrderDetail> {
+                        OrderDetailsScreen(
+                            userRole = UserRole.CUSTOMER,
+                            onBackClicked = { navController.popBackStack() }
                         )
                     }
 
@@ -190,11 +190,10 @@ fun SmartFixNavGraph() {
                         )
                     }
 
-                    composable<Route.TechnicianOrderDetail> { backStackEntry ->
-                        val route = backStackEntry.toRoute<Route.TechnicianOrderDetail>()
-                        TechnicianOrderDetailScreen(
-                            orderId = route.orderId,
-                            onBack = { navController.popBackStack() }
+                    composable<Route.TechnicianOrderDetail> {
+                        OrderDetailsScreen(
+                            userRole = UserRole.TECHNICIAN,
+                            onBackClicked = { navController.popBackStack() }
                         )
                     }
 
