@@ -38,6 +38,7 @@ class OrderRepositoryImpl : OrderRepository {
                     status = OrderStatus.ON_WAY, timeline = Order.OrderTimeline(
                         createdAt   = LocalDateTime(2024, 1, 15, 10, 30),
                         acceptedAt  = LocalDateTime(2024, 1, 15, 11, 0),
+                        onWayAt     = LocalDateTime(2024, 1, 15, 11, 30),
                         arrivedAt   = LocalDateTime(2024, 1, 15, 12, 0),
                         startedAt   = LocalDateTime(2024, 1, 15, 12, 30),
                         completedAt = LocalDateTime(2024, 1, 15, 12, 30),

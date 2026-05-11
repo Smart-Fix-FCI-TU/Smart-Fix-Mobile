@@ -60,6 +60,8 @@ data class OrderDto(
         val createdAt: String,
         @SerialName("acceptedAt")
         val acceptedAt: String,
+        @SerialName("onWayAt")
+        val onWayAt: String,
         @SerialName("arrivedAt")
         val arrivedAt: String,
         @SerialName("startedAt")
