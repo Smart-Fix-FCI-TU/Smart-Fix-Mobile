@@ -1,0 +1,43 @@
+package com.fcitu.smartfix.ui.screen.shared.orderDetails.component
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import com.fcitu.smartfix.domain.model.UserRole
+import com.fcitu.smartfix.ui.designSystem.components.button.PrimaryButton
+
+@Composable
+fun OrderDetailsFooter(
+    userRole: UserRole,
+    onClickRateTechnician: () -> Unit,
+    onClickGoHome: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        if (userRole == UserRole.CUSTOMER) {
+            PrimaryButton(
+                text = "Rate Technician",
+                onClick = onClickRateTechnician,
+                modifier = Modifier.fillMaxWidth(),
+                containerColor = Color(0xFFFF4400)
+            )
+        }
+
+        PrimaryButton(
+            text = "Go Home",
+            onClick = onClickGoHome,
+            modifier = Modifier.fillMaxWidth(),
+            containerColor = Color(0xFFFF4400)
+        )
+    }
+}
