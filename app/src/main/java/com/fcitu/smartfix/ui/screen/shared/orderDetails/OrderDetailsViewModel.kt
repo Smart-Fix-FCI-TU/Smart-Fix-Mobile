@@ -113,7 +113,7 @@ class OrderDetailsViewModel(
                 description = order.details.description,
                 address = order.details.address,
                 problemPhotoUrls = order.details.problemPhotoUrls,
-                timeLine = order.timeline,
+                timeline = order.timeline,
                 repairPhotos = order.repairPhotos,
             )
         }

@@ -1,5 +1,6 @@
 package com.fcitu.smartfix.ui.screen.shared.orderDetails.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,6 +23,7 @@ fun OrderDetailsFooter(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .background(Color.White)
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {

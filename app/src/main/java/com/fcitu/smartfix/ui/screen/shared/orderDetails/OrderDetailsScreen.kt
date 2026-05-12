@@ -103,8 +103,9 @@ private fun OrderDetailsContent(
                 orderId = uiState.orderId,
                 title = uiState.title,
                 description = uiState.description,
-                createdAt = uiState.timeLine.createdAt.format(),
+                createdAt = uiState.timeline.createdAt.format(),
                 address = uiState.address.fullAddress,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
             if (uiState.rating != 0) {
                 RatingInfo(
@@ -117,7 +118,10 @@ private fun OrderDetailsContent(
                 label = "Problem Photos",
                 photos = uiState.problemPhotoUrls
             )
-            OrderTimeline(timeline = uiState.timeLine)
+            OrderTimeline(
+                timeline = uiState.timeline,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+            )
             PhotosSection(
                 label = "Before Repair",
                 photos = uiState.repairPhotos.beforeRepairUrls
@@ -144,10 +148,7 @@ private fun EffectsHandler(
         key1 = navController.currentBackStackEntry
     ) { effect ->
         when (effect) {
-            is OrderDetailsEffect.NavigateBack -> {
-                onBackClicked()
-                navController.popBackStack()
-            }
+            is OrderDetailsEffect.NavigateBack -> { onBackClicked() }
 
             is OrderDetailsEffect.NavigateToHomeScreen -> {
                 if (userRole == UserRole.CUSTOMER) {

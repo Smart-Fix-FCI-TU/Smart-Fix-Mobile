@@ -69,7 +69,7 @@ class OrderRepositoryImpl : OrderRepository {
                 description = "the lamb is broken",
                 problemPhotoUrls = listOf(
                     "https://cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
-                    "https:listOf//cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
+                    "https://cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
                     "https://cdn.stocksnap.io/img-thumbs/960w/sand-dunes_Q8FBYHQ2ER.jpg",
                 ),
                 address = Address(
