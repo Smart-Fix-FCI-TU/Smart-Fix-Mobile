@@ -144,9 +144,6 @@ private fun RatingFormContent(
             hint = "Add optional comment",
             onValueChanged = { if (!isLoading) comment = it },
             enabled = !isLoading,
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
         )
         Spacer(modifier = Modifier.height(12.dp))
         PrimaryButton(
