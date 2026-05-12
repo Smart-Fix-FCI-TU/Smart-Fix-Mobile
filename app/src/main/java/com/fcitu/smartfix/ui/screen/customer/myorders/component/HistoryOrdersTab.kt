@@ -19,11 +19,12 @@ import com.fcitu.smartfix.ui.screen.customer.myorders.MyOrdersUiState
 fun HistoryOrdersTab(
     state: MyOrdersUiState,
     listener: MyOrdersInteractionListener,
+    modifier: Modifier
 ) {
     when {
-        state.isLoading -> {
+        state.isLoadingHistory -> {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -43,15 +44,15 @@ fun HistoryOrdersTab(
 
         state.hasHistoryOrders -> {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(items = state.historyOrders, key = { it.id }) {completedOrder ->
+                items(items = state.historyOrders, key = { it.id }) { completedOrder ->
                     CompletedOrderCard(
                         order = completedOrder,
                         technician = state.technicianMap[completedOrder.id],
-                        onCompletedOrderClicked = {},
+                        onCompletedOrderClicked = { listener.onCompletedOrderClicked(orderId = completedOrder.id) },
                     )
                 }
             }

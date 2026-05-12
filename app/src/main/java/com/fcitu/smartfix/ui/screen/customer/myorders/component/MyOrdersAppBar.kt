@@ -1,5 +1,6 @@
 package com.fcitu.smartfix.ui.screen.customer.myorders.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -34,7 +35,7 @@ fun MyOrdersAppBar(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxWidth().background(color = Color.White)
             .padding(contentPadding)
     ) {
         leadingContent?.let { content ->

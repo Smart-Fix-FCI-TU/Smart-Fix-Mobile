@@ -19,11 +19,12 @@ import com.fcitu.smartfix.ui.screen.customer.myorders.MyOrdersUiState
 fun ActiveOrdersTab(
     state: MyOrdersUiState,
     listener: MyOrdersInteractionListener,
+    modifier: Modifier
 ) {
     when {
-        state.isLoading -> {
+        state.isLoadingActive -> {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -44,7 +45,7 @@ fun ActiveOrdersTab(
 
         state.hasActiveOrders -> {
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
@@ -54,7 +55,7 @@ fun ActiveOrdersTab(
                         technician = state.technicianMap[activeOrder.id],
                         onActiveOrderClicked = { listener.onActiveOrderClicked(orderId = activeOrder.id) },
                         onChatClicked = { orderId, technicianId ->
-                            listener.onChatClicked(orderId =orderId, technicianId = technicianId)
+                            listener.onChatClicked(orderId = orderId, technicianId = technicianId)
                         }
                     )
                 }
