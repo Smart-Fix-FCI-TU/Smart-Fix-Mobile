@@ -24,24 +24,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.R
-import com.fcitu.smartfix.domain.entity.Address
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.entity.Technician
-import com.fcitu.smartfix.domain.entity.User
-import com.fcitu.smartfix.domain.model.OrderStatus
-import com.fcitu.smartfix.domain.model.ServiceCategory
-import com.fcitu.smartfix.domain.model.UserRole
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.screen.customer.home.component.ProfilePhoto
 import com.fcitu.smartfix.ui.utils.toOrderTimeFormat
-import kotlinx.datetime.LocalDateTime
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @Composable
 fun CompletedOrderCard(
@@ -128,7 +118,7 @@ private fun TechnicianInfoRow(technician: Technician?) {
 }
 
 @Composable
-fun CompletedBadge(modifier: Modifier = Modifier) {
+fun CompletedBadge() {
     Box(
         modifier = Modifier
             .background(
@@ -157,69 +147,4 @@ fun CompletedBadge(modifier: Modifier = Modifier) {
             )
         }
     }
-}
-
-@OptIn(ExperimentalUuidApi::class)
-@Preview(showBackground = true)
-@Composable
-private fun Test(
-
-) {
-    CompletedOrderCard(
-        order = Order(
-            id = Uuid.random().toString(),
-            customer = Order.UserInfo(id = Uuid.random().toString(), name = "Fouad"),
-            technician = Order.UserInfo(id = Uuid.random().toString(), name = "Ahmed Mohamed"),
-            details = Order.OrderDetails(
-                serviceCategory = ServiceCategory.ELECTRICITY,
-                title = "change lamb",
-                "the lamb is broken", problemPhotoUrls = emptyList(),
-                address = Address(
-                    id = Uuid.random().toString(),
-                    fullAddress = "Tanta",
-                    location = Address.Location(40.0, 41.0),
-                    floor = "2",
-                    apartmentNo = "3"
-                ), additionalNotes = ""
-            ),
-            repairPhotos = Order.RepairPhotos(
-                beforeRepairUrls = emptyList(),
-                afterRepairUrls = emptyList()
-            ),
-            status = OrderStatus.ON_WAY, timeline = Order.OrderTimeline(
-                createdAt = LocalDateTime(2024, 1, 15, 10, 30),
-                acceptedAt = LocalDateTime(2024, 1, 15, 11, 0),
-                arrivedAt = LocalDateTime(2024, 1, 15, 12, 0),
-                startedAt = LocalDateTime(2024, 1, 15, 12, 30),
-                completedAt = LocalDateTime(2024, 1, 15, 12, 30),
-            )
-        ), technician = Technician(
-            user = User(
-                id = "5425425",
-                phoneNumber = "563767567262",
-                firstName = "Fouad",
-                lastName = "Elmeligy",
-                username = "Fouad Elmeligy",
-                birthOfDate = "2/2/2002",
-                nationalId = "25362627246",
-                email = "fouad@gmail.com",
-                role = UserRole.CUSTOMER,
-                profilePhotoUrl = " ",
-                address = Address(
-                    id = "523455",
-                    fullAddress = "Tanta",
-                    location = Address.Location(30.0, 31.0),
-                    floor = "1",
-                    apartmentNo = "2"
-                )
-            ),
-            serviceCategory = ServiceCategory.ELECTRICITY,
-            isAvailable = true,
-            isOnJob = false,
-            yearsOfExperience = 5,
-            bio = "",
-            averageRating = 3.5F,
-            reviewCount = 4,
-            reviews = emptyList(),
-        ), {})
 }

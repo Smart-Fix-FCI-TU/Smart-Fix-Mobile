@@ -21,7 +21,7 @@ fun HistoryOrdersTab(
     listener: MyOrdersInteractionListener,
 ) {
     when {
-        state.isLoadingHistory -> {
+        state.isLoading -> {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -47,10 +47,10 @@ fun HistoryOrdersTab(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                items(items = state.activeOrders, key = { it.id }) { activeOrder ->
+                items(items = state.historyOrders, key = { it.id }) {completedOrder ->
                     CompletedOrderCard(
-                        order = activeOrder,
-                        technician = listener.onGetTechnicianInfo(activeOrder.technician.id),
+                        order = completedOrder,
+                        technician = state.technicianMap[completedOrder.id],
                         onCompletedOrderClicked = {},
                     )
                 }

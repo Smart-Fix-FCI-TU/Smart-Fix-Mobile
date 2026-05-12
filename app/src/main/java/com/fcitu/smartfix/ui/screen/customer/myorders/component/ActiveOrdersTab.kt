@@ -21,7 +21,7 @@ fun ActiveOrdersTab(
     listener: MyOrdersInteractionListener,
 ) {
     when {
-        state.isLoadingActive -> {
+        state.isLoading -> {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -51,9 +51,11 @@ fun ActiveOrdersTab(
                 items(items = state.activeOrders, key = { it.id }) { activeOrder ->
                     ActiveOrderCard(
                         order = activeOrder,
-                        technician = listener.onGetTechnicianInfo(activeOrder.technician.id),
+                        technician = state.technicianMap[activeOrder.id],
                         onActiveOrderClicked = { listener.onActiveOrderClicked(orderId = activeOrder.id) },
-                        onChatClicked = {}
+                        onChatClicked = { orderId, technicianId ->
+                            listener.onChatClicked(orderId =orderId, technicianId = technicianId)
+                        }
                     )
                 }
             }

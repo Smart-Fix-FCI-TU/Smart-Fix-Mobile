@@ -38,8 +38,8 @@ import com.fcitu.smartfix.ui.utils.toOrderTimeFormat
 fun ActiveOrderCard(
     order: Order,
     technician: Technician? = null,
-    onActiveOrderClicked: () -> Unit,
-    onChatClicked: () -> Unit,
+    onActiveOrderClicked: (String) -> Unit,
+    onChatClicked: (String, String) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -49,7 +49,7 @@ fun ActiveOrderCard(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = onActiveOrderClicked
+                onClick = { onActiveOrderClicked(order.id) }
             )
             .padding(20.dp)
     ) {
@@ -71,13 +71,21 @@ fun ActiveOrderCard(
             )
 
             //  Technician Info Row
-            TechnicianInfoRow(technician = technician, onChatClicked = onChatClicked)
+            TechnicianInfoRow(
+                orderId = order.id,
+                technician = technician,
+                onChatClicked = onChatClicked
+            )
         }
     }
 }
 
 @Composable
-private fun TechnicianInfoRow(technician: Technician?, onChatClicked: () -> Unit) {
+private fun TechnicianInfoRow(
+    orderId: String,
+    technician: Technician?,
+    onChatClicked: (String, String) -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -113,14 +121,18 @@ private fun TechnicianInfoRow(technician: Technician?, onChatClicked: () -> Unit
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        ChatImage(onChatClicked = onChatClicked)
+        ChatImage(
+            orderId = orderId,
+            technicianId = technician?.user?.id,
+            onChatClicked = onChatClicked
+        )
         PhoneImage(technician?.user?.phoneNumber)
 
     }
 }
 
 @Composable
-fun ChatImage(onChatClicked: () -> Unit) {
+fun ChatImage(orderId: String, technicianId: String?, onChatClicked: (String, String) -> Unit) {
     Box(
         modifier = Modifier
             .size(45.dp)
@@ -128,7 +140,11 @@ fun ChatImage(onChatClicked: () -> Unit) {
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = onChatClicked
+                onClick = {
+                    if (technicianId != null) {
+                        onChatClicked(orderId, technicianId)
+                    }
+                }
             ),
         contentAlignment = Alignment.Center
     ) {
@@ -162,6 +178,7 @@ fun PhoneImage(phoneNumber: String?) {
         )
     }
 }
+
 val ServiceCategory?.specialization: String
     get() = when (this) {
         ServiceCategory.CARPENTRY -> "Carpenter"
