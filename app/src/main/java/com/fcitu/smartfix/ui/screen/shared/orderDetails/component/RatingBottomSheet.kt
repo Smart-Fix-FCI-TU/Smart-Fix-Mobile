@@ -153,7 +153,7 @@ private fun RatingFormContent(
             text = "Submit Rating",
             onClick = { onSubmitRating(rating, comment, selectedChips.toList()) },
             modifier = Modifier.fillMaxWidth(),
-            isEnabled = rating > 0 && !isLoading,
+            isEnabled = rating > 0 && !isLoading && selectedChips.isNotEmpty(),
             isLoading = isLoading,
             containerColor = Color(0xFFFF4400)
         )
