@@ -2,13 +2,12 @@ package com.fcitu.smartfix.ui.screen.shared.login
 
 import com.fcitu.smartfix.domain.entity.User
 import com.fcitu.smartfix.domain.exception.BadRequestException
-import com.fcitu.smartfix.domain.exception.InvalidMobileNumberException
+import com.fcitu.smartfix.domain.exception.InvalidEmailException
 import com.fcitu.smartfix.domain.exception.InvalidPasswordException
 import com.fcitu.smartfix.domain.exception.NoNetworkException
 import com.fcitu.smartfix.domain.exception.NotFoundException
 import com.fcitu.smartfix.domain.exception.UnauthorizedException
 import com.fcitu.smartfix.domain.exception.UserNotRegisteredException
-import com.fcitu.smartfix.domain.model.UserRole
 import com.fcitu.smartfix.domain.useCase.LoginUseCase
 import com.fcitu.smartfix.ui.shared.BaseViewModel
 import kotlinx.coroutines.delay
@@ -19,12 +18,8 @@ class LoginScreenViewModel(
     LoginScreenUiState()
 ), LoginScreenInteractionListener {
 
-    override fun onUserRoleSelected(userRole: UserRole) {
-        updateState { it.copy(userRole = userRole) }
-    }
-
-    override fun onPhoneNumberChanged(phone: String) {
-        updateState { it.copy(phoneNumber = phone) }
+    override fun onEmailChanged(email: String) {
+        updateState { it.copy(email = email) }
         changeIsLoginEnabled()
     }
 
@@ -48,10 +43,9 @@ class LoginScreenViewModel(
 
     private fun changeIsLoginEnabled() {
         updateState {
-            val mobileNumberValid =
-                loginUseCase.isMobileNumberValid(phoneNumber = state.value.phoneNumber)
-            val passwordValid = loginUseCase.isPasswordValid(password = state.value.password)
-            it.copy(isLoginEnabled = passwordValid && mobileNumberValid)
+            val emailValid = loginUseCase.isEmailValid(email = it.email)
+            val passwordValid = loginUseCase.isPasswordValid(password = it.password)
+            it.copy(isLoginEnabled = passwordValid && emailValid)
         }
     }
 
@@ -60,8 +54,7 @@ class LoginScreenViewModel(
     }
 
     private suspend fun onLogin() = loginUseCase.login(
-        role = state.value.userRole,
-        phoneNumber = state.value.phoneNumber,
+        email = state.value.email,
         password = state.value.password
     )
 
@@ -69,7 +62,7 @@ class LoginScreenViewModel(
         updateState { it.copy(isLoading = false) }
         emitEffect(LoginScreenUiEffect.ShowSnackBar("Login successful", isError = false))
         delay(100)
-        emitEffect(LoginScreenUiEffect.NavigateToHome(state.value.userRole))
+        emitEffect(LoginScreenUiEffect.NavigateToHome(user.role))
     }
 
     private fun onLoginError(throwable: Throwable) {
@@ -79,10 +72,10 @@ class LoginScreenViewModel(
 
     private fun mapError(throwable: Throwable) {
         when (throwable) {
-            is InvalidMobileNumberException -> {
+            is InvalidEmailException -> {
                 emitEffect(
                     LoginScreenUiEffect.ShowSnackBar(
-                        message = "Invalid phone number format",
+                        message = "Invalid email format",
                         isError = true
                     )
                 )
@@ -100,7 +93,7 @@ class LoginScreenViewModel(
             is UserNotRegisteredException -> {
                 emitEffect(
                     LoginScreenUiEffect.ShowSnackBar(
-                        message = "Phone number not registered",
+                        message = "Email not registered",
                         isError = true
                     )
                 )
@@ -109,7 +102,7 @@ class LoginScreenViewModel(
             is UnauthorizedException -> {
                 emitEffect(
                     LoginScreenUiEffect.ShowSnackBar(
-                        message = "Incorrect phone number or password",
+                        message = "Incorrect email or password",
                         isError = true
                     )
                 )
@@ -118,7 +111,7 @@ class LoginScreenViewModel(
             is NotFoundException -> {
                 emitEffect(
                     LoginScreenUiEffect.ShowSnackBar(
-                        message = "No account found with this phone number",
+                        message = "No account found with this email",
                         isError = true
                     )
                 )

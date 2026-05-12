@@ -10,6 +10,7 @@ val appModule =
             repositoriesModule,
             validatorsModule,
             useCasesModule,
-            viewModelsModule
+            viewModelsModule,
+            networkAvailabilityModule
         )
     }

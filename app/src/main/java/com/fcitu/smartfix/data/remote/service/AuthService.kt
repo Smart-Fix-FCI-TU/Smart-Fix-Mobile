@@ -1,15 +1,23 @@
 package com.fcitu.smartfix.data.remote.service
 
+import com.fcitu.smartfix.data.remote.NetworkConstants.LOGIN
+import com.fcitu.smartfix.data.remote.NetworkConstants.REFRESH_TOKEN
 import com.fcitu.smartfix.data.remote.dto.auth.LoginRequest
 import com.fcitu.smartfix.data.remote.dto.auth.LoginResponse
+import com.fcitu.smartfix.data.remote.dto.auth.TokenRefreshRequest
+import com.fcitu.smartfix.data.remote.dto.auth.TokenRefreshResponse
+import retrofit2.Call
 import retrofit2.http.Body
-import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthService {
-    @POST("api/v1/auth/login")
+    @POST(LOGIN)
     suspend fun login(
-        @Header("user-type") userType: String,
         @Body request: LoginRequest
     ): LoginResponse
+
+    @POST(REFRESH_TOKEN)
+    fun refreshToken(
+        @Body request: TokenRefreshRequest
+    ): Call<TokenRefreshResponse>
 }

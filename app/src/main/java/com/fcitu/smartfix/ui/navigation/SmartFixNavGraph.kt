@@ -25,6 +25,7 @@ import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.AnimatedSnackBarHost
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
+import com.fcitu.smartfix.ui.screen.customer.home.HomeScreen
 import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
 import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
 
@@ -120,12 +121,9 @@ fun SmartFixNavGraph() {
                 navigation<Route.CustomerGraph>(
                     startDestination = Route.CustomerHome
                 ) {
+                    //TODO: Once all the screens that the Home Screen navigates to are built, the code for navigating to these screens will be written.
                     composable<Route.CustomerHome> {
-                        CustomerHomeScreen(
-                            onServiceSelected = {
-                                navController.navigate(Route.Booking)
-                            }
-                        )
+                        HomeScreen()
                     }
 
                     composable<Route.Booking> {
