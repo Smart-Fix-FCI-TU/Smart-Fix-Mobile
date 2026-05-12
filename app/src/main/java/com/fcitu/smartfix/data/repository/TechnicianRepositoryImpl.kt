@@ -16,7 +16,7 @@ class TechnicianRepositoryImpl : TechnicianRepository {
     }
 
     //TODO: Change the impl for this fun  when api endpoint is finished
-    override suspend fun getTechnicianDetails(technicianId: String): Technician? {
+    override suspend fun getTechnicianDetails(technicianId: String): Technician{
         return Technician(
             user = User(
                 id = "5425425",
