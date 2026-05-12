@@ -3,12 +3,15 @@ package com.fcitu.smartfix.ui.screen.shared.orderDetails
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import com.fcitu.smartfix.domain.entity.Order
+import com.fcitu.smartfix.domain.entity.Review
 import com.fcitu.smartfix.domain.repository.OrderRepository
+import com.fcitu.smartfix.domain.repository.ReviewRepository
 import com.fcitu.smartfix.ui.navigation.Route
 import com.fcitu.smartfix.ui.shared.BaseViewModel
 
 class OrderDetailsViewModel(
     private val orderRepository: OrderRepository,
+    private val reviewRepository: ReviewRepository,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<OrderDetailsUiState, OrderDetailsEffect>(OrderDetailsUiState()),
     OrderDetailsInteractionListener {
@@ -16,9 +19,9 @@ class OrderDetailsViewModel(
 
     init {
         val orderId = savedStateHandle.toRoute<Route.OrderDetail>().orderId
-        println("Order Id: $orderId")
         updateState { it.copy(orderId = orderId) }
         loadOrderDetails(orderId)
+        fetchExistingReview(orderId)
     }
 
     override fun onBackClicked() {
@@ -29,8 +32,51 @@ class OrderDetailsViewModel(
         updateState { it.copy(showRatingBottomSheet = true) }
     }
 
-    override fun onSubmitRatingClicked(rating: Float, comment: String) {
-        TODO("Not yet implemented")
+    override fun onSubmitRatingClicked(rating: Int, comment: String, chips: List<String>) {
+        val fullComment = if (chips.isNotEmpty()) {
+            "${chips.joinToString(", ")}. $comment"
+        } else {
+            comment
+        }
+
+        tryToExecute(
+            onStart = ::onSubmitRatingStart,
+            execute = { onSubmitRating(rating, fullComment) },
+            onSuccess = { onSubmitRatingSuccess(rating, fullComment) },
+            onError = ::onSubmitRatingError
+        )
+    }
+
+    private fun onSubmitRatingStart() {
+        updateState { it.copy(isSubmittingRating = true) }
+    }
+
+    private suspend fun onSubmitRating(rating: Int, fullComment: String) {
+        reviewRepository.submitReview(
+            orderId = state.value.orderId,
+            rating = rating,
+            comment = fullComment
+        )
+    }
+
+    private fun onSubmitRatingSuccess(rating: Int, comment: String) {
+        updateState {
+            it.copy(
+                isRatingSuccess = true,
+                isSubmittingRating = false,
+                rating = rating,
+                comment = comment,
+            )
+        }
+    }
+
+    private fun onSubmitRatingError(error: Throwable) {
+        updateState { it.copy(isSubmittingRating = false) }
+        emitEffect(
+            OrderDetailsEffect.ShowSnackBar(
+                error.message ?: "Failed to Submit Rating", isError = true
+            )
+        )
     }
 
     override fun onDismissRatingBottomSheetClicked() {
@@ -62,6 +108,7 @@ class OrderDetailsViewModel(
         updateState {
             it.copy(
                 isLoading = false,
+                technicianId = order.technician.id,
                 title = order.details.title,
                 description = order.details.description,
                 address = order.details.address,
@@ -69,6 +116,28 @@ class OrderDetailsViewModel(
                 timeLine = order.timeline,
                 repairPhotos = order.repairPhotos,
             )
+        }
+    }
+
+    private fun fetchExistingReview(orderId: String) {
+        tryToExecute(
+            execute = { onGetExistingReview(orderId) },
+            onSuccess = ::onGetExistingReviewSuccess
+        )
+    }
+
+    private suspend fun onGetExistingReview(orderId: String): Review? {
+        return reviewRepository.getReviewByBookingId(orderId)
+    }
+
+    private suspend fun onGetExistingReviewSuccess(review: Review?) {
+        review?.let {
+            updateState {
+                it.copy(
+                    rating = review.rating,
+                    comment = review.comment
+                )
+            }
         }
     }
 
