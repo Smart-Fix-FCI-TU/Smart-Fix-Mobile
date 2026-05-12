@@ -19,11 +19,11 @@ class TechnicianRepositoryImpl : TechnicianRepository {
     override suspend fun getTechnicianDetails(technicianId: String): Technician{
         return Technician(
             user = User(
-                id = "5425425",
+                id = technicianId,
                 phoneNumber = "563767567262",
-                firstName = "Fouad",
-                lastName = "Elmeligy",
-                username = "Fouad Elmeligy",
+                firstName = "Ahmed",
+                lastName = "Mostafa",
+                username = "Ahmed Mostafa",
                 birthOfDate = "2/2/2002",
                 nationalId = "25362627246",
                 email = "fouad@gmail.com",
