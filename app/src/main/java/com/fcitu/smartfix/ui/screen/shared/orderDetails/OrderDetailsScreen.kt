@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fcitu.smartfix.domain.model.UserRole
+import com.fcitu.smartfix.ui.designSystem.components.bottomSheet.BottomSheet
 import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarData
@@ -22,6 +23,8 @@ import com.fcitu.smartfix.ui.screen.shared.orderDetails.component.OrderDetailsHe
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.component.OrderInfo
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.component.OrderTimeline
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.component.PhotosSection
+import com.fcitu.smartfix.ui.screen.shared.orderDetails.component.RatingBottomSheet
+import com.fcitu.smartfix.ui.screen.shared.orderDetails.component.RatingInfo
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.component.SuccessBanner
 import com.fcitu.smartfix.ui.utils.EffectHandler
 import com.fcitu.smartfix.ui.utils.format
@@ -70,10 +73,27 @@ private fun OrderDetailsContent(
         bottomBar = {
             OrderDetailsFooter(
                 userRole = userRole,
+                isRated = (uiState.rating != 0),
                 onClickRateTechnician = interactionListener::onRateTechnicianClicked,
                 onClickGoHome = interactionListener::onGoHomeClicked
             )
         },
+        overlays = {
+            bottomSheet(isVisible = uiState.showRatingBottomSheet) { isVisible ->
+                BottomSheet(
+                    isVisible = isVisible,
+                    onDismissRequest = interactionListener::onDismissRatingBottomSheetClicked,
+                    skipPartiallyExpanded = true
+                ) {
+                    RatingBottomSheet(
+                        isSuccess = uiState.isRatingSuccess,
+                        isLoading = uiState.isSubmittingRating,
+                        onSubmitRating = interactionListener::onSubmitRatingClicked,
+                        onClickGoHome = interactionListener::onGoHomeClicked
+                    )
+                }
+            }
+        }
     ) {
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState())
@@ -86,6 +106,13 @@ private fun OrderDetailsContent(
                 createdAt = uiState.timeLine.createdAt.format(),
                 address = uiState.address.fullAddress,
             )
+            if (uiState.rating != 0) {
+                RatingInfo(
+                    rating = uiState.rating,
+                    comment = uiState.comment,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                )
+            }
             PhotosSection(
                 label = "Problem Photos",
                 photos = uiState.problemPhotoUrls
