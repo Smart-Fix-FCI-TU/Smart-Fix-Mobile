@@ -56,16 +56,6 @@ fun ServiceHistoryItem(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            if (item.isTechnicianOnline) {
-                Box(
-                    modifier = Modifier
-                        .size(10.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFF2ECC71))
-                        .border(1.dp, Color.White, CircleShape)
-                        .align(Alignment.TopEnd)
-                )
-            }
         }
         Spacer(modifier = Modifier.width(12.dp))
         Column(modifier = Modifier.weight(1f)) {

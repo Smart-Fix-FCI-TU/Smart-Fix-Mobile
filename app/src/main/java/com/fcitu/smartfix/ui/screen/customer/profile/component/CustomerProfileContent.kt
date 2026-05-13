@@ -24,8 +24,7 @@ fun CustomerProfileContent(
         CustomerHeaderSection(
             name = state.name,
             memberSince = state.memberSince,
-            profilePhotoUrl = state.profilePhotoUrl,
-            isOnline = state.isOnline
+            profilePhotoUrl = state.profilePhotoUrl
         )
 
         Spacer(modifier = Modifier.height(32.dp))

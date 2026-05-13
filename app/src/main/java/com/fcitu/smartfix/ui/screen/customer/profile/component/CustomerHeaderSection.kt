@@ -26,7 +26,6 @@ fun CustomerHeaderSection(
     name: String,
     memberSince: String,
     profilePhotoUrl: String,
-    isOnline: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -53,17 +52,6 @@ fun CustomerHeaderSection(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
-            if (isOnline) {
-                Box(
-                    modifier = Modifier
-                        .size(16.dp)
-                        .clip(CircleShape)
-                        .background(Color(0xFF2ECC71))
-                        .border(2.dp, Color.White, CircleShape)
-                        .align(Alignment.TopEnd)
-                        .offset(x = (-8).dp, y = 8.dp)
-                )
-            }
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(

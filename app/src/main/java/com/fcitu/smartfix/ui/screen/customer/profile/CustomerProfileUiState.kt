@@ -7,7 +7,6 @@ data class CustomerProfileUiState(
     val email: String = "",
     val address: String = "",
     val profilePhotoUrl: String = "",
-    val isOnline: Boolean = false,
     val serviceHistory: List<ServiceHistoryUiState> = emptyList(),
     val isLoading: Boolean = false,
     val error: String? = null
@@ -19,6 +18,5 @@ data class ServiceHistoryUiState(
     val serviceName: String = "",
     val rating: String = "",
     val status: String = "",
-    val date: String = "",
-    val isTechnicianOnline: Boolean = false
+    val date: String = ""
 )

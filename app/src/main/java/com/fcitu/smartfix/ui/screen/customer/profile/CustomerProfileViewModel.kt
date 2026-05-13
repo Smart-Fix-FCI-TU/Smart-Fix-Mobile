@@ -20,7 +20,6 @@ class CustomerProfileViewModel : BaseViewModel<CustomerProfileUiState, CustomerP
                 email = "mahmoud.hassan@email.com",
                 address = "9 Maadi St., Cairo",
                 profilePhotoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynS_f9S3stJ6S6T0V8LUM5VvOa3YqYy1Ag&s",
-                isOnline = true,
                 serviceHistory = listOf(
                     ServiceHistoryUiState(
                         id = "1",
@@ -28,8 +27,7 @@ class CustomerProfileViewModel : BaseViewModel<CustomerProfileUiState, CustomerP
                         serviceName = "Electrician Service",
                         rating = "4.9",
                         status = "Completed",
-                        date = "Jan 15, 2024",
-                        isTechnicianOnline = true
+                        date = "Jan 15, 2024"
                     ),
                     ServiceHistoryUiState(
                         id = "2",
@@ -37,8 +35,7 @@ class CustomerProfileViewModel : BaseViewModel<CustomerProfileUiState, CustomerP
                         serviceName = "Plumbing Service",
                         rating = "4.8",
                         status = "Completed",
-                        date = "Dec 10, 2023",
-                        isTechnicianOnline = true
+                        date = "Dec 10, 2023"
                     )
                 )
             )
