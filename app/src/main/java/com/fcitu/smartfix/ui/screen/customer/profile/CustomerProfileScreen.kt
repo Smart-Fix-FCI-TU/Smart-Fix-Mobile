@@ -67,10 +67,15 @@ private fun EffectsHandler(
     EffectHandler(effects = effects) { effect ->
         when (effect) {
             CustomerProfileUiEffect.NavigateToSettings -> {
-                navController.navigate(Route.Settings)
             }
             CustomerProfileUiEffect.NavigateToAllServiceHistory -> {
-                navController.navigate(Route.CustomerOrders)
+                snackBarHostController.showSnackBar(
+                    SnackBarData(
+                        title = "Info",
+                        message = "Service History screen is under development",
+                        isError = false
+                    )
+                )
             }
             is CustomerProfileUiEffect.ShowSnackBar -> {
                 snackBarHostController.showSnackBar(
