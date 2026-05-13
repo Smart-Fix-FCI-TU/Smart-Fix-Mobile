@@ -34,15 +34,24 @@ fun TechnicianHeaderSection(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier.fillMaxWidth()
     ) {
-        Box {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(80.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFF5F5F5))
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_profile),
+                contentDescription = null,
+                modifier = Modifier.size(32.dp),
+                tint = Color.Gray
+            )
             AsyncImage(
                 model = profilePhotoUrl,
                 contentDescription = null,
-                modifier = Modifier
-                    .size(80.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.ic_profile)
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
             if (isOnline) {
                 Box(
