@@ -48,7 +48,7 @@ fun TechnicianReviewsSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        reviews.forEach { review ->
+        reviews.take(3).forEach { review ->
             ReviewItem(review)
             Spacer(modifier = Modifier.height(12.dp))
         }

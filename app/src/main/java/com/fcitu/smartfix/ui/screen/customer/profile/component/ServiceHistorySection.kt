@@ -46,7 +46,7 @@ fun ServiceHistorySection(
             )
         }
         Spacer(modifier = Modifier.height(16.dp))
-        history.forEach { item ->
+        history.take(3).forEach { item ->
             ServiceHistoryItem(item = item)
             Spacer(modifier = Modifier.height(12.dp))
         }
