@@ -26,9 +26,11 @@ import com.fcitu.smartfix.ui.designSystem.components.snackBar.AnimatedSnackBarHo
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
 import com.fcitu.smartfix.ui.screen.customer.home.HomeScreen
+import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileScreen
 import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.OrderDetailsScreen
 import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
+import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileScreen
 
 
 val LocalNavController = staticCompositionLocalOf<NavController> {
@@ -174,7 +176,10 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.CustomerProfile> {
-                        CustomerProfileScreen()
+                        CustomerProfileScreen(
+                            onSettings = { /* TODO: Navigate to settings */ },
+                            onViewAllServiceHistory = { /* TODO: Navigate to history */ }
+                        )
                     }
                 }
 
@@ -206,7 +211,10 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.TechnicianProfile> {
-                        TechnicianProfileScreen()
+                        TechnicianProfileScreen(
+                            onSettings = { /* TODO: Navigate to settings */ },
+                            onViewAllReviews = { /* TODO: Navigate to all reviews */ }
+                        )
                     }
                 }
             }
