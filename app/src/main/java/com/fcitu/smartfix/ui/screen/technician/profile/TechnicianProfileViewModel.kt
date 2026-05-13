@@ -2,11 +2,11 @@ package com.fcitu.smartfix.ui.screen.technician.profile
 
 import com.fcitu.smartfix.domain.entity.Review
 import com.fcitu.smartfix.domain.entity.Technician
-import com.fcitu.smartfix.domain.useCase.GetTechnicianProfileUseCase
+import com.fcitu.smartfix.domain.repository.TechnicianRepository
 import com.fcitu.smartfix.ui.shared.BaseViewModel
 
 class TechnicianProfileViewModel(
-    private val getTechnicianProfileUseCase: GetTechnicianProfileUseCase
+    private val technicianRepository: TechnicianRepository
 ) : BaseViewModel<TechnicianProfileUiState, TechnicianProfileUiEffect>(
     TechnicianProfileUiState()
 ), TechnicianProfileInteractionListener {
@@ -40,7 +40,7 @@ class TechnicianProfileViewModel(
     private fun getTechnicianProfile(id: String) {
         tryToExecute(
             onStart = { updateState { it.copy(isLoading = true) } },
-            execute = { getTechnicianProfileUseCase(id) },
+            execute = { technicianRepository.getTechnicianDetails(id) },
             onSuccess = ::onGetProfileSuccess,
             onError = ::onGetProfileError
         )
