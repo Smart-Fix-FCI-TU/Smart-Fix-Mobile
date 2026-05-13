@@ -6,15 +6,12 @@ import com.fcitu.smartfix.data.remote.util.safeApiCall
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.model.OrderStatus
 import com.fcitu.smartfix.domain.repository.OrderRepository
-import kotlin.uuid.ExperimentalUuidApi
 
 class OrderRepositoryImpl(
     private val bookingApiService: BookingApiService,
 ) : OrderRepository {
 
-    @OptIn(ExperimentalUuidApi::class)
     override suspend fun getCustomerOrders(): List<Order> {
-        // Fake Data
         return getOrdersByStatus("accepted") +
                 getOrdersByStatus("started") +
                 getOrdersByStatus("pending") +

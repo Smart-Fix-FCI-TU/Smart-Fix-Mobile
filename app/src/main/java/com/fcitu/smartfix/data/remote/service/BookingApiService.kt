@@ -9,17 +9,17 @@ import retrofit2.http.Query
 
 interface BookingApiService {
 
-    @GET("api/v1/bookings")
+    @GET("/api/v1/bookings")
     suspend fun getBookingByStatus(
         @Query("status") status: String,
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 20
     ): PaginatedResponse<BookingDto>
 
-    @GET("api/v1/bookings/active")
+    @GET("/api/v1/bookings/active")
     suspend fun getActiveOrders(): ApiResponse<BookingDto>
 
-    @GET("api/v1/bookings/{bookingId}")
+    @GET("/api/v1/bookings/{bookingId}")
     suspend fun getBookingById(
         @Path("bookingId") bookingId: String,
     ): ApiResponse<BookingDto>
