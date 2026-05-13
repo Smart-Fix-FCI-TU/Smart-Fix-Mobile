@@ -36,7 +36,7 @@ fun AccountInformationSection(
         Spacer(modifier = Modifier.height(12.dp))
         InfoRow(icon = R.drawable.ic_gmail, text = email)
         Spacer(modifier = Modifier.height(12.dp))
-        InfoRow(icon = R.drawable.ic_profile, text = address) // Assuming ic_profile for address if ic_location not found
+        InfoRow(icon = R.drawable.ic_location, text = address) // Assuming ic_profile for address if ic_location not found
     }
 }
 
