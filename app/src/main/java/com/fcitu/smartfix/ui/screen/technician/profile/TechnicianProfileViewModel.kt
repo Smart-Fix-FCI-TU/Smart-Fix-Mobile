@@ -80,10 +80,6 @@ class TechnicianProfileViewModel(
     override fun onViewAllReviewsClicked() {
         emitEffect(TechnicianProfileUiEffect.NavigateToAllReviews)
     }
-
-    override fun onShowMoreClicked() {
-        // Toggle bio expansion or navigate
-    }
 }
 
 private fun List<Review>.toUiState(): List<ReviewUiState> {

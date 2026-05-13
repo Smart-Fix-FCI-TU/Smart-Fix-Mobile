@@ -43,8 +43,7 @@ fun TechnicianProfileContent(
 
         // جزء "نبذة عن الفني"
         TechnicianAboutSection(
-            bio = state.bio,
-            onShowMoreClick = listener::onShowMoreClicked
+            bio = state.bio
         )
 
         Spacer(modifier = Modifier.height(24.dp))

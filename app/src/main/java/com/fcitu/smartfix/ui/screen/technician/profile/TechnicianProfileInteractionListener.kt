@@ -4,5 +4,4 @@ interface TechnicianProfileInteractionListener {
     fun onBackClicked()
     fun onSettingsClicked()
     fun onViewAllReviewsClicked()
-    fun onShowMoreClicked()
 }
