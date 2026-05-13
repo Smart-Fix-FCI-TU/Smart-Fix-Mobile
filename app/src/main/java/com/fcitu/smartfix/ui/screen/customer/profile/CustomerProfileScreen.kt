@@ -12,6 +12,8 @@ import com.fcitu.smartfix.ui.designSystem.components.appBar.AppBar
 import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarData
+import com.fcitu.smartfix.ui.navigation.LocalNavController
+import com.fcitu.smartfix.ui.navigation.Route
 import com.fcitu.smartfix.ui.screen.customer.profile.component.CustomerProfileContent
 import com.fcitu.smartfix.ui.utils.EffectHandler
 import kotlinx.coroutines.flow.SharedFlow
@@ -19,17 +21,13 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CustomerProfileScreen(
-    onSettings: () -> Unit,
-    onViewAllServiceHistory: () -> Unit,
     viewModel: CustomerProfileViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val effect = viewModel.effect
 
     EffectsHandler(
-        effects = effect,
-        onSettings = onSettings,
-        onViewAllServiceHistory = onViewAllServiceHistory
+        effects = effect
     )
 
     Scaffold(
@@ -61,16 +59,19 @@ private fun CustomerProfileAppBar(
 
 @Composable
 private fun EffectsHandler(
-    effects: SharedFlow<CustomerProfileUiEffect>,
-    onSettings: () -> Unit,
-    onViewAllServiceHistory: () -> Unit
+    effects: SharedFlow<CustomerProfileUiEffect>
 ) {
     val snackBarHostController = LocalSnackBarHostController.current
+    val navController = LocalNavController.current
 
     EffectHandler(effects = effects) { effect ->
         when (effect) {
-            CustomerProfileUiEffect.NavigateToSettings -> onSettings()
-            CustomerProfileUiEffect.NavigateToAllServiceHistory -> onViewAllServiceHistory()
+            CustomerProfileUiEffect.NavigateToSettings -> {
+                navController.navigate(Route.Settings)
+            }
+            CustomerProfileUiEffect.NavigateToAllServiceHistory -> {
+                navController.navigate(Route.CustomerOrders)
+            }
             is CustomerProfileUiEffect.ShowSnackBar -> {
                 snackBarHostController.showSnackBar(
                     SnackBarData(

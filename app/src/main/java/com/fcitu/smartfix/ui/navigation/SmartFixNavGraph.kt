@@ -176,10 +176,7 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.CustomerProfile> {
-                        CustomerProfileScreen(
-                            onSettings = { /* TODO: Navigate to settings */ },
-                            onViewAllServiceHistory = { /* TODO: Navigate to history */ }
-                        )
+                        CustomerProfileScreen()
                     }
                 }
 
@@ -211,10 +208,7 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.TechnicianProfile> {
-                        TechnicianProfileScreen(
-                            onSettings = { /* TODO: Navigate to settings */ },
-                            onViewAllReviews = { /* TODO: Navigate to all reviews */ }
-                        )
+                        TechnicianProfileScreen()
                     }
                 }
             }

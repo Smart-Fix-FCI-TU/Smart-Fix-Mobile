@@ -11,6 +11,8 @@ import com.fcitu.smartfix.ui.designSystem.components.appBar.AppBar
 import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarData
+import com.fcitu.smartfix.ui.navigation.LocalNavController
+import com.fcitu.smartfix.ui.navigation.Route
 import com.fcitu.smartfix.ui.screen.technician.profile.component.TechnicianProfileContent
 import com.fcitu.smartfix.ui.utils.EffectHandler
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,17 +20,13 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TechnicianProfileScreen(
-    onSettings: () -> Unit,
-    onViewAllReviews: () -> Unit,
     viewModel: TechnicianProfileViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val effect = viewModel.effect
 
     EffectsHandler(
-        effects = effect,
-        onSettings = onSettings,
-        onViewAllReviews = onViewAllReviews
+        effects = effect
     )
 
     Scaffold(
@@ -61,15 +59,18 @@ private fun TechnicianProfileAppBar(
 @Composable
 private fun EffectsHandler(
     effects: SharedFlow<TechnicianProfileUiEffect>,
-    onSettings: () -> Unit,
-    onViewAllReviews: () -> Unit,
 ) {
     val snackBarHostController = LocalSnackBarHostController.current
+    val navController = LocalNavController.current
 
     EffectHandler(effects = effects) { effect ->
         when (effect) {
-            TechnicianProfileUiEffect.NavigateToSettings -> onSettings()
-            TechnicianProfileUiEffect.NavigateToAllReviews -> onViewAllReviews()
+            TechnicianProfileUiEffect.NavigateToSettings -> {
+                navController.navigate(Route.Settings)
+            }
+            TechnicianProfileUiEffect.NavigateToAllReviews -> {
+                navController.navigate(Route.AllReviews)
+            }
             is TechnicianProfileUiEffect.ShowSnackBar -> {
                 snackBarHostController.showSnackBar(
                     SnackBarData(
