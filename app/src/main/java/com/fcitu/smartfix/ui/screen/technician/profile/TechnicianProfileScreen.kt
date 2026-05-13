@@ -18,7 +18,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun TechnicianProfileScreen(
-    onBack: () -> Unit,
     onSettings: () -> Unit,
     onViewAllReviews: () -> Unit,
     viewModel: TechnicianProfileViewModel = koinViewModel(),
@@ -28,7 +27,6 @@ fun TechnicianProfileScreen(
 
     EffectsHandler(
         effects = effect,
-        onBack = onBack,
         onSettings = onSettings,
         onViewAllReviews = onViewAllReviews
     )
@@ -63,7 +61,6 @@ private fun TechnicianProfileAppBar(
 @Composable
 private fun EffectsHandler(
     effects: SharedFlow<TechnicianProfileUiEffect>,
-    onBack: () -> Unit,
     onSettings: () -> Unit,
     onViewAllReviews: () -> Unit,
 ) {
@@ -71,7 +68,6 @@ private fun EffectsHandler(
 
     EffectHandler(effects = effects) { effect ->
         when (effect) {
-            TechnicianProfileUiEffect.NavigateBack -> onBack()
             TechnicianProfileUiEffect.NavigateToSettings -> onSettings()
             TechnicianProfileUiEffect.NavigateToAllReviews -> onViewAllReviews()
             is TechnicianProfileUiEffect.ShowSnackBar -> {

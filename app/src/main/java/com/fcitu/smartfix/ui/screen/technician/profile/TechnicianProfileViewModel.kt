@@ -69,10 +69,6 @@ class TechnicianProfileViewModel(
         emitEffect(TechnicianProfileUiEffect.ShowSnackBar(throwable.message ?: "Error", true))
     }
 
-    override fun onBackClicked() {
-        emitEffect(TechnicianProfileUiEffect.NavigateBack)
-    }
-
     override fun onSettingsClicked() {
         emitEffect(TechnicianProfileUiEffect.NavigateToSettings)
     }
