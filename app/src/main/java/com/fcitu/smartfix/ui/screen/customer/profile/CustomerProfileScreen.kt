@@ -19,7 +19,6 @@ import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun CustomerProfileScreen(
-    onBack: () -> Unit,
     onSettings: () -> Unit,
     onViewAllServiceHistory: () -> Unit,
     viewModel: CustomerProfileViewModel = koinViewModel()
@@ -29,7 +28,6 @@ fun CustomerProfileScreen(
 
     EffectsHandler(
         effects = effect,
-        onBack = onBack,
         onSettings = onSettings,
         onViewAllServiceHistory = onViewAllServiceHistory
     )
@@ -64,7 +62,6 @@ private fun CustomerProfileAppBar(
 @Composable
 private fun EffectsHandler(
     effects: SharedFlow<CustomerProfileUiEffect>,
-    onBack: () -> Unit,
     onSettings: () -> Unit,
     onViewAllServiceHistory: () -> Unit
 ) {
@@ -72,7 +69,6 @@ private fun EffectsHandler(
 
     EffectHandler(effects = effects) { effect ->
         when (effect) {
-            CustomerProfileUiEffect.NavigateBack -> onBack()
             CustomerProfileUiEffect.NavigateToSettings -> onSettings()
             CustomerProfileUiEffect.NavigateToAllServiceHistory -> onViewAllServiceHistory()
             is CustomerProfileUiEffect.ShowSnackBar -> {

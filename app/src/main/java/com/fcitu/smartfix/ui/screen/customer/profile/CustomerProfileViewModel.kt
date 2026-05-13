@@ -45,10 +45,6 @@ class CustomerProfileViewModel : BaseViewModel<CustomerProfileUiState, CustomerP
         }
     }
 
-    override fun onBackClicked() {
-        emitEffect(CustomerProfileUiEffect.NavigateBack)
-    }
-
     override fun onSettingsClicked() {
         emitEffect(CustomerProfileUiEffect.NavigateToSettings)
     }
