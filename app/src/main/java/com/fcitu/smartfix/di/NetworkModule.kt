@@ -3,6 +3,7 @@ package com.fcitu.smartfix.di
 import com.fcitu.smartfix.BuildConfig
 import com.fcitu.smartfix.data.remote.NetworkConstants
 import com.fcitu.smartfix.data.remote.service.AuthService
+import com.fcitu.smartfix.data.remote.service.BookingApiService
 import com.fcitu.smartfix.data.remote.util.AuthInterceptor
 import com.fcitu.smartfix.data.remote.util.TokenAuthenticator
 import kotlinx.serialization.json.Json
@@ -82,6 +83,7 @@ val networkModule = module {
             .addConverterFactory(get<Json>().asConverterFactory(contentType))
             .build()
     }
+    single { get<Retrofit>().create(BookingApiService::class.java) }
 
     single { get<Retrofit>().create(AuthService::class.java) }
 }
