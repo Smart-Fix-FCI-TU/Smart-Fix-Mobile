@@ -15,7 +15,7 @@ class TechnicianRepositoryImpl(
         location: Address.Location,
         serviceCategory: ServiceCategory
     ): List<Technician> {
-        TODO("Not yet implemented")
+        return emptyList()
     }
 
     override suspend fun getTechnicianDetails(technicianId: String): Technician {
