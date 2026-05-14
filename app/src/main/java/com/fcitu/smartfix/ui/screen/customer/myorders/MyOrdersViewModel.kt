@@ -1,18 +1,14 @@
 package com.fcitu.smartfix.ui.screen.customer.myorders
 
-import android.util.Log
-import androidx.lifecycle.viewModelScope
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.entity.Technician
 import com.fcitu.smartfix.domain.repository.TechnicianRepository
 import com.fcitu.smartfix.domain.useCase.GetCustomerOrdersUseCase
 import com.fcitu.smartfix.ui.shared.BaseViewModel
 import com.fcitu.smartfix.ui.utils.InternetConnectionAvailability
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
 class MyOrdersViewModel(
     private val getCustomerOrdersUseCase: GetCustomerOrdersUseCase,
@@ -25,6 +21,14 @@ class MyOrdersViewModel(
         observeNetwork()
     }
 
+    fun refreshOrders() {
+        if ( state.value.hasNetworkConnection) {
+            if (state.value.hasLoaded)
+                updateState { it.copy(hasLoaded = false) }
+            loadOrders()
+        }
+    }
+
     // ── Network ───────────────────────────────────────────────────────────────
     private fun observeNetwork() {
         tryToCollect(
@@ -32,9 +36,7 @@ class MyOrdersViewModel(
             onCollect = { isConnected ->
                 updateState { it.copy(hasNetworkConnection = isConnected) }
                 if (isConnected && !state.value.hasLoaded) {
-                    viewModelScope.launch(Dispatchers.Main) {
                         loadOrders()
-                    }
                 }
             },
             onError = {
@@ -46,18 +48,19 @@ class MyOrdersViewModel(
 
     // ── Load Orders ───────────────────────────────────────────────────────────
     private fun loadOrders() {
+        val isCurrentlyLoading = state.value.isLoadingActive || state.value.isLoadingHistory
+        if (isCurrentlyLoading) return
+
         updateState {
             it.copy(
                 isLoadingActive = true,
                 isLoadingHistory = true,
-                hasLoaded = false,
+                technicianMap = emptyMap()
             )
         }
-        viewModelScope.launch(Dispatchers.Main) {
-            kotlinx.coroutines.delay(100)
-            loadActiveOrders()
-            loadHistoryOrders()
-        }
+        loadActiveOrders()
+        loadHistoryOrders()
+
     }
 
     private fun loadActiveOrders() {
@@ -80,6 +83,7 @@ class MyOrdersViewModel(
             },
             onError = { error ->
                 updateState { it.copy(isLoadingActive = false, error = error.message) }
+                checkIfFullyLoaded()
                 emitEffect(MyOrdersUiEffect.ShowError(error.message ?: "Failed to load orders"))
             }
         )
@@ -110,6 +114,7 @@ class MyOrdersViewModel(
                         error = error.message ?: "Failed to load history"
                     )
                 }
+                checkIfFullyLoaded()
                 emitEffect(MyOrdersUiEffect.ShowError(error.message ?: "Failed to load history"))
             }
         )
@@ -131,7 +136,6 @@ class MyOrdersViewModel(
                         val tech = technicianRepository.getTechnicianDetails(order.technician.id)
                         order.id to tech
                     } catch (e: Exception) {
-                        Log.e("MyOrdersVM", "Failed for order ${order.id}", e)
                         null
                     }
                 }
