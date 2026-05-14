@@ -22,39 +22,47 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.R
+import com.fcitu.smartfix.domain.entity.Technician
 import com.fcitu.smartfix.ui.designSystem.components.button.PrimaryButton
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 
 @Composable
-fun RejectedBottomSheetContent(modifier: Modifier = Modifier) {
+fun RejectedBottomSheetContent(
+    modifier: Modifier = Modifier,
+    technician: Technician,
+    onClickChooseAnother: () -> Unit,
+    onClickGoHome: () -> Unit
+) {
     Column(
         modifier = modifier.background(Color(0xFFF2F4F7)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         RejectedMessage()
         TechnicianInfoSection(
-            name = "Mahmoud Hassan",
-            jobTitle = "Electrician",
-            rating = 4.8f,
+            name = "${technician.user.firstName} ${technician.user.lastName}",
+            jobTitle = technician.serviceCategory
+                .name
+                .lowercase()
+                .replaceFirstChar { it.uppercase() },
+            rating = technician.averageRating,
             distance = 1.2f,
             profilePhotoUrl = "https://images.pexels.com/videos/7055325/nature-natures-beauty-pine-plants-7055325.jpeg?auto=compress&cs=tinysrgb&w=600&loading=lazy",
             modifier = Modifier.padding(bottom = 12.dp)
         )
         PrimaryButton(
             text = "Choose another technician",
-            onClick = {},
+            onClick = onClickChooseAnother,
             containerColor = Color(0xFFFF4400),
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(12.dp))
         PrimaryButton(
             text = "Go Home",
-            onClick = {},
+            onClick = onClickGoHome,
             modifier = Modifier
                 .fillMaxWidth()
                 .border(
@@ -108,10 +116,4 @@ private fun RejectedMessage() {
         ),
         textAlign = TextAlign.Center
     )
-}
-
-@Preview
-@Composable
-private fun Preview() {
-    RejectedBottomSheetContent()
 }

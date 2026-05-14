@@ -24,20 +24,27 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.R
+import com.fcitu.smartfix.domain.entity.Technician
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 
 @Composable
-fun AcceptanceBottomSheetContent(modifier: Modifier) {
+fun AcceptanceBottomSheetContent(
+    technician: Technician,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.background(Color(0xFFF2F4F7)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AcceptanceMessage()
         TechnicianInfoSection(
-            name = "Mahmoud Ali",
-            jobTitle = "Plumber",
-            rating = 4.8f,
+            name = "${technician.user.firstName} ${technician.user.lastName}",
+            jobTitle = technician.serviceCategory
+                .name
+                .lowercase()
+                .replaceFirstChar { it.uppercase() },
+            rating = technician.averageRating,
             distance = 1.2f,
             profilePhotoUrl = "https://images.pexels.com/videos/7055325/nature-natures-beauty-pine-plants-7055325.jpeg?auto=compress&cs=tinysrgb&w=600&loading=lazy",
         )
@@ -55,7 +62,7 @@ private fun AcceptanceMessage() {
         contentAlignment = Alignment.Center
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_back),
+            painter = painterResource(R.drawable.ic_success),
             contentDescription = "Success",
             modifier = Modifier.size(64.dp),
             tint = Color.White
