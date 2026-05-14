@@ -6,18 +6,23 @@ import com.fcitu.smartfix.data.remote.util.safeApiCall
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.model.OrderStatus
 import com.fcitu.smartfix.domain.repository.OrderRepository
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 class OrderRepositoryImpl(
     private val bookingApiService: BookingApiService,
 ) : OrderRepository {
 
-    override suspend fun getCustomerOrders(): List<Order> {
-        return getOrdersByStatus("accepted") +
-                getOrdersByStatus("started") +
-                getOrdersByStatus("pending") +
-                getOrdersByStatus("completed") +
-                getOrdersByStatus("cancelled") +
-                getOrdersByStatus("rejected")
+    override suspend fun getCustomerOrders(): List<Order> = coroutineScope {
+
+        val statuses = listOf("accepted", "started", "pending", "completed", "cancelled", "rejected")
+
+        val deferredOrders = statuses.map { status ->
+            async { getOrdersByStatus(status) }
+        }
+
+        deferredOrders.awaitAll().flatten()
     }
 
     override suspend fun getOrdersByStatus(status: String): List<Order> {
@@ -38,9 +43,14 @@ class OrderRepositoryImpl(
 
     override suspend fun getOrderDetails(orderId: String): Order {
         return safeApiCall {
-            bookingApiService.getBookingById(orderId).data.toDomain()
-        }
-    }
+            val response = bookingApiService.getBookingById(orderId)
+            if (response.success && response.data != null) {
+                response.data.toDomain()
+            } else {
+                throw Exception(response.message ?: "Order not found or data is null")
+            }
+        }}
+
 
     override suspend fun acceptOrder(orderId: String) {
         TODO("Not yet implemented")

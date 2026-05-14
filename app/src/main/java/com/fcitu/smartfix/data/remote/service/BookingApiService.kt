@@ -1,7 +1,7 @@
 package com.fcitu.smartfix.data.remote.service
 
-import com.fcitu.smartfix.data.remote.dto.ApiResponse
-import com.fcitu.smartfix.data.remote.dto.PaginatedResponse
+import com.fcitu.smartfix.data.remote.util.ApiResponse
+import com.fcitu.smartfix.data.remote.util.PaginatedResponse
 import com.fcitu.smartfix.data.remote.dto.booking.BookingDto
 import retrofit2.http.GET
 import retrofit2.http.Path

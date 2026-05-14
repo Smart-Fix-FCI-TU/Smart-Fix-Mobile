@@ -18,18 +18,15 @@ class TechnicianRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    //TODO: Change the impl for this fun  when api endpoint is finished
-    override suspend fun getTechnicianDetails(technicianId: String): Technician{
+    override suspend fun getTechnicianDetails(technicianId: String): Technician {
         val response = technicianService.getTechnicianById(technicianId)
 
-        if (response.success) {
-            return response.data?.toDomain()
-                ?: throw Exception("Technician data is null")
+        return if (response.success && response.data != null) {
+            response.data.toDomain()
         } else {
             throw Exception(response.message ?: "Failed to load technician profile")
         }
     }
-
 
     override suspend fun updateAvailabilityStatus(isAvailable: Boolean) {
         TODO("Not yet implemented")

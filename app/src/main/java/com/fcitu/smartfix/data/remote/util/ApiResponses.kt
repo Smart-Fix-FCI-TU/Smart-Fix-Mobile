@@ -1,12 +1,11 @@
-package com.fcitu.smartfix.data.remote.dto
+package com.fcitu.smartfix.data.remote.util
 
-// ── Common ─────────────────────────────────────────────────────────────────
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiResponse<T>(
     val success: Boolean,
-    val data: T,
+    val data: T? = null,
     val message: String? = null,
 )
 

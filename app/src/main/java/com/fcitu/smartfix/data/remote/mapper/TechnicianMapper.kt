@@ -18,7 +18,8 @@ fun TechnicianDto.toDomain(): Technician {
         yearsOfExperience = 0,
         bio = this.bio ?: "",
         averageRating = this.rating?.toFloat() ?: 0f,
-        reviewCount = this.completedJobs ?: 0, // We're temporarily replacing reviewCount with completedJobs
+     // TODO: Remove this mapping once the Entity is updated or API provides reviewCount
+        reviewCount = this.completedJobs ?: 0,
         reviews = emptyList()
     )
 }

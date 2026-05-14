@@ -25,8 +25,13 @@ fun BookingDto.toDomain(): Order = Order(
         title = serviceId?.name ?: "",
         description = "",
         problemPhotoUrls = emptyList(),
-        address = address?.toDomain() ?: com.fcitu.smartfix.data.remote.dto.booking.Address.empty(),
-        additionalNotes = notes ?: "",
+        address = address?.toDomain() ?: Address(
+            id = "",
+            fullAddress = "",
+            location = Address.Location(0.0, 0.0),
+            floor = "",
+            apartmentNo = ""
+        ),        additionalNotes = notes ?: "",
     ),
 
     repairPhotos = Order.RepairPhotos(),
@@ -88,11 +93,3 @@ private fun String.toLocalDateTimeOrNull(): LocalDateTime? = try {
 } catch (e: Exception) {
     null
 }
-
-private fun com.fcitu.smartfix.data.remote.dto.booking.Address.Companion.empty() = Address(
-    id = "",
-    fullAddress = "",
-    location = Address.Location(0.0, 0.0),
-    floor = "",
-    apartmentNo = "",
-)

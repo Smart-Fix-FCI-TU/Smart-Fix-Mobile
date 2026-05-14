@@ -1,6 +1,6 @@
 package com.fcitu.smartfix.data.remote.service
 
-import com.fcitu.smartfix.data.remote.dto.ApiResponse
+import com.fcitu.smartfix.data.remote.util.ApiResponse
 import com.fcitu.smartfix.data.remote.dto.technician.TechnicianDto
 import retrofit2.http.GET
 import retrofit2.http.Path
