@@ -1,4 +1,5 @@
 package com.fcitu.smartfix.ui.screen.customer.techniciansList
 
-interface TechnicianListEffect {
+sealed interface TechnicianListEffect {
+    data object NavigateBack : TechnicianListEffect
 }
