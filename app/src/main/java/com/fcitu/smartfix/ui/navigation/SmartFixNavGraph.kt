@@ -34,6 +34,7 @@ import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostC
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.screen.customer.home.HomeScreen
+import com.fcitu.smartfix.ui.screen.customer.myorders.MyOrdersScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileViewModel
 import com.fcitu.smartfix.ui.screen.customer.profile.ServiceHistoryScreen
@@ -148,8 +149,14 @@ fun SmartFixNavGraph() {
                             )
                         }
                     ) {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text(text = "Settings Screen Coming Soon", style = androidx.compose.ui.text.TextStyle(fontFamily = com.fcitu.smartfix.ui.designSystem.theme.Cairo))
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Settings Screen Coming Soon",
+                                style = androidx.compose.ui.text.TextStyle(fontFamily = com.fcitu.smartfix.ui.designSystem.theme.Cairo)
+                            )
                         }
                     }
                 }
@@ -181,13 +188,9 @@ fun SmartFixNavGraph() {
                             onBack = { navController.popBackStack() }
                         )
                     }
-
+                    // TODO: Write the screen navigation functions when implementation is complete.
                     composable<Route.CustomerOrders> {
-                        CustomerOrdersScreen(
-                            onOrderClick = { orderId ->
-                                navController.navigate(Route.OrderDetail(orderId))
-                            }
-                        )
+                        MyOrdersScreen()
                     }
 
                     composable<Route.OrderDetail> {
@@ -214,7 +217,8 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.AllServiceHistory> {
-                        val viewModel: CustomerProfileViewModel = org.koin.compose.viewmodel.koinViewModel()
+                        val viewModel: CustomerProfileViewModel =
+                            org.koin.compose.viewmodel.koinViewModel()
                         val state by viewModel.state.collectAsStateWithLifecycle()
                         ServiceHistoryScreen(
                             history = state.serviceHistory,
@@ -255,7 +259,8 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.AllReviews> {
-                        val viewModel: TechnicianProfileViewModel = org.koin.compose.viewmodel.koinViewModel()
+                        val viewModel: TechnicianProfileViewModel =
+                            org.koin.compose.viewmodel.koinViewModel()
                         val state by viewModel.state.collectAsStateWithLifecycle()
                         AllReviewsScreen(
                             reviews = state.reviews,

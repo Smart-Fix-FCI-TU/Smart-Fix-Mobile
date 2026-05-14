@@ -43,6 +43,7 @@ fun BookingDto.toDomain(): Order = Order(
         acceptedAt = LocalDateTime(2026, 4, 12, 4, 40),
         arrivedAt = LocalDateTime(2026, 4, 12, 4, 40),
         startedAt = startedAt?.toLocalDateTimeOrNull() ?: LocalDateTime(2026, 4, 12, 4, 40),
+        onWayAt = startedAt?.toLocalDateTimeOrNull()?:LocalDateTime(2026, 4, 12, 4, 40),
         completedAt = completedAt?.toLocalDateTimeOrNull() ?: LocalDateTime(2026, 4, 12, 4, 40),
     )
 )
