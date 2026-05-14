@@ -1,12 +1,18 @@
 package com.fcitu.smartfix.ui.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -20,14 +26,23 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.fcitu.smartfix.R
 import com.fcitu.smartfix.domain.model.UserRole
+import com.fcitu.smartfix.ui.designSystem.components.appBar.AppBar
 import com.fcitu.smartfix.ui.designSystem.components.bottomNavigation.BottomNavigationBar
 import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.AnimatedSnackBarHost
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
+import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.screen.customer.home.HomeScreen
+import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileScreen
+import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileViewModel
+import com.fcitu.smartfix.ui.screen.customer.profile.ServiceHistoryScreen
 import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
+import com.fcitu.smartfix.ui.screen.shared.orderDetails.OrderDetailsScreen
 import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
+import com.fcitu.smartfix.ui.screen.technician.profile.AllReviewsScreen
+import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileScreen
+import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileViewModel
 
 
 val LocalNavController = staticCompositionLocalOf<NavController> {
@@ -116,6 +131,28 @@ fun SmartFixNavGraph() {
                         }
                     )
                 }
+
+                composable<Route.Settings> {
+                    // Placeholder Settings Screen to prevent crash
+                    Scaffold(
+                        topBar = {
+                            AppBar(
+                                title = "Settings",
+                                leadingContent = {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.ic_back),
+                                        contentDescription = "Back"
+                                    )
+                                },
+                                onLeadingClick = { navController.popBackStack() }
+                            )
+                        }
+                    ) {
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(text = "Settings Screen Coming Soon", style = androidx.compose.ui.text.TextStyle(fontFamily = com.fcitu.smartfix.ui.designSystem.theme.Cairo))
+                        }
+                    }
+                }
                 // TODO: the current graph is just a placeholder to setup navigation structure, remove it later when real screens are implemented
                 // ── Customer Graph ─────────────────────────
                 navigation<Route.CustomerGraph>(
@@ -123,7 +160,11 @@ fun SmartFixNavGraph() {
                 ) {
                     //TODO: Once all the screens that the Home Screen navigates to are built, the code for navigating to these screens will be written.
                     composable<Route.CustomerHome> {
-                        HomeScreen()
+                        HomeScreen(
+                            onNavigateToOrderDetails = {
+                                navController.navigate(Route.OrderDetail(orderId = "sample_order_id"))
+                            }
+                        )
                     }
 
                     composable<Route.Booking> {
@@ -149,11 +190,10 @@ fun SmartFixNavGraph() {
                         )
                     }
 
-                    composable<Route.OrderDetail> { backStackEntry ->
-                        val route = backStackEntry.toRoute<Route.OrderDetail>()
-                        CustomerOrderDetailScreen(
-                            orderId = route.orderId,
-                            onBack = { navController.popBackStack() }
+                    composable<Route.OrderDetail> {
+                        OrderDetailsScreen(
+                            userRole = UserRole.CUSTOMER,
+                            onBackClicked = { navController.popBackStack() }
                         )
                     }
 
@@ -171,6 +211,15 @@ fun SmartFixNavGraph() {
 
                     composable<Route.CustomerProfile> {
                         CustomerProfileScreen()
+                    }
+
+                    composable<Route.AllServiceHistory> {
+                        val viewModel: CustomerProfileViewModel = org.koin.compose.viewmodel.koinViewModel()
+                        val state by viewModel.state.collectAsStateWithLifecycle()
+                        ServiceHistoryScreen(
+                            history = state.serviceHistory,
+                            onBack = { navController.popBackStack() }
+                        )
                     }
                 }
 
@@ -190,11 +239,10 @@ fun SmartFixNavGraph() {
                         )
                     }
 
-                    composable<Route.TechnicianOrderDetail> { backStackEntry ->
-                        val route = backStackEntry.toRoute<Route.TechnicianOrderDetail>()
-                        TechnicianOrderDetailScreen(
-                            orderId = route.orderId,
-                            onBack = { navController.popBackStack() }
+                    composable<Route.OrderDetail> {
+                        OrderDetailsScreen(
+                            userRole = UserRole.TECHNICIAN,
+                            onBackClicked = { navController.popBackStack() }
                         )
                     }
 
@@ -204,6 +252,15 @@ fun SmartFixNavGraph() {
 
                     composable<Route.TechnicianProfile> {
                         TechnicianProfileScreen()
+                    }
+
+                    composable<Route.AllReviews> {
+                        val viewModel: TechnicianProfileViewModel = org.koin.compose.viewmodel.koinViewModel()
+                        val state by viewModel.state.collectAsStateWithLifecycle()
+                        AllReviewsScreen(
+                            reviews = state.reviews,
+                            onBack = { navController.popBackStack() }
+                        )
                     }
                 }
             }

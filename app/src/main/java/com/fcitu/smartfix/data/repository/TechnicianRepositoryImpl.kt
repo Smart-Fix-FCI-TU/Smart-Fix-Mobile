@@ -5,6 +5,7 @@ import com.fcitu.smartfix.domain.entity.Technician
 import com.fcitu.smartfix.domain.entity.User
 import com.fcitu.smartfix.domain.model.ServiceCategory
 import com.fcitu.smartfix.domain.model.UserRole
+import com.fcitu.smartfix.domain.model.ServiceCategory
 import com.fcitu.smartfix.domain.repository.TechnicianRepository
 
 class TechnicianRepositoryImpl : TechnicianRepository {
@@ -50,5 +51,12 @@ class TechnicianRepositoryImpl : TechnicianRepository {
 
     override suspend fun updateAvailabilityStatus(isAvailable: Boolean) {
         TODO("Not yet implemented")
+    }
+}
+        return emptyList()
+    }
+
+    override suspend fun updateAvailabilityStatus(isAvailable: Boolean) {
+        // Do nothing
     }
 }

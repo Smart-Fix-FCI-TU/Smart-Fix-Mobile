@@ -45,6 +45,7 @@ fun OrderDto.AddressDto.LocationDto.toEntity(): Address.Location =
 fun OrderDto.OrderTimelineDto.toDomain(): Order.OrderTimeline = Order.OrderTimeline(
     createdAt = LocalDateTime.parse(createdAt),
     acceptedAt = LocalDateTime.parse(acceptedAt),
+    onWayAt = LocalDateTime.parse(onWayAt),
     arrivedAt = LocalDateTime.parse(arrivedAt),
     startedAt = LocalDateTime.parse(startedAt),
     completedAt = LocalDateTime.parse(completedAt),
