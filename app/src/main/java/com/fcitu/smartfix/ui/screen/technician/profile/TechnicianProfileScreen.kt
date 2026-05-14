@@ -1,6 +1,7 @@
 package com.fcitu.smartfix.ui.screen.technician.profile
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,7 +37,11 @@ fun TechnicianProfileScreen(
             )
         }
     ) {
-        TechnicianProfileContent(state, viewModel)
+        TechnicianProfileContent(
+            state = state,
+            onViewAllReviewsClicked = viewModel::onViewAllReviewsClicked,
+            modifier = Modifier.fillMaxSize()
+        )
     }
 }
 
@@ -68,9 +73,11 @@ private fun EffectsHandler(
             TechnicianProfileUiEffect.NavigateToSettings -> {
                 navController.navigate(Route.Settings)
             }
+
             TechnicianProfileUiEffect.NavigateToAllReviews -> {
                 navController.navigate(Route.AllReviews)
             }
+
             is TechnicianProfileUiEffect.ShowSnackBar -> {
                 snackBarHostController.showSnackBar(
                     SnackBarData(
