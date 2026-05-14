@@ -16,7 +16,7 @@ class TechnicianRepositoryImpl : TechnicianRepository {
     }
 
     //TODO: Change the impl for this fun  when api endpoint is finished
-    override suspend fun getTechnicianDetails(technicianId: String): Technician{
+    override suspend fun getTechnicianDetails(technicianId: String): Technician {
         return Technician(
             user = User(
                 id = technicianId,
@@ -53,8 +53,4 @@ class TechnicianRepositoryImpl : TechnicianRepository {
         // Do nothing
     }
 
-}
-
-suspend fun updateAvailabilityStatus(isAvailable: Boolean) {
-    TODO("Not yet implemented")
 }
