@@ -27,10 +27,15 @@ class TechnicianProfileViewModel(
                 reviewCount = "124",
                 experience = "5 Years",
                 bio = "Professional electrician with 5 years of experience in residential and commercial maintenance. Specialized in diagnostics and new installations. Fully licensed and insured.",
-                reviews = listOf(
-                    ReviewUiState("1", "Ahmed Mohamed", 5, "Excellent service and very fast. He solved the problem in record time.", "Today"),
-                    ReviewUiState("2", "Sara Ahmed", 4, "Good service, arrived on time and cleaned up after work.", "Yesterday")
-                ),
+                reviews = (1..10).map { i ->
+                    ReviewUiState(
+                        id = "$i",
+                        reviewerName = if (i % 2 == 0) "Ahmed Mohamed" else "Sara Ahmed",
+                        rating = if (i % 3 == 0) 4 else 5,
+                        comment = "Service number $i: Very professional and efficient. Highly recommended!",
+                        date = "Jan ${10 + i}, 2024"
+                    )
+                },
                 profilePhotoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynS_f9S3stJ6S6T0V8LUM5VvOa3YqYy1Ag&s",
                 isOnline = true
             )
