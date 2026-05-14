@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.fcitu.smartfix.R
 import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
@@ -28,6 +29,11 @@ fun MyOrdersScreen(
     viewModel: MyOrdersViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LifecycleResumeEffect(Unit) {
+        viewModel.refreshOrders()
+        onPauseOrDispose {}
+    }
 
     MyOrdersEffectsHandler(
         effects = viewModel.effect,
