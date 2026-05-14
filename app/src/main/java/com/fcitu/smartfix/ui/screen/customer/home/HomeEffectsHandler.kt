@@ -1,41 +1,27 @@
 package com.fcitu.smartfix.ui.screen.customer.home
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import com.fcitu.smartfix.ui.navigation.Route
 import com.fcitu.smartfix.ui.utils.EffectHandler
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
- fun HomeEffectsHandler(
+fun HomeEffectsHandler(
     effects: SharedFlow<HomeUiEffect>,
-    onNavigateToBooking: (String) -> Unit,
-    onNavigateToOrderDetails: (String) -> Unit,
-    onNavigateToNotifications: () -> Unit,
-    onNavigateToAllOrders: () -> Unit,
-    onNavigateToTechniciansList: (String) -> Unit
+    navController: NavController
 ) {
 
+    //TODO: Navigate to the rest of the screens when there are finished.
     EffectHandler(effects = effects) { effect ->
         when (effect) {
-            is HomeUiEffect.NavigateToBooking -> {
-                onNavigateToBooking(effect.selectedCategory)
-            }
-
-            is HomeUiEffect.NavigateToOrderDetails -> {
-                onNavigateToOrderDetails(effect.orderId)
-            }
-
-            is HomeUiEffect.NavigateToNotifications -> {
-                onNavigateToNotifications()
-            }
-
+            is HomeUiEffect.NavigateToBooking -> {}//Booking
+            is HomeUiEffect.NavigateToOrderDetails -> {}//Tracking
+            is HomeUiEffect.NavigateToNotifications -> {}//Notification
             is HomeUiEffect.NavigateToAllActiveOrders -> {
-                onNavigateToAllOrders()
+                navController.navigate(Route.CustomerOrders)
             }
-
-            is HomeUiEffect.NavigateToAvailableTechnicianList -> {
-                onNavigateToTechniciansList(effect.orderId)
-            }
-
+            is HomeUiEffect.NavigateToAvailableTechnicianList -> {}
             is HomeUiEffect.ShowError -> {
 
             }

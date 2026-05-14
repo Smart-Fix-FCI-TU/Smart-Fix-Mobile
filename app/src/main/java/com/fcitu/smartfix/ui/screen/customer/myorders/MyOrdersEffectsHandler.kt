@@ -1,35 +1,27 @@
 package com.fcitu.smartfix.ui.screen.customer.myorders
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import com.fcitu.smartfix.ui.navigation.Route
 import com.fcitu.smartfix.ui.utils.EffectHandler
 import kotlinx.coroutines.flow.SharedFlow
 
 @Composable
 fun MyOrdersEffectsHandler(
     effects: SharedFlow<MyOrdersUiEffect>,
-    onNavigateToCompletedOrderDetails: (String) -> Unit,
-    onNavigateToTrackingActiveOrderDetails: (String) -> Unit,
-    onNavigateToChat: (String, String) -> Unit,
-    onNavigateToNotifications: () -> Unit,
-    onNavigateBack: () -> Unit,
+    navController: NavController,
+    onNavigateBack: () -> Unit = {},
 ) {
+    //TODO: Navigate to the rest of the screens when there are finished.
     EffectHandler(effects = effects) { effect ->
         when (effect) {
             is MyOrdersUiEffect.NavigateBack -> onNavigateBack()
-            is MyOrdersUiEffect.NavigateToChat -> onNavigateToChat(
-                effect.orderId,
-                effect.technicianId
-            )
-
-            is MyOrdersUiEffect.NavigateToCompletedOrderDetails -> onNavigateToCompletedOrderDetails(
-                effect.orderId
-            )
-
-            is MyOrdersUiEffect.NavigateToNotifications -> onNavigateToNotifications()
-            is MyOrdersUiEffect.NavigateToTrackingActiveOrder -> onNavigateToTrackingActiveOrderDetails(
-                effect.orderId
-            )
-
+            is MyOrdersUiEffect.NavigateToChat -> {}
+            is MyOrdersUiEffect.NavigateToCompletedOrderDetails -> {
+                navController.navigate(Route.OrderDetail(orderId = effect.orderId))
+            }
+            is MyOrdersUiEffect.NavigateToNotifications -> {}
+            is MyOrdersUiEffect.NavigateToTrackingActiveOrder -> {}
             is MyOrdersUiEffect.ShowError -> {}
         }
 

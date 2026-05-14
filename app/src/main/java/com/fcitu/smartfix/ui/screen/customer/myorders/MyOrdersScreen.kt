@@ -8,8 +8,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.fcitu.smartfix.R
 import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.screen.customer.home.component.NetworkOutageScreen
@@ -21,28 +21,16 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MyOrdersScreen(
-    onNavigateToCompletedOrderDetails: (String) -> Unit = {},
-    onNavigateToTrackingActiveOrder: (String) -> Unit = {},
-    onNavigateToChat: (String, String) -> Unit = { _, _ -> },
-    onNavigateToNotifications: () -> Unit = {},
+    navController: NavController,
     onNavigateBack: () -> Unit = {},
     viewModel: MyOrdersViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LifecycleResumeEffect(Unit) {
-        viewModel.refreshOrders()
-        onPauseOrDispose {}
-    }
-
     MyOrdersEffectsHandler(
         effects = viewModel.effect,
+        navController = navController,
         onNavigateBack = onNavigateBack,
-        onNavigateToCompletedOrderDetails = onNavigateToCompletedOrderDetails,
-        onNavigateToNotifications = onNavigateToNotifications,
-        onNavigateToTrackingActiveOrderDetails = onNavigateToTrackingActiveOrder,
-        onNavigateToChat = onNavigateToChat
-
     )
     MyOrdersContent(state, listener = viewModel)
 
@@ -78,26 +66,29 @@ private fun MyOrdersContent(
         }
     ) {
         if (!state.hasNetworkConnection) {
-            NetworkOutageScreen()
+            NetworkOutageScreen(onTryAgain = { listener.onTryAgainClicked() })
         } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
 
             ) {
-            OrdersTabRow(
-                state.selectedTab,
-                onTabClicked = { selectedTab -> listener.onTabSelected(selectedTab) })
-            when (state.selectedTab) {
-                OrdersTab.ACTIVE -> {
-                    ActiveOrdersTab(state, listener, modifier = Modifier.weight(1f))
-                }
+                OrdersTabRow(
+                    state.selectedTab,
+                    onTabClicked = { selectedTab -> listener.onTabSelected(selectedTab) })
+                when (state.selectedTab) {
+                    OrdersTab.ACTIVE -> {
+                        ActiveOrdersTab(state, listener, modifier = Modifier.weight(1f))
+                    }
 
-                OrdersTab.HISTORY -> {
-                    HistoryOrdersTab(state, listener,
-                        modifier = Modifier.weight(1f))
+                    OrdersTab.HISTORY -> {
+                        HistoryOrdersTab(
+                            state, listener,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
                 }
             }
-        }}
+        }
     }
 }

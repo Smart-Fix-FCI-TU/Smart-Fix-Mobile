@@ -9,4 +9,5 @@ interface MyOrdersInteractionListener {
     fun onNotificationClicked()
     fun onChatClicked(orderId: String, technicianId: String)
     fun onBackClicked()
+    fun onTryAgainClicked()
 }
