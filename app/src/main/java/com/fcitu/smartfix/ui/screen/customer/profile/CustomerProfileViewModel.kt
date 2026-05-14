@@ -11,6 +11,21 @@ class CustomerProfileViewModel : BaseViewModel<CustomerProfileUiState, CustomerP
     }
 
     private fun loadMockProfile() {
+        val mockHistory = (1..10).map { i ->
+            ServiceHistoryUiState(
+                id = "$i",
+                technicianImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynS_f9S3stJ6S6T0V8LUM5VvOa3YqYy1Ag&s",
+                serviceName = when(i % 3) {
+                    0 -> "Electrician Service"
+                    1 -> "Plumbing Service"
+                    else -> "Carpentry Service"
+                },
+                rating = (4.0 + (i % 10) / 10.0).toString().take(3),
+                status = "Completed",
+                date = "Jan ${10 + i}, 2024"
+            )
+        }
+
         updateState {
             it.copy(
                 isLoading = false,
@@ -20,24 +35,7 @@ class CustomerProfileViewModel : BaseViewModel<CustomerProfileUiState, CustomerP
                 email = "mahmoud.hassan@email.com",
                 address = "9 Maadi St., Cairo",
                 profilePhotoUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynS_f9S3stJ6S6T0V8LUM5VvOa3YqYy1Ag&s",
-                serviceHistory = listOf(
-                    ServiceHistoryUiState(
-                        id = "1",
-                        technicianImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynS_f9S3stJ6S6T0V8LUM5VvOa3YqYy1Ag&s",
-                        serviceName = "Electrician Service",
-                        rating = "4.9",
-                        status = "Completed",
-                        date = "Jan 15, 2024"
-                    ),
-                    ServiceHistoryUiState(
-                        id = "2",
-                        technicianImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsynS_f9S3stJ6S6T0V8LUM5VvOa3YqYy1Ag&s",
-                        serviceName = "Plumbing Service",
-                        rating = "4.8",
-                        status = "Completed",
-                        date = "Dec 10, 2023"
-                    )
-                )
+                serviceHistory = mockHistory
             )
         }
     }
