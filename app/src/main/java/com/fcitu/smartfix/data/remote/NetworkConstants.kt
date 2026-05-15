@@ -10,4 +10,9 @@ object NetworkConstants {
     const val REFRESH_TOKEN = "api/v1/auth/refresh-token"
 
     // endregion
+
+    // region Review endpoints
+    const val SUBMIT_REVIEW: String = "api/v1/reviews"
+    const val BOOKING_REVIEW: String = "api/v1/reviews/booking"
+    // endregion
 }
