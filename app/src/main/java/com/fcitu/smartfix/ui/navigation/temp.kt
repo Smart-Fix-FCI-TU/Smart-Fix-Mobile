@@ -23,8 +23,11 @@ fun TrackingScreen(orderId: String, onBack: () -> Unit) {}
 // TODO: Don't use this screens that are used to setup navigation graph, remove them later when real screens are implemented
 @Composable
 fun CustomerChatScreen() {}
-@Composable
-fun CustomerProfileScreen() {}
+
+// تم تعطيل هذه الشاشات مؤقتاً لأنها موجودة فعلياً في ملفات أخرى وتسبب تعارض في الـ Build
+// @Composable
+// fun CustomerProfileScreen() {}
+
 // TODO: Don't use this screens that are used to setup navigation graph, remove them later when real screens are implemented
 @Composable
 fun TechnicianHomeScreen() {}
@@ -36,5 +39,7 @@ fun TechnicianOrderDetailScreen(orderId: String, onBack: () -> Unit) {}
 @Composable
 fun TechnicianChatScreen() {}
 // TODO: Don't use this screens that are used to setup navigation graph, remove them later when real screens are implemented
-@Composable
-fun TechnicianProfileScreen() {}
+
+// تم تعطيل هذه الشاشات مؤقتاً لأنها موجودة فعلياً في ملفات أخرى وتسبب تعارض في الـ Build
+// @Composable
+// fun TechnicianProfileScreen() {}

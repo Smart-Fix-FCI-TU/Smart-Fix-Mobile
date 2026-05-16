@@ -137,7 +137,7 @@ class BookingViewModel(
                 )
             },
             onSuccess = { result ->
-                result.onSuccess {
+                if (result.isSuccess) {
                     updateState {
                         it.copy(
                             isLoading = false,
@@ -145,11 +145,12 @@ class BookingViewModel(
                         )
                     }
                     emitEffect(BookingUiEffect.ProblemSubmittedSuccessfully)
-                }.onFailure { error ->
-                    updateState { it.copy(isLoading = false, errorMessage = error.message) }
+                } else {
+                    val error = result.exceptionOrNull()
+                    updateState { it.copy(isLoading = false, errorMessage = error?.message) }
                     emitEffect(
                         BookingUiEffect.ShowSnackBar(
-                            error.message ?: "Unknown error occurred",
+                            error?.message ?: "Unknown error occurred",
                             isError = true
                         )
                     )
