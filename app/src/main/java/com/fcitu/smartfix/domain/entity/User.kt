@@ -8,8 +8,10 @@ data class User(
     val firstName: String,
     val lastName: String,
     val username: String,
+    val birthOfDate: String,
+    val nationalId: String,
     val email: String,
     val role: UserRole,
     val profilePhotoUrl: String,
-    val location: Location?
+    val address: Address,
 )

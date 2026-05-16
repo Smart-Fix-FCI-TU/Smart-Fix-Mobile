@@ -3,6 +3,7 @@ package com.fcitu.smartfix.di
 import com.fcitu.smartfix.BuildConfig
 import com.fcitu.smartfix.data.remote.NetworkConstants
 import com.fcitu.smartfix.data.remote.service.AuthService
+import com.fcitu.smartfix.data.remote.service.ReviewService
 import com.fcitu.smartfix.data.remote.util.AuthInterceptor
 import com.fcitu.smartfix.data.remote.util.TokenAuthenticator
 import kotlinx.serialization.json.Json
@@ -84,4 +85,5 @@ val networkModule = module {
     }
 
     single { get<Retrofit>().create(AuthService::class.java) }
+    single { get<Retrofit>().create(ReviewService::class.java) }
 }

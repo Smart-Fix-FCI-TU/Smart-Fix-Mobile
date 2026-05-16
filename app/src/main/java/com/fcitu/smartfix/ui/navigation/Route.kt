@@ -16,6 +16,7 @@ sealed interface Route {
     @Serializable data object CustomerProfile : Route
     @Serializable data class Booking(val serviceId: String) : Route
     @Serializable data object Map : Route
+    @Serializable data object AllServiceHistory : Route
     @Serializable data object TechnicianList : Route
     @Serializable data class OrderDetail(val orderId: String) : Route
     @Serializable data class Tracking(val orderId: String) : Route
@@ -27,4 +28,6 @@ sealed interface Route {
     @Serializable data object TechnicianOrders : Route
     @Serializable data object TechnicianProfile : Route
     @Serializable data class TechnicianOrderDetail(val orderId: String) : Route
+    @Serializable data object Settings : Route
+    @Serializable data object AllReviews : Route
 }

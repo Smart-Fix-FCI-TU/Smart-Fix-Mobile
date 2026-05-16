@@ -6,8 +6,10 @@ data class Technician(
     val user: User,
     val serviceCategory: ServiceCategory,
     val isAvailable: Boolean,
+    val isOnJob: Boolean,
     val yearsOfExperience: Int,
     val bio: String,
     val averageRating: Float,
-    val reviewCount: Int
+    val reviewCount: Int,
+    val reviews: List<Review>,
 )
