@@ -1,12 +1,14 @@
 package com.fcitu.smartfix.di
 
 import com.fcitu.smartfix.data.repository.AuthRepositoryImpl
+import com.fcitu.smartfix.data.repository.BookingRepositoryImpl
 import com.fcitu.smartfix.data.repository.CustomerRepositoryImpl
 import com.fcitu.smartfix.data.repository.IdentityRepositoryImpl
 import com.fcitu.smartfix.data.repository.OrderRepositoryImpl
 import com.fcitu.smartfix.data.repository.ReviewRepositoryImpl
 import com.fcitu.smartfix.data.repository.TechnicianRepositoryImpl
 import com.fcitu.smartfix.domain.repository.AuthRepository
+import com.fcitu.smartfix.domain.repository.BookingRepository
 import com.fcitu.smartfix.domain.repository.CustomerRepository
 import com.fcitu.smartfix.domain.repository.IdentityRepository
 import com.fcitu.smartfix.domain.repository.OrderRepository
@@ -24,4 +26,5 @@ val repositoriesModule = module {
     singleOf(::CustomerRepositoryImpl) bind CustomerRepository::class
     singleOf(::TechnicianRepositoryImpl) bind TechnicianRepository::class
     singleOf(::ReviewRepositoryImpl) bind ReviewRepository::class
+    singleOf(::BookingRepositoryImpl) bind BookingRepository::class
 }
