@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -78,6 +79,7 @@ fun SmartFixNavGraph() {
     val tabRoutes = if (isCustomerGraph) customerTabRoutes else technicianTabRoutes
 
     Scaffold(
+        statusBarColor = Color(0xFF535755),
         bottomBar = {
             BottomBar(
                 showBottomBar = showBottomBar,
@@ -270,7 +272,7 @@ fun SmartFixNavGraph() {
                         )
                     }
 
-                    composable<Route.TechnicianOrderDetail> {
+                    composable<Route.OrderDetail> {
                         OrderDetailsScreen(
                             userRole = UserRole.TECHNICIAN,
                             onBackClicked = { navController.popBackStack() }

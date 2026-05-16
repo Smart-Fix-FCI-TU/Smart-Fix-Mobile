@@ -18,11 +18,7 @@ class OrderDetailsViewModel(
 
 
     init {
-        val orderId = try {
-            savedStateHandle.toRoute<Route.OrderDetail>().orderId
-        } catch (e: Exception) {
-            savedStateHandle.toRoute<Route.TechnicianOrderDetail>().orderId
-        }
+        val orderId = savedStateHandle.toRoute<Route.OrderDetail>().orderId
         updateState { it.copy(orderId = orderId) }
         loadOrderDetails(orderId)
         fetchExistingReview(orderId)
