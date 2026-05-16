@@ -17,6 +17,9 @@ data class BookingUiState(
     val isLocationValid: Boolean = false,
     val isFindServiceButtonEnabled: Boolean = false,
     val showOrderDetailsBottomSheet: Boolean = false,
+    val showDeletePhotoDialog: Boolean = false,
+    val photoToDelete: Uri? = null,
+    val showLocationDialog: Boolean = false,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 ) {

@@ -1,4 +1,4 @@
-package com.fcitu.smartfix.ui.theme.navigation
+package com.fcitu.smartfix.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -25,20 +25,6 @@ import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.AnimatedSnackBarHost
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
-import com.fcitu.smartfix.ui.navigation.CustomerChatScreen
-import com.fcitu.smartfix.ui.navigation.CustomerHomeScreen
-import com.fcitu.smartfix.ui.navigation.CustomerOrderDetailScreen
-import com.fcitu.smartfix.ui.navigation.CustomerOrdersScreen
-import com.fcitu.smartfix.ui.navigation.CustomerProfileScreen
-import com.fcitu.smartfix.ui.navigation.MapScreen
-import com.fcitu.smartfix.ui.navigation.Route
-import com.fcitu.smartfix.ui.navigation.TechnicianChatScreen
-import com.fcitu.smartfix.ui.navigation.TechnicianHomeScreen
-import com.fcitu.smartfix.ui.navigation.TechnicianListScreen
-import com.fcitu.smartfix.ui.navigation.TechnicianOrderDetailScreen
-import com.fcitu.smartfix.ui.navigation.TechnicianOrdersScreen
-import com.fcitu.smartfix.ui.navigation.TechnicianProfileScreen
-import com.fcitu.smartfix.ui.navigation.TrackingScreen
 import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
 import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
 import com.fcitu.smartfix.ui.screen.customer.booking.BookingScreen
@@ -93,7 +79,7 @@ fun SmartFixNavGraph() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = Route.Splash,
+                startDestination = Route.Splash
             ) {
 
                 // TODO: the current graph is just a placeholder to setup navigation structure, remove it later when real screens are implemented
@@ -156,6 +142,7 @@ fun SmartFixNavGraph() {
                             latitude = lat,
                             longitude = lng,
                             onNavigateBack = { navController.popBackStack() },
+                            onNavigateToMap = { navController.navigate(Route.Map) },
                             onProblemSubmitted = {
                                 navController.navigate(Route.TechnicianList)
                             }

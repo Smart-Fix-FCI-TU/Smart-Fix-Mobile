@@ -7,5 +7,6 @@ sealed interface BookingUiEffect {
     data class ShowSnackBar(val message: String, val isError: Boolean) : BookingUiEffect
     data class LaunchImagePicker(val maxSelection: Int) : BookingUiEffect
     data class ShowImageRemoveConfirmation(val uri: Uri) : BookingUiEffect
+    data object NavigateToMap : BookingUiEffect
     data object ProblemSubmittedSuccessfully : BookingUiEffect
 }

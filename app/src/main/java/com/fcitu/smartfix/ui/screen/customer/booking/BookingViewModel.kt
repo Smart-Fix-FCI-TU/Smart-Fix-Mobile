@@ -46,7 +46,7 @@ class BookingViewModel(
     override fun onProblemPhotoAdded(uris: List<Uri>) {
         val currentPhotos = state.value.problemPhotos.toMutableList()
         uris.forEach { uri ->
-            if (currentPhotos.size < 5 && !currentPhotos.contains(uri)) {
+            if (currentPhotos.size < 10 && !currentPhotos.contains(uri)) {
                 currentPhotos.add(uri)
             }
         }
@@ -54,13 +54,28 @@ class BookingViewModel(
     }
 
     override fun onProblemPhotoRemoved(uri: Uri) {
+        updateState { it.copy(showDeletePhotoDialog = true, photoToDelete = uri) }
+    }
+
+    override fun onConfirmDeletePhoto() {
+        val uri = state.value.photoToDelete ?: return
         val currentPhotos = state.value.problemPhotos.toMutableList()
         currentPhotos.remove(uri)
-        updateState { it.copy(problemPhotos = currentPhotos) }
+        updateState {
+            it.copy(
+                problemPhotos = currentPhotos,
+                showDeletePhotoDialog = false,
+                photoToDelete = null
+            )
+        }
+    }
+
+    override fun onDismissDeletePhoto() {
+        updateState { it.copy(showDeletePhotoDialog = false, photoToDelete = null) }
     }
 
     override fun onAddPhotoClicked() {
-        emitEffect(BookingUiEffect.LaunchImagePicker(5 - state.value.problemPhotos.size))
+        emitEffect(BookingUiEffect.LaunchImagePicker(10 - state.value.problemPhotos.size))
     }
 
     override fun onLocationClicked() {
@@ -94,7 +109,11 @@ class BookingViewModel(
     }
 
     override fun onGetCurrentLocationClick() {
-        emitEffect(BookingUiEffect.RequestLocation)
+        updateState { it.copy(showLocationDialog = true) }
+    }
+
+    override fun onDismissLocationDialog() {
+        updateState { it.copy(showLocationDialog = false) }
     }
 
     override fun onBottomSheetDismissed() {
@@ -149,12 +168,17 @@ class BookingViewModel(
     }
 
     override fun onLocationSelected(location: String, latitude: Double?, longitude: Double?) {
+        val isInvalidString = location == "Detecting location..." || 
+                             location.contains("unavailable", ignoreCase = true) || 
+                             location.contains("disabled", ignoreCase = true) ||
+                             location.contains("Error", ignoreCase = true)
+
         updateState {
             it.copy(
                 location = location,
                 latitude = latitude,
                 longitude = longitude,
-                isLocationValid = location.isNotBlank()
+                isLocationValid = location.isNotBlank() && !isInvalidString
             )
         }
         validateForm()

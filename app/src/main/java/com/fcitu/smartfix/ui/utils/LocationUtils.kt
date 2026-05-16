@@ -7,6 +7,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import java.util.Locale
+import kotlin.concurrent.thread
 
 object LocationUtils {
 
@@ -17,7 +18,6 @@ object LocationUtils {
         onError: (Exception) -> Unit = {}
     ) {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-        val geocoder = Geocoder(context, Locale.getDefault())
         val cancellationTokenSource = CancellationTokenSource()
 
         fusedLocationClient.getCurrentLocation(
@@ -25,23 +25,40 @@ object LocationUtils {
             cancellationTokenSource.token
         ).addOnSuccessListener { location ->
             if (location != null) {
-                try {
-                    @Suppress("DEPRECATION")
-                    val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                    val addressLine = addresses?.firstOrNull()?.getAddressLine(0) ?: "Location Found"
-                    onResult(addressLine, location.latitude, location.longitude)
-                } catch (e: Exception) {
-                    onResult(
-                        "Location Found (${location.latitude}, ${location.longitude})",
-                        location.latitude,
-                        location.longitude
-                    )
-                }
+                fetchAddress(context, location.latitude, location.longitude, onResult)
             } else {
-                onError(Exception("Location is null"))
+                fusedLocationClient.lastLocation.addOnSuccessListener { lastLocation ->
+                    if (lastLocation != null) {
+                        fetchAddress(context, lastLocation.latitude, lastLocation.longitude, onResult)
+                    } else {
+                        onError(Exception("Unable to find location. Please ensure GPS is on."))
+                    }
+                }
             }
-        }.addOnFailureListener {
-            onError(it)
+        }.addOnFailureListener { onError(it) }
+    }
+
+    private fun fetchAddress(
+        context: Context,
+        lat: Double,
+        lng: Double,
+        onResult: (String, Double, Double) -> Unit
+    ) {
+        thread {
+            try {
+                val geocoder = Geocoder(context, Locale.getDefault())
+                @Suppress("DEPRECATION")
+                val addresses = geocoder.getFromLocation(lat, lng, 1)
+                val addressLine = addresses?.firstOrNull()?.getAddressLine(0) ?: "Selected Location ($lat, $lng)"
+                
+                android.os.Handler(android.os.Looper.getMainLooper()).post {
+                    onResult(addressLine, lat, lng)
+                }
+            } catch (e: Exception) {
+                android.os.Handler(android.os.Looper.getMainLooper()).post {
+                    onResult("Location: $lat, $lng", lat, lng)
+                }
+            }
         }
     }
 }

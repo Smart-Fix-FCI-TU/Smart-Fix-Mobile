@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,7 +40,7 @@ import com.fcitu.smartfix.R
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 
-private const val MAX_PHOTOS = 5
+private const val MAX_PHOTOS = 10
 
 @Composable
 fun ProblemPhotoPickerSection(
@@ -49,14 +50,31 @@ fun ProblemPhotoPickerSection(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            text = "Problem Photos",
-            style = TextStyle(
-                fontFamily = Cairo,
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Problem Photos",
+                style = TextStyle(
+                    fontFamily = Cairo,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp
+                )
             )
-        )
+            if (problemPhotos.size >= MAX_PHOTOS) {
+                Text(
+                    text = "Maximum 10 photos reached",
+                    style = TextStyle(
+                        fontFamily = Cairo,
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
+            }
+        }
         Spacer(modifier = Modifier.height(8.dp))
 
         LazyRow(

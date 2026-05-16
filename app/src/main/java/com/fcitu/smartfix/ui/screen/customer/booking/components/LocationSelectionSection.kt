@@ -20,9 +20,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.R
+import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.designSystem.components.textField.TextField
+import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 
 @Composable
 fun LocationSelectionSection(
@@ -54,20 +59,23 @@ fun LocationSelectionSection(
             contentAlignment = Alignment.BottomEnd
         ) {
             Image(
-                painter = painterResource(id = R.drawable.img_map_placeholder), // اسم الصورة اللي هتضيفها
+                painter = painterResource(id = R.drawable.img_map_placeholder),
                 contentDescription = null,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop,
                 alpha = 0.6f
             )
-            Icon(
-                painter = painterResource(id = R.drawable.ic_my_location),
-                contentDescription = null,
-                tint = Color(0xFFB71C1C),
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(48.dp)
-            )
+            
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_my_location),
+                    contentDescription = "Select Location",
+                    tint = Color(0xFFB71C1C),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .size(40.dp)
+                )
+            }
         }
     }
 }

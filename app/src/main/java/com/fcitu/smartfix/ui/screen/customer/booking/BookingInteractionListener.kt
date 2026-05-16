@@ -14,7 +14,10 @@ interface BookingInteractionListener {
     fun onAdditionalNotesChanged(notes: String)
     fun onFindServiceClicked()
     fun onGetCurrentLocationClick()
+    fun onDismissLocationDialog()
     fun onBottomSheetDismissed()
+    fun onConfirmDeletePhoto()
+    fun onDismissDeletePhoto()
     fun onFindAvailableTechnicianClicked()
     fun onLocationSelected(location: String, latitude: Double? = null, longitude: Double? = null)
 }
