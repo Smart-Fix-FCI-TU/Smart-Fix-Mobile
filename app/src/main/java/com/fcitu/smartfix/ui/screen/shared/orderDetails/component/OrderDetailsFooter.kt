@@ -15,6 +15,7 @@ import com.fcitu.smartfix.ui.designSystem.components.button.PrimaryButton
 @Composable
 fun OrderDetailsFooter(
     userRole: UserRole,
+    isRated: Boolean,
     onClickRateTechnician: () -> Unit,
     onClickGoHome: () -> Unit,
     modifier: Modifier = Modifier
@@ -26,7 +27,7 @@ fun OrderDetailsFooter(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        if (userRole == UserRole.CUSTOMER) {
+        if (userRole == UserRole.CUSTOMER && !isRated) {
             PrimaryButton(
                 text = "Rate Technician",
                 onClick = onClickRateTechnician,

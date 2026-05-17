@@ -7,6 +7,7 @@ import kotlinx.datetime.LocalDateTime
 
 data class OrderDetailsUiState(
     val orderId: String = "",
+    val technicianId: String = "",
     val title: String = "",
     val description: String = "",
     val address: Address = Address(
@@ -30,7 +31,10 @@ data class OrderDetailsUiState(
         afterRepairUrls = emptyList()
     ),
     val showRatingBottomSheet: Boolean = false,
-    val isRated: Boolean = false,
+    val isRatingSuccess: Boolean = false,
+    val isSubmittingRating: Boolean = false,
+    val rating: Int = 0,
+    val comment: String = "",
     val isLoading: Boolean = false,
     val error: String? = null,
 )
