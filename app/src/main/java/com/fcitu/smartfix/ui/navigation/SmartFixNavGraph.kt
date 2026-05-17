@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -42,6 +43,7 @@ import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.OrderDetailsScreen
 import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
 import com.fcitu.smartfix.ui.screen.technician.home.TechHomeScreen
+import com.fcitu.smartfix.ui.screen.customer.booking.BookingScreen
 import com.fcitu.smartfix.ui.screen.technician.profile.AllReviewsScreen
 import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileScreen
 import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileViewModel
@@ -79,6 +81,7 @@ fun SmartFixNavGraph() {
     val tabRoutes = if (isCustomerGraph) customerTabRoutes else technicianTabRoutes
 
     Scaffold(
+        statusBarColor = Color(0xFF535755),
         bottomBar = {
             BottomBar(
                 showBottomBar = showBottomBar,
@@ -97,7 +100,7 @@ fun SmartFixNavGraph() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = Route.Splash,
+                startDestination = Route.Splash
             ) {
 
                 // TODO: the current graph is just a placeholder to setup navigation structure, remove it later when real screens are implemented
@@ -170,15 +173,48 @@ fun SmartFixNavGraph() {
                     composable<Route.CustomerHome> {
                         HomeScreen(
                             navController = navController
+                            onNavigateToBooking = { serviceId ->
+                                navController.navigate(Route.Booking(serviceId))
+                            },
+                            onNavigateToOrderDetails = { orderId ->
+                                navController.navigate(Route.OrderDetail(orderId))
+                            },
+                            onNavigateToAllOrders = {
+                                navController.navigate(Route.CustomerOrders)
+                            }
                         )
                     }
 
-                    composable<Route.Booking> {
+                    composable<Route.Booking> { backStackEntry ->
+                        val route = backStackEntry.toRoute<Route.Booking>()
+
+                        // استلام البيانات من الخريطة
+                        val address = backStackEntry.savedStateHandle.get<String>("selected_location")
+                        val lat = backStackEntry.savedStateHandle.get<Double>("selected_lat")
+                        val lng = backStackEntry.savedStateHandle.get<Double>("selected_lng")
+
                         BookingScreen(
-                            onFindTechnician = {
+                            serviceId = route.serviceId,
+                            selectedLocation = address,
+                            latitude = lat,
+                            longitude = lng,
+                            onNavigateBack = { navController.popBackStack() },
+                            onNavigateToMap = { navController.navigate(Route.Map) },
+                            onProblemSubmitted = {
                                 navController.navigate(Route.TechnicianList)
-                            },
-                            onBack = { navController.popBackStack() }
+                            }
+                        )
+                    }
+
+                    composable<Route.Map> {
+                        MapScreen(
+                            onBack = { navController.popBackStack() },
+                            onLocationSelected = { address, lat, lng ->
+                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_location", address)
+                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_lat", lat)
+                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_lng", lng)
+                                navController.popBackStack()
+                            }
                         )
                     }
 
