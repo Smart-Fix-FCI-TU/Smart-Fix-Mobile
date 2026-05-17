@@ -63,7 +63,6 @@ fun TechHomeScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TechHomeContent(
     state: TechHomeUiState,
