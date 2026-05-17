@@ -3,6 +3,8 @@ package com.fcitu.smartfix.ui.screen.technician.home.component
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,7 +43,10 @@ fun AvailabilityToggleCard(
         modifier = modifier
             .fillMaxWidth()
             .background(backgroundColor, RoundedCornerShape(20.dp))
-            .padding(horizontal = 20.dp, vertical = 16.dp),
+            .padding(horizontal = 20.dp, vertical = 16.dp)
+            .clickable(
+                enabled = canToggle, interactionSource = remember { MutableInteractionSource() },
+                onClick = { onToggle(!isAvailable) })
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -54,7 +60,7 @@ fun AvailabilityToggleCard(
                         fontFamily = Cairo,
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
-                        color = Color.White ,
+                        color = Color.White,
                     ),
                 )
                 Text(
@@ -70,22 +76,23 @@ fun AvailabilityToggleCard(
             }
 
 
-                Switch(isChecked = isAvailable,
-                    onCheckedChange = {newValue->
-                        if (canToggle) onToggle(newValue)
-                    },
-                    isEnabled = canToggle,
-                    onContentColor = Color(0xFFFF4501),
-                    onContainerColor = Color.White,
-                    offContainerColor = Color.White,
-                    offContentColor = Color(0xFF818599),
-                    onDisabledContainerColor = Color.White,
-                    onDisabledContentColor = Color(0xFFFF4501),
-                    offDisabledContentColor = Color(0xFFE7E7E7),
-                    offDisabledContainerColor = Color.White
+            Switch(
+                isChecked = isAvailable,
+                onCheckedChange = { newValue ->
+                    if (canToggle) onToggle(newValue)
+                },
+                isEnabled = canToggle,
+                onContentColor = Color(0xFFFF4501),
+                onContainerColor = Color.White,
+                offContainerColor = Color.White,
+                offContentColor = Color(0xFF818599),
+                onDisabledContainerColor = Color.White,
+                onDisabledContentColor = Color(0xFFFF4501),
+                offDisabledContentColor = Color(0xFFE7E7E7),
+                offDisabledContainerColor = Color.White
 
 
-                    )
+            )
 
         }
     }
