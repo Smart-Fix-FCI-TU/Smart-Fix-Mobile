@@ -85,17 +85,20 @@ fun NewOrdersSection(
                                 order = order,
                                 isRejected = isRejected,
                                 isAccepted = isAccepted,
-                                onAccept = { },
-                                onReject = { },
-                                onViewDetails = { listener.onViewOrderDetails(order.id) },
-                                onTimeout = { },
+                                onAccept = { listener.onAcceptOrder(order.id) },
+                                onReject = { listener.onRejectOrder(order.id) },
+                                onViewDetails = { listener.onViewOrderDetails(order) },
+                                onTimeout = { orderId ->
+                                    if (!isRejected && !isAccepted) {
+                                        listener.onOrderTimeout(orderId)
+                                    }
+                                },
                             )
                         }
                     }
                 }
             }
 
-            // ✅ الحالة العادية
             !state.isAvailable || !state.hasOrders -> {
                 NoOrdersCard()
             }
@@ -113,7 +116,7 @@ fun NewOrdersSection(
                                 isAccepted = isAccepted,
                                 onAccept = { listener.onAcceptOrder(order.id) },
                                 onReject = { listener.onRejectOrder(order.id) },
-                                onViewDetails = { listener.onViewOrderDetails(order.id) },
+                                onViewDetails = { listener.onViewOrderDetails(order) },
                                 onTimeout = { orderId ->
                                     if (!isRejected && !isAccepted) {
                                         listener.onOrderTimeout(orderId)
@@ -211,7 +214,7 @@ fun NewOrderCard(
                         }
                     }
                 }
-                // ✅ نخفي الـ Timer لما يكون مرفوض أو مقبول
+
                 if (!isAccepted && !isRejected) {
                     TimerChip(order = order, onTimeout = onTimeout)
                 }
@@ -224,25 +227,26 @@ fun NewOrderCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                if (!isAccepted){
-                Button(
-                    onClick = onReject,
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(vertical = 15.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    containerColor = Color.Red
-                ) {
-                    Text(
-                        text = if (isRejected) " Rejected ✕" else {
-                            "Reject"
-                        },
-                        style = TextStyle(
-                            color = Color.White,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 14.sp,
-                        ),
-                    )
-                }}
+                if (!isAccepted) {
+                    Button(
+                        onClick = onReject,
+                        modifier = Modifier.weight(1f),
+                        contentPadding = PaddingValues(vertical = 15.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        containerColor = Color.Red
+                    ) {
+                        Text(
+                            text = if (isRejected) " Rejected ✕" else {
+                                "Reject"
+                            },
+                            style = TextStyle(
+                                color = Color.White,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp,
+                            ),
+                        )
+                    }
+                }
                 if (!isRejected) {
                     Button(
                         onClick = { if (!isRejected) onAccept() },
@@ -264,121 +268,121 @@ fun NewOrderCard(
                     }
 
                 }
+            }
+            if (!isRejected && !isAccepted) {
+                Button(
+                    onClick = onViewDetails,
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(vertical = 15.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    containerColor = Color(0xFFF2F4F7)
+                ) {
+                    Text(
+                        text = "Details",
+                        style = TextStyle(
+                            color = Color(0xFF475569),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 14.sp,
+                        ),
+                    )
                 }
-                if (!isRejected && !isAccepted) {
-                    Button(
-                        onClick = onViewDetails,
-                        modifier = Modifier.fillMaxWidth(),
-                        contentPadding = PaddingValues(vertical = 15.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        containerColor = Color(0xFFF2F4F7)
-                    ) {
-                        Text(
-                            text = "Details",
-                            style = TextStyle(
-                                color = Color(0xFF475569),
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 14.sp,
-                            ),
-                        )
-                    }
-                }
-
             }
 
-            if (isRejected) {
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .background(Color(0xFFBEC0CC).copy(alpha = 0.4f))
-                )
-            }
-        }
-    }
-
-    @SuppressLint("DefaultLocale")
-    @Composable
-    fun TimerChip(
-        order: Order,
-        onTimeout: (String) -> Unit,
-        timeoutMinutes: Int = 1,
-    ) {
-        var remainingSeconds by remember(order.id) {
-            mutableIntStateOf(timeoutMinutes * 60)
         }
 
-        LaunchedEffect(order.id) {
-            while (remainingSeconds > 0) {
-                delay(1_000)
-                remainingSeconds--
-            }
-            onTimeout(order.id)
-        }
-
-        val minutes = remainingSeconds / 60
-        val seconds = remainingSeconds % 60
-
-        Box(
-            modifier = Modifier
-                .background(
-                    color = Color(0xFFF2F4F7),
-                    shape = RoundedCornerShape(10.dp),
-                )
-                .padding(horizontal = 10.dp, vertical = 6.dp),
-            contentAlignment = Alignment.Center,
-        ) {
-            Text(
-                text = "$minutes:${String.format("%02d", seconds)}\nleft",
-                style = TextStyle(
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFFFF4501),
-                    textAlign = TextAlign.Center,
-                    lineHeight = 14.sp,
-                ),
+        if (isRejected) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(Color(0xFFBEC0CC).copy(alpha = 0.4f))
             )
         }
     }
+}
 
-    @Composable
-    private fun NoOrdersCard() {
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .shadow(2.dp, shape = RoundedCornerShape(16.dp))
-                .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-                .padding(32.dp)
+@SuppressLint("DefaultLocale")
+@Composable
+fun TimerChip(
+    order: Order,
+    onTimeout: (String) -> Unit,
+    timeoutMinutes: Int = 1,
+) {
+    var remainingSeconds by remember(order.id) {
+        mutableIntStateOf(timeoutMinutes * 60)
+    }
+
+    LaunchedEffect(order.id) {
+        while (remainingSeconds > 0) {
+            delay(1_000)
+            remainingSeconds--
+        }
+        onTimeout(order.id)
+    }
+
+    val minutes = remainingSeconds / 60
+    val seconds = remainingSeconds % 60
+
+    Box(
+        modifier = Modifier
+            .background(
+                color = Color(0xFFF2F4F7),
+                shape = RoundedCornerShape(10.dp),
+            )
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "$minutes:${String.format("%02d", seconds)}\nleft",
+            style = TextStyle(
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFFFF4501),
+                textAlign = TextAlign.Center,
+                lineHeight = 14.sp,
+            ),
+        )
+    }
+}
+
+@Composable
+private fun NoOrdersCard() {
+    Box(
+        modifier = Modifier
+            .padding(16.dp)
+            .shadow(2.dp, shape = RoundedCornerShape(16.dp))
+            .background(color = Color.White, shape = RoundedCornerShape(16.dp))
+            .padding(32.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.empty_card_image),
-                    contentDescription = "Empty Card Image"
+            Image(
+                painter = painterResource(R.drawable.empty_card_image),
+                contentDescription = "Empty Card Image"
+            )
+            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            Text(
+                text = "No orders available",
+                style = TextStyle(
+                    color = Color(0xFF1C1B1F),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 30.sp,
+                    lineHeight = 36.sp
                 )
-                Spacer(modifier = Modifier.padding(vertical = 10.dp))
-                Text(
-                    text = "No orders available",
-                    style = TextStyle(
-                        color = Color(0xFF1C1B1F),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 30.sp,
-                        lineHeight = 36.sp
-                    )
+            )
+            Spacer(modifier = Modifier.padding(vertical = 10.dp))
+            Text(
+                text = "There are no available orders right now.\nActivate your status to start receiving jobs.",
+                style = TextStyle(
+                    color = Color(0xFF49454E),
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 16.sp,
+                    lineHeight = 26.sp
                 )
-                Spacer(modifier = Modifier.padding(vertical = 10.dp))
-                Text(
-                    text = "There are no available orders right now.\nActivate your status to start receiving jobs.",
-                    style = TextStyle(
-                        color = Color(0xFF49454E),
-                        fontWeight = FontWeight.Normal,
-                        fontSize = 16.sp,
-                        lineHeight = 26.sp
-                    )
-                )
+            )
 
-            }
         }
     }
+}
