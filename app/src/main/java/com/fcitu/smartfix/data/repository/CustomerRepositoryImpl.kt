@@ -7,7 +7,7 @@ import com.fcitu.smartfix.domain.model.UserRole
 import com.fcitu.smartfix.domain.repository.CustomerRepository
 
 class CustomerRepositoryImpl: CustomerRepository {
-    override suspend fun getProfile(): User {
+    override suspend fun getMyProfile(): User {
         //TODO change Fake Data When use API
         ///Fake Data
         Log.e("Customer Face Data","Fake data")

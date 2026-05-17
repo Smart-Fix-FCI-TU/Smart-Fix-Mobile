@@ -41,6 +41,7 @@ import com.fcitu.smartfix.ui.screen.customer.profile.ServiceHistoryScreen
 import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.OrderDetailsScreen
 import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
+import com.fcitu.smartfix.ui.screen.technician.home.TechHomeScreen
 import com.fcitu.smartfix.ui.screen.technician.profile.AllReviewsScreen
 import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileScreen
 import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileViewModel
@@ -233,7 +234,7 @@ fun SmartFixNavGraph() {
                     startDestination = Route.TechnicianHome
                 ) {
                     composable<Route.TechnicianHome> {
-                        TechnicianHomeScreen()
+                        TechHomeScreen(navController = navController)
                     }
 
                     composable<Route.TechnicianOrders> {
