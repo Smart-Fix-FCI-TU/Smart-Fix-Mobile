@@ -173,15 +173,6 @@ fun SmartFixNavGraph() {
                     composable<Route.CustomerHome> {
                         HomeScreen(
                             navController = navController
-                            onNavigateToBooking = { serviceId ->
-                                navController.navigate(Route.Booking(serviceId))
-                            },
-                            onNavigateToOrderDetails = { orderId ->
-                                navController.navigate(Route.OrderDetail(orderId))
-                            },
-                            onNavigateToAllOrders = {
-                                navController.navigate(Route.CustomerOrders)
-                            }
                         )
                     }
 
