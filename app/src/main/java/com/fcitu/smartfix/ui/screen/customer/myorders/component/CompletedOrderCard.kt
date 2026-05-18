@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -30,6 +31,7 @@ import com.fcitu.smartfix.R
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.entity.Technician
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 import com.fcitu.smartfix.ui.screen.customer.home.component.ProfilePhoto
 import com.fcitu.smartfix.ui.utils.toOrderTimeFormat
 
@@ -41,7 +43,6 @@ fun CompletedOrderCard(
 ) {
     Box(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 10.dp)
             .fillMaxWidth()
             .background(color = Color.White, shape = RoundedCornerShape(32.dp))
             .clickable(
@@ -49,7 +50,7 @@ fun CompletedOrderCard(
                 indication = null,
                 onClick = onCompletedOrderClicked
             )
-            .padding(20.dp)
+            .padding(12.dp)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -79,7 +80,6 @@ fun CompletedOrderCard(
 private fun TechnicianInfoRow(technician: Technician?) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ProfilePhoto(
@@ -89,25 +89,29 @@ private fun TechnicianInfoRow(technician: Technician?) {
         )
 
         Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 12.dp),
             verticalArrangement = Arrangement.spacedBy(3.dp),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
                 text = technician?.user?.username ?: "Unassigned",
                 style = TextStyle(
+                    fontFamily = Cairo,
                     color = Color(0xFF000000),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    lineHeight = 20.sp
-                )
+                ),
+                maxLines = 1
             )
             Text(
                 text = technician?.serviceCategory.specialization,
                 style = TextStyle(
+                    fontFamily = Cairo,
                     color = Color(0xFFFF4A08),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
-                    lineHeight = 20.sp
                 )
             )
         }
@@ -134,15 +138,16 @@ fun CompletedBadge() {
             Icon(
                 Icons.Default.CheckCircle,
                 contentDescription = "Check Icon",
-                tint = Color(0xFF34C759)
+                tint = Color(0xFF34C759),
+                modifier = Modifier.size(18.dp)
             )
             Text(
                 "Completed",
                 style = TextStyle(
+                    fontFamily = Cairo,
                     color = Color(0xFF34C759),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 14.sp,
-                    lineHeight = 16.sp
+                    fontSize = 12.sp,
                 )
             )
         }

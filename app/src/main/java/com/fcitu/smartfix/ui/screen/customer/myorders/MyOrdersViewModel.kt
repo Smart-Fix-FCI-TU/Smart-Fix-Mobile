@@ -153,16 +153,8 @@ class MyOrdersViewModel(
         emitEffect(MyOrdersUiEffect.NavigateToTrackingActiveOrder(orderId))
     }
 
-    override fun onNotificationClicked() {
-        emitEffect(MyOrdersUiEffect.NavigateToNotifications)
-    }
-
     override fun onChatClicked(orderId: String, technicianId: String) {
         emitEffect(MyOrdersUiEffect.NavigateToChat(orderId, technicianId))
-    }
-
-    override fun onBackClicked() {
-        emitEffect(MyOrdersUiEffect.NavigateBack)
     }
 
     override fun onTryAgainClicked() {

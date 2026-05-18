@@ -10,20 +10,16 @@ import kotlinx.coroutines.flow.SharedFlow
 fun MyOrdersEffectsHandler(
     effects: SharedFlow<MyOrdersUiEffect>,
     navController: NavController,
-    onNavigateBack: () -> Unit = {},
 ) {
     //TODO: Navigate to the rest of the screens when there are finished.
     EffectHandler(effects = effects) { effect ->
         when (effect) {
-            is MyOrdersUiEffect.NavigateBack -> onNavigateBack()
             is MyOrdersUiEffect.NavigateToChat -> {}
             is MyOrdersUiEffect.NavigateToCompletedOrderDetails -> {
                 navController.navigate(Route.OrderDetail(orderId = effect.orderId))
             }
-            is MyOrdersUiEffect.NavigateToNotifications -> {}
             is MyOrdersUiEffect.NavigateToTrackingActiveOrder -> {}
             is MyOrdersUiEffect.ShowError -> {}
         }
-
     }
 }

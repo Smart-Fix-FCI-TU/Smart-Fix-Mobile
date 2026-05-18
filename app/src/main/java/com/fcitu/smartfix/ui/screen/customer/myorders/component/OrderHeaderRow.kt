@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.domain.model.ServiceCategory
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 
 
 @Composable
@@ -36,14 +37,13 @@ import com.fcitu.smartfix.ui.designSystem.components.text.Text
         Text(
             modifier = Modifier
                 .weight(1f)
-                .padding(top = 10.dp)
                 .padding(horizontal = 8.dp),
             text = title,
             style = TextStyle(
+                fontFamily = Cairo,
                 color = Color(0xFF1C1B1F),
-                fontSize = 20.sp,
+                fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
-                lineHeight = 20.sp
             ),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
@@ -66,10 +66,10 @@ private fun TimeBadge(time: String) {
         Text(
             text = time,
             style = TextStyle(
+                fontFamily = Cairo,
                 color = Color(0xFFFF4A08),
                 fontSize = 10.sp,
                 fontWeight = FontWeight.SemiBold,
-                lineHeight = 11.2.sp
             )
         )
     }

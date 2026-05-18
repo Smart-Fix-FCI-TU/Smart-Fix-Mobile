@@ -80,7 +80,6 @@ fun SmartFixNavGraph() {
     val tabRoutes = if (isCustomerGraph) customerTabRoutes else technicianTabRoutes
 
     Scaffold(
-        statusBarColor = Color(0xFF535755),
         bottomBar = {
             BottomBar(
                 showBottomBar = showBottomBar,
@@ -215,10 +214,7 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.CustomerOrders> {
-                        MyOrdersScreen(
-                            navController = navController,
-                            onNavigateBack = { navController.popBackStack() }
-                        )
+                        MyOrdersScreen(navController = navController)
                     }
 
                     composable<Route.OrderDetail> {
