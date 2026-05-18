@@ -11,54 +11,16 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
 class InternetConnectionAvailability(private val context: Context) {
-    val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-    fun isNetworkAvailable(): Boolean {
-        val network = connectivityManager.activeNetwork ?: return false
-        val activeNetwork = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return when {
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
-            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
-            else -> false
+    fun isNetworkAvailable(): Boolean{
+        val connectivityManager =  context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork?:return false
+        val activeNetwork = connectivityManager.getNetworkCapabilities(network)?:return false
+        return when{
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)->true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)->true
+            activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)->true
+            else->false
         }
     }
-
-    fun observeNetworkConnection(): Flow<Boolean> = callbackFlow {
-
-        trySend(isNetworkAvailable())
-
-        val callback = object : ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                trySend(true)
-            }
-
-            override fun onLost(network: Network) {
-                trySend(false)
-            }
-
-            override fun onCapabilitiesChanged(
-                network: Network,
-                capabilities: NetworkCapabilities,
-            ) {
-                val connected =
-                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-                            || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                            || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
-                trySend(connected)
-            }
-        }
-
-        val request = NetworkRequest.Builder()
-            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            .build()
-
-        connectivityManager.registerNetworkCallback(request, callback)
-
-        awaitClose {
-            connectivityManager.unregisterNetworkCallback(callback)
-        }
-    }.distinctUntilChanged()
 }
 

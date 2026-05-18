@@ -19,6 +19,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -109,14 +110,24 @@ fun UserProfileHeader(userState: UserProfileState, modifier: Modifier = Modifier
 
 //-----------------Profile Photo Composable---------------------
 @Composable
-private fun ProfilePhoto(imageUrl: String?, modifier: Modifier = Modifier) {
+fun ProfilePhoto(
+    imageUrl: String?,
+    modifier: Modifier = Modifier,
+    borderColor: Color? = null,
+    borderWidth: Dp? = null,
+    imageSize: Dp? = null
+) {
     val imageModifier = modifier
-        .size(80.dp)
+        .size(imageSize ?: 80.dp)
         .clip(CircleShape)
-        .border(width = 5.dp, color = Color.White, shape = CircleShape)
+        .border(
+            width = borderWidth ?: 5.dp,
+            color = borderColor ?: Color.White,
+            shape = CircleShape
+        )
     if (imageUrl.isNullOrBlank() || imageUrl.isEmpty()) {
         Image(
-            painter = painterResource(R.drawable.icon_profile),
+            painter = painterResource(R.drawable.avatar),
             contentDescription = "Profile Icon",
             contentScale = ContentScale.Fit,
             modifier = imageModifier,

@@ -35,6 +35,7 @@ import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostC
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.screen.customer.home.HomeScreen
+import com.fcitu.smartfix.ui.screen.customer.myorders.MyOrdersScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileViewModel
 import com.fcitu.smartfix.ui.screen.customer.profile.ServiceHistoryScreen
@@ -79,7 +80,6 @@ fun SmartFixNavGraph() {
     val tabRoutes = if (isCustomerGraph) customerTabRoutes else technicianTabRoutes
 
     Scaffold(
-        statusBarColor = Color(0xFF535755),
         bottomBar = {
             BottomBar(
                 showBottomBar = showBottomBar,
@@ -151,8 +151,14 @@ fun SmartFixNavGraph() {
                             )
                         }
                     ) {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text(text = "Settings Screen Coming Soon", style = androidx.compose.ui.text.TextStyle(fontFamily = com.fcitu.smartfix.ui.designSystem.theme.Cairo))
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Settings Screen Coming Soon",
+                                style = androidx.compose.ui.text.TextStyle(fontFamily = com.fcitu.smartfix.ui.designSystem.theme.Cairo)
+                            )
                         }
                     }
                 }
@@ -164,15 +170,7 @@ fun SmartFixNavGraph() {
                     //TODO: Once all the screens that the Home Screen navigates to are built, the code for navigating to these screens will be written.
                     composable<Route.CustomerHome> {
                         HomeScreen(
-                            onNavigateToBooking = { serviceId ->
-                                navController.navigate(Route.Booking(serviceId))
-                            },
-                            onNavigateToOrderDetails = { orderId ->
-                                navController.navigate(Route.OrderDetail(orderId))
-                            },
-                            onNavigateToAllOrders = {
-                                navController.navigate(Route.CustomerOrders)
-                            }
+                            navController = navController
                         )
                     }
 
@@ -216,11 +214,7 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.CustomerOrders> {
-                        CustomerOrdersScreen(
-                            onOrderClick = { orderId ->
-                                navController.navigate(Route.OrderDetail(orderId))
-                            }
-                        )
+                        MyOrdersScreen(navController = navController)
                     }
 
                     composable<Route.OrderDetail> {
@@ -247,7 +241,8 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.AllServiceHistory> {
-                        val viewModel: CustomerProfileViewModel = org.koin.compose.viewmodel.koinViewModel()
+                        val viewModel: CustomerProfileViewModel =
+                            org.koin.compose.viewmodel.koinViewModel()
                         val state by viewModel.state.collectAsStateWithLifecycle()
                         ServiceHistoryScreen(
                             history = state.serviceHistory,
@@ -288,7 +283,8 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.AllReviews> {
-                        val viewModel: TechnicianProfileViewModel = org.koin.compose.viewmodel.koinViewModel()
+                        val viewModel: TechnicianProfileViewModel =
+                            org.koin.compose.viewmodel.koinViewModel()
                         val state by viewModel.state.collectAsStateWithLifecycle()
                         AllReviewsScreen(
                             reviews = state.reviews,

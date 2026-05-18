@@ -19,8 +19,16 @@ class HomeViewModel(
 
 
     init {
+        loadHomeScreen()
+    }
 
-        observeNetwork()
+    private fun loadHomeScreen() {
+        if (!networkConnection.isNetworkAvailable()) {
+            updateState { it.copy(hasNetworkConnection = false) }
+            emitEffect(HomeUiEffect.ShowError("No Internet Connection"))
+            return
+        }
+
         loadServicesList()
         loadCustomerInfo()
         loadActiveOrders()
@@ -31,6 +39,7 @@ class HomeViewModel(
     private fun loadServicesList() {
         updateState {
             it.copy(
+                hasNetworkConnection = true,
                 servicesList = listOf(
                     ServiceItem(
                         serviceCategory = ServiceCategory.ELECTRICITY,
@@ -166,24 +175,7 @@ class HomeViewModel(
     }
 
     //---------------------------------------------------------------------------------------------
-// Check Network Availability-----------------------------------------------------------------------
-    private fun observeNetwork() {
-        tryToCollect(
-            collect = { networkConnection.observeNetworkConnection() },
-            onCollect = { isConnected ->
-                updateState { it.copy(hasNetworkConnection = isConnected) }
 
-                if (isConnected) {
-                    loadActiveOrders()
-                    loadPendingOrder()
-                    loadCustomerInfo()
-                }
-            },
-            onError = {
-                updateState { it.copy(hasNetworkConnection = false) }
-            },
-        )
-    }
 
     //--------------------------------------------------------------------
 
@@ -211,6 +203,10 @@ class HomeViewModel(
 
     override fun onNavigateToAvailableTechnicianList(orderId: String) {
         emitEffect(HomeUiEffect.NavigateToAvailableTechnicianList(orderId))
+    }
+
+    override fun onTryAgainClicked() {
+        loadHomeScreen()
     }
     //---------------------------------------------------------------
 }
