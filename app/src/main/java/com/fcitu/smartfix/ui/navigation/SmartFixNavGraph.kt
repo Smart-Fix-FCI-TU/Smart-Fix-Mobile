@@ -34,7 +34,6 @@ import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostC
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.screen.customer.home.HomeScreen
-import com.fcitu.smartfix.ui.screen.customer.myorders.MyOrdersScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileViewModel
 import com.fcitu.smartfix.ui.screen.customer.profile.ServiceHistoryScreen
@@ -96,7 +95,7 @@ fun SmartFixNavGraph() {
         ) {
             NavHost(
                 navController = navController,
-                startDestination = Route.Splash,
+                startDestination = Route.Splash
             ) {
 
                 // TODO: the current graph is just a placeholder to setup navigation structure, remove it later when real screens are implemented
@@ -168,18 +167,40 @@ fun SmartFixNavGraph() {
                     //TODO: Once all the screens that the Home Screen navigates to are built, the code for navigating to these screens will be written.
                     composable<Route.CustomerHome> {
                         HomeScreen(
-                            onNavigateToOrderDetails = {
-                                navController.navigate(Route.OrderDetail(orderId = "sample_order_id"))
+                            navController = navController
+                        )
+                    }
+
+                    composable<Route.Booking> { backStackEntry ->
+                        val route = backStackEntry.toRoute<Route.Booking>()
+
+                        // استلام البيانات من الخريطة
+                        val address = backStackEntry.savedStateHandle.get<String>("selected_location")
+                        val lat = backStackEntry.savedStateHandle.get<Double>("selected_lat")
+                        val lng = backStackEntry.savedStateHandle.get<Double>("selected_lng")
+
+                        BookingScreen(
+                            serviceId = route.serviceId,
+                            selectedLocation = address,
+                            latitude = lat,
+                            longitude = lng,
+                            onNavigateBack = { navController.popBackStack() },
+                            onNavigateToMap = { navController.navigate(Route.Map) },
+                            onProblemSubmitted = {
+                                navController.navigate(Route.TechnicianList)
                             }
                         )
                     }
 
-                    composable<Route.Booking> {
-                        BookingScreen(
-                            onFindTechnician = {
-                                navController.navigate(Route.TechnicianList)
-                            },
-                            onBack = { navController.popBackStack() }
+                    composable<Route.Map> {
+                        MapScreen(
+                            onBack = { navController.popBackStack() },
+                            onLocationSelected = { address, lat, lng ->
+                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_location", address)
+                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_lat", lat)
+                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_lng", lng)
+                                navController.popBackStack()
+                            }
                         )
                     }
 
@@ -190,7 +211,7 @@ fun SmartFixNavGraph() {
                     }
                     // TODO: Write the screen navigation functions when implementation is complete.
                     composable<Route.CustomerOrders> {
-                        MyOrdersScreen()
+                        MyOrdersScreen(navController = navController)
                     }
 
                     composable<Route.OrderDetail> {

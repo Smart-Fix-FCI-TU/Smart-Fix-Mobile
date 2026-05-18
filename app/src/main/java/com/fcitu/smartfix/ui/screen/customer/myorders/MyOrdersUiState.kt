@@ -11,7 +11,6 @@ data class MyOrdersUiState(
     val isLoadingActive: Boolean = false,
     val isLoadingHistory: Boolean = false,
     val hasNetworkConnection: Boolean = true,
-    val hasLoaded: Boolean = false,
     val error: String? = null,
 ) {
     val hasActiveOrders: Boolean get() = activeOrders.isNotEmpty()

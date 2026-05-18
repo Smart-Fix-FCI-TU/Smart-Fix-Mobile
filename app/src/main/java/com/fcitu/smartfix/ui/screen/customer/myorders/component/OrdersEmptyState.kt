@@ -15,14 +15,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcitu.smartfix.R
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 
 @Composable
-fun OrdersEmptyState(title: String, subtitle: String, modifier: Modifier = Modifier) {
+fun OrdersEmptyState(title: String, subtitle: String) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
@@ -55,7 +55,8 @@ fun OrdersEmptyState(title: String, subtitle: String, modifier: Modifier = Modif
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Normal,
                 lineHeight = 22.sp
-            )
+            ),
+            textAlign = TextAlign.Center
         )
 
     }

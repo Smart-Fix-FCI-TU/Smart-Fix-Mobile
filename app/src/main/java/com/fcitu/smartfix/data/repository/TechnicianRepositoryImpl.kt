@@ -9,8 +9,7 @@ import com.fcitu.smartfix.domain.repository.TechnicianRepository
 
 class TechnicianRepositoryImpl(
     private val technicianService: TechnicianService
-)
-    : TechnicianRepository {
+) : TechnicianRepository {
     override suspend fun getAvailableTechnicians(
         location: Address.Location,
         serviceCategory: ServiceCategory
@@ -28,7 +27,9 @@ class TechnicianRepositoryImpl(
         }
     }
 
+
     override suspend fun updateAvailabilityStatus(isAvailable: Boolean) {
-        TODO("Not yet implemented")
+        // Do nothing
     }
+
 }

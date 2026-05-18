@@ -18,31 +18,11 @@ class MyOrdersViewModel(
     MyOrdersInteractionListener {
 
     init {
-        observeNetwork()
+        loadOrders()
     }
 
     fun refreshOrders() {
-        if ( state.value.hasNetworkConnection) {
-            if (state.value.hasLoaded)
-                updateState { it.copy(hasLoaded = false) }
-            loadOrders()
-        }
-    }
-
-    // ── Network ───────────────────────────────────────────────────────────────
-    private fun observeNetwork() {
-        tryToCollect(
-            collect = { networkConnection.observeNetworkConnection() },
-            onCollect = { isConnected ->
-                updateState { it.copy(hasNetworkConnection = isConnected) }
-                if (isConnected && !state.value.hasLoaded) {
-                        loadOrders()
-                }
-            },
-            onError = {
-                updateState { it.copy(hasNetworkConnection = false) }
-            },
-        )
+        loadOrders()
     }
 
 
@@ -51,8 +31,22 @@ class MyOrdersViewModel(
         val isCurrentlyLoading = state.value.isLoadingActive || state.value.isLoadingHistory
         if (isCurrentlyLoading) return
 
+        if (!networkConnection.isNetworkAvailable()) {
+            updateState {
+                it.copy(
+                    hasNetworkConnection = false,
+                    error = "No internet connection. Please check your network.",
+                    isLoadingActive = false,
+                    isLoadingHistory = false
+                )
+            }
+            emitEffect(MyOrdersUiEffect.ShowError("No internet connection"))
+            return
+        }
+
         updateState {
             it.copy(
+                hasNetworkConnection = true,
                 isLoadingActive = true,
                 isLoadingHistory = true,
                 technicianMap = emptyMap()
@@ -79,11 +73,9 @@ class MyOrdersViewModel(
                         error = null,
                     )
                 }
-                checkIfFullyLoaded()
             },
             onError = { error ->
                 updateState { it.copy(isLoadingActive = false, error = error.message) }
-                checkIfFullyLoaded()
                 emitEffect(MyOrdersUiEffect.ShowError(error.message ?: "Failed to load orders"))
             }
         )
@@ -105,7 +97,6 @@ class MyOrdersViewModel(
                         error = null
                     )
                 }
-                checkIfFullyLoaded()
             },
             onError = { error ->
                 updateState {
@@ -114,18 +105,11 @@ class MyOrdersViewModel(
                         error = error.message ?: "Failed to load history"
                     )
                 }
-                checkIfFullyLoaded()
                 emitEffect(MyOrdersUiEffect.ShowError(error.message ?: "Failed to load history"))
             }
         )
     }
 
-    private fun checkIfFullyLoaded() {
-        val current = state.value
-        if (!current.isLoadingActive && !current.isLoadingHistory) {
-            updateState { it.copy(hasLoaded = true) }
-        }
-    }
 
     // ── Fetch Technicians ─────────────────────────────────────────────────────
     private suspend fun fetchTechnicianForOrders(orders: List<Order>): Map<String, Technician> {
@@ -152,22 +136,28 @@ class MyOrdersViewModel(
     }
 
     override fun onCompletedOrderClicked(orderId: String) {
+        if (!networkConnection.isNetworkAvailable()) {
+            updateState { it.copy(hasNetworkConnection = false) }
+            emitEffect(MyOrdersUiEffect.ShowError("No internet connection"))
+            return
+        }
         emitEffect(MyOrdersUiEffect.NavigateToCompletedOrderDetails(orderId))
     }
 
     override fun onActiveOrderClicked(orderId: String) {
+        if (!networkConnection.isNetworkAvailable()) {
+            updateState { it.copy(hasNetworkConnection = false) }
+            emitEffect(MyOrdersUiEffect.ShowError("No internet connection"))
+            return
+        }
         emitEffect(MyOrdersUiEffect.NavigateToTrackingActiveOrder(orderId))
-    }
-
-    override fun onNotificationClicked() {
-        emitEffect(MyOrdersUiEffect.NavigateToNotifications)
     }
 
     override fun onChatClicked(orderId: String, technicianId: String) {
         emitEffect(MyOrdersUiEffect.NavigateToChat(orderId, technicianId))
     }
 
-    override fun onBackClicked() {
-        emitEffect(MyOrdersUiEffect.NavigateBack)
+    override fun onTryAgainClicked() {
+        refreshOrders()
     }
 }

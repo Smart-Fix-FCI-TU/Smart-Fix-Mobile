@@ -9,4 +9,5 @@ interface HomeInteractionListener {
     fun onNotificationClicked()
     fun onViewAllOrdersClicked(orders: List<Order>)
     fun onNavigateToAvailableTechnicianList(orderId: String)
+    fun onTryAgainClicked()
 }

@@ -6,7 +6,6 @@ interface MyOrdersInteractionListener {
     fun onTabSelected(tab: OrdersTab)
     fun onCompletedOrderClicked(orderId: String)
     fun onActiveOrderClicked(orderId: String)
-    fun onNotificationClicked()
     fun onChatClicked(orderId: String, technicianId: String)
-    fun onBackClicked()
+    fun onTryAgainClicked()
 }
