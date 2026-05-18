@@ -4,7 +4,9 @@ import com.fcitu.smartfix.data.remote.mapper.toDomain
 import com.fcitu.smartfix.data.remote.service.TechnicianService
 import com.fcitu.smartfix.domain.entity.Address
 import com.fcitu.smartfix.domain.entity.Technician
+import com.fcitu.smartfix.domain.entity.User
 import com.fcitu.smartfix.domain.model.ServiceCategory
+import com.fcitu.smartfix.domain.model.UserRole
 import com.fcitu.smartfix.domain.repository.TechnicianRepository
 import kotlinx.coroutines.flow.Flow
 

@@ -216,10 +216,6 @@ fun SmartFixNavGraph() {
                     // TODO: Write the screen navigation functions when implementation is complete.
                     composable<Route.CustomerOrders> {
                         MyOrdersScreen(navController = navController)
-                        MyOrdersScreen(
-                            navController = navController,
-                            onNavigateBack = { navController.popBackStack() }
-                        )
                     }
 
                     composable<Route.OrderDetail> {
