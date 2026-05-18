@@ -30,6 +30,7 @@ import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.entity.Technician
 import com.fcitu.smartfix.domain.model.ServiceCategory
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.designSystem.theme.Cairo
 import com.fcitu.smartfix.ui.screen.customer.home.component.ProfilePhoto
 import com.fcitu.smartfix.ui.utils.makePhoneCall
 import com.fcitu.smartfix.ui.utils.toOrderTimeFormat
@@ -43,7 +44,6 @@ fun ActiveOrderCard(
 ) {
     Box(
         modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 10.dp)
             .fillMaxWidth()
             .background(color = Color.White, shape = RoundedCornerShape(32.dp))
             .clickable(
@@ -51,7 +51,7 @@ fun ActiveOrderCard(
                 indication = null,
                 onClick = { onActiveOrderClicked(order.id) }
             )
-            .padding(20.dp)
+            .padding(12.dp)
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(14.dp),
@@ -98,21 +98,25 @@ private fun TechnicianInfoRow(
         )
 
         Column(
+            modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(3.dp),
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = technician?.user?.username ?: "Unassigned",
+                text = technician?.user?.username + "daskjdas" ?: "Unassigned",
                 style = TextStyle(
+                    fontFamily = Cairo,
                     color = Color(0xFF000000),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 20.sp
-                )
+                ),
+                maxLines = 1
             )
             Text(
                 text = technician?.serviceCategory.specialization,
                 style = TextStyle(
+                    fontFamily = Cairo,
                     color = Color(0xFFFF4A08),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Medium,
@@ -173,8 +177,9 @@ fun PhoneImage(phoneNumber: String?) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painterResource(R.drawable.phone_icon),
+            painter = painterResource(R.drawable.phone_icon),
             contentDescription = "Phone Icon",
+            modifier = Modifier.size(16.dp)
         )
     }
 }

@@ -38,8 +38,8 @@ fun ActiveOrdersTab(
 
         !state.hasActiveOrders -> {
             OrdersEmptyState(
-                "No Active Orders", "All current orders that have not yet been completed \n" +
-                        "will appear here."
+                title = "No Active Orders",
+                subtitle = "All current orders that have not yet been completed will appear here."
             )
         }
 

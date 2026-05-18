@@ -10,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,6 +33,7 @@ import com.fcitu.smartfix.ui.designSystem.components.snackBar.AnimatedSnackBarHo
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.screen.customer.booking.BookingScreen
 import com.fcitu.smartfix.ui.screen.customer.home.HomeScreen
 import com.fcitu.smartfix.ui.screen.customer.myorders.MyOrdersScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileScreen
@@ -81,7 +81,6 @@ fun SmartFixNavGraph() {
     val tabRoutes = if (isCustomerGraph) customerTabRoutes else technicianTabRoutes
 
     Scaffold(
-        statusBarColor = Color(0xFF535755),
         bottomBar = {
             BottomBar(
                 showBottomBar = showBottomBar,
@@ -214,8 +213,9 @@ fun SmartFixNavGraph() {
                             onBack = { navController.popBackStack() }
                         )
                     }
-
+                    // TODO: Write the screen navigation functions when implementation is complete.
                     composable<Route.CustomerOrders> {
+                        MyOrdersScreen(navController = navController)
                         MyOrdersScreen(
                             navController = navController,
                             onNavigateBack = { navController.popBackStack() }

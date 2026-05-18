@@ -1,10 +1,13 @@
 package com.fcitu.smartfix.ui.screen.shared.orderDetails.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,8 +42,17 @@ fun OrderDetailsFooter(
         PrimaryButton(
             text = "Go Home",
             onClick = onClickGoHome,
-            modifier = Modifier.fillMaxWidth(),
-            containerColor = Color(0xFFFF4400)
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = Color(0xFFFF4400)
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ),
+            containerColor = Color.White,
+            contentColor = Color(0xFFFF4400)
         )
     }
 }
