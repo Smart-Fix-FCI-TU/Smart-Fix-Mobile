@@ -31,7 +31,8 @@ fun LocalDateTime.toOrderTimeFormat(): String {
     val amPm = if (hour < 12) "AM" else "PM"
 
     val hour12 = when (hour) {
-        0 -> 12
+        0    -> 12           // 12 AM (midnight)
+        12   -> 12           // 12 PM (noon) ← explicit
         in 13..23 -> hour - 12
         else -> hour
     }

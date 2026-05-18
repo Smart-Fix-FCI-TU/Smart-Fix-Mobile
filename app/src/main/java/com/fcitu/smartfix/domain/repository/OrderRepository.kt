@@ -5,7 +5,8 @@ import com.fcitu.smartfix.domain.model.OrderStatus
 
 interface OrderRepository {
     suspend fun getCustomerOrders(): List<Order>
-
+    suspend fun getOrdersByStatus(status: String): List<Order>
+    suspend fun getActivePendingOrder(): Order?
     suspend fun getTechnicianOrders(): List<Order>
 
     suspend fun getOrderDetails(orderId: String): Order

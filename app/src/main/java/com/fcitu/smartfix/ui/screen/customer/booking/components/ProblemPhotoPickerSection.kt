@@ -81,7 +81,7 @@ fun ProblemPhotoPickerSection(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.fillMaxWidth()
         ) {
-            items(problemPhotos, key = { it.toString() }) { uri ->
+            items(problemPhotos, key = { it }) { uri ->
                 PhotoThumbnailItem(
                     uri = uri,
                     onRemove = { onRemovePhoto(uri) }
