@@ -33,7 +33,9 @@ import com.fcitu.smartfix.ui.designSystem.components.snackBar.AnimatedSnackBarHo
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.LocalSnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.snackBar.SnackBarHostController
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
+import com.fcitu.smartfix.ui.screen.customer.booking.BookingScreen
 import com.fcitu.smartfix.ui.screen.customer.home.HomeScreen
+import com.fcitu.smartfix.ui.screen.customer.myorders.MyOrdersScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileViewModel
 import com.fcitu.smartfix.ui.screen.customer.profile.ServiceHistoryScreen

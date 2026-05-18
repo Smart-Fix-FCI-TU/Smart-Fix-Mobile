@@ -6,9 +6,12 @@ import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.model.OrderStatus
 import com.fcitu.smartfix.domain.model.ServiceCategory
 import kotlinx.datetime.LocalDateTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 fun BookingDto.toDomain(): Order = Order(
-    id = id ?: "",
+    id = id?.takeIf { it.isNotBlank() } ?: Uuid.random().toString(),
 
     customer = Order.UserInfo(
         id = customerId?.id ?: "",
