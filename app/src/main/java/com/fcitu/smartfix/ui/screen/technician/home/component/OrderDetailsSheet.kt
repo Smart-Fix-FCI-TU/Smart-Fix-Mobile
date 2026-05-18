@@ -1,5 +1,7 @@
 package com.fcitu.smartfix.ui.screen.technician.home.component
 
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -7,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -19,26 +20,22 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.ui.designSystem.components.bottomSheet.BottomSheet
@@ -46,6 +43,12 @@ import com.fcitu.smartfix.ui.designSystem.components.button.PrimaryButton
 import com.fcitu.smartfix.ui.designSystem.components.scaffold.ScaffoldScope
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.screen.technician.home.TechHomeUiState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.net.HttpURLConnection
+import java.net.URL
 
 fun ScaffoldScope.orderDetailsSheet(
     state: TechHomeUiState,
@@ -57,17 +60,10 @@ fun ScaffoldScope.orderDetailsSheet(
     onDelineClick: () -> Unit
 ) {
 
+
     bottomSheet(isVisible = isVisible) { currentVisibility ->
-
-        var selectedImageUrl by remember { mutableStateOf<String?>(null) }
-
-        selectedImageUrl?.let { url ->
-            FullScreenImageViewer(
-                imageUrl = url,
-                onDismiss = { selectedImageUrl = null }
-            )
-        }
-
+        val context = LocalContext.current
+        val scope = rememberCoroutineScope()
         BottomSheet(
             containerColor = Color.White,
             isVisible = currentVisibility,
@@ -80,7 +76,7 @@ fun ScaffoldScope.orderDetailsSheet(
                         .fillMaxWidth()
                         .background(Color.White)
                 ) {
-                    androidx.compose.material3.HorizontalDivider(color = Color(0xFFF2F4F7), thickness = 1.dp)
+                    HorizontalDivider(color = Color(0xFFF2F4F7), thickness = 1.dp)
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -88,7 +84,7 @@ fun ScaffoldScope.orderDetailsSheet(
                             .navigationBarsPadding()
                     ) {
                         PrimaryButton(
-                            text = "Decline",
+                            text = "Reject",
                             containerColor = Color.Red,
                             disabledContainerColor = Color.Red,
                             contentColor = Color.White,
@@ -102,8 +98,8 @@ fun ScaffoldScope.orderDetailsSheet(
                         Spacer(modifier = Modifier.padding(horizontal = 6.dp))
                         PrimaryButton(
                             text = "Accept Order",
-                            containerColor = Color(0xFFFF4A08),
-                            disabledContainerColor = Color(0xFFFF4A08),
+                            containerColor = Color(0xFF4CAF50),
+                            disabledContainerColor = Color(0xFF4CAF50),
                             contentColor = Color.White,
                             disabledContentColor = Color.White,
                             modifier = Modifier.weight(2f),
@@ -138,6 +134,7 @@ fun ScaffoldScope.orderDetailsSheet(
                             color = Color.Black
                         )
                     )
+
                     if (order.details.problemPhotoUrls.isNotEmpty()) {
                         LazyRow(
                             horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -151,12 +148,15 @@ fun ScaffoldScope.orderDetailsSheet(
                                         .size(120.dp)
                                         .clip(RoundedCornerShape(12.dp))
                                         .clickable {
-                                            selectedImageUrl = imageUrl
+                                            scope.launch {
+                                                openImageInExternalApp(context, imageUrl)
+                                            }
                                         }
                                 )
                             }
                         }
                     }
+
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -173,7 +173,7 @@ fun ScaffoldScope.orderDetailsSheet(
                             horizontalArrangement = Arrangement.spacedBy(10.dp)
                         ) {
                             Icon(
-                                Icons.Default.LocationOn,
+                                imageVector = Icons.Default.LocationOn,
                                 contentDescription = "Location Icon",
                                 tint = Color(0xFFFF4A08),
                                 modifier = Modifier
@@ -204,6 +204,7 @@ fun ScaffoldScope.orderDetailsSheet(
                             }
                         }
                     }
+
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -225,7 +226,7 @@ fun ScaffoldScope.orderDetailsSheet(
                                 lineHeight = 22.sp,
                                 color = Color(0xFF2D2F2F)
                             ),
-                            )
+                        )
                     }
                     Column(
                         modifier = Modifier.fillMaxWidth(),
@@ -256,42 +257,60 @@ fun ScaffoldScope.orderDetailsSheet(
     }
 }
 
-@Composable
-private fun FullScreenImageViewer(
-    imageUrl: String,
-    onDismiss: () -> Unit
-) {
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Black)
-                .clickable(onClick = onDismiss),
-            contentAlignment = Alignment.Center
-        ) {
-            AsyncImage(
-                model = imageUrl,
-                contentDescription = "Full screen image",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.fillMaxSize()
-            )
+private suspend fun openImageInExternalApp(context: android.content.Context, imageUrl: String) {
+    try {
+        val imageFile = withContext(Dispatchers.IO) {
+            val url = URL(imageUrl)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.requestMethod = "GET"
 
-            IconButton(
-                onClick = onDismiss,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Close",
-                    tint = Color.White,
-                    modifier = Modifier.size(32.dp)
-                )
+            // We tell the server we're a regular browser so they don't reject us.
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+            connection.instanceFollowRedirects = true
+
+            connection.connectTimeout = 15000
+            connection.readTimeout = 15000
+            connection.doInput = true
+            connection.connect()
+
+            if (connection.responseCode != HttpURLConnection.HTTP_OK) {
+                throw Exception("Server returned HTTP ${connection.responseCode}")
             }
+
+            val fileName = "shared_image_${System.currentTimeMillis()}.jpg"
+            val file = File(context.cacheDir, fileName)
+
+            connection.inputStream.use { input ->
+                file.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            file
+        }
+
+        val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", imageFile)
+
+        withContext(Dispatchers.Main) {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "image/*")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            context.startActivity(Intent.createChooser(intent, "Open image with"))
+        }
+
+    } catch (e: Exception) {
+        e.printStackTrace()
+//  If the download fails, open it in the browser        withContext(Dispatchers.Main) {
+        Toast.makeText(context, "Cannot open in Gallery, opening in browser...", Toast.LENGTH_SHORT)
+            .show()
+
+        try {
+            val browserIntent = Intent(Intent.ACTION_VIEW, imageUrl.toUri())
+            browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(browserIntent)
+        } catch (ex: Exception) {
+            Toast.makeText(context, "Failed to open image", Toast.LENGTH_SHORT).show()
         }
     }
 }

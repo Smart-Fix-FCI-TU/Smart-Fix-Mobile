@@ -148,7 +148,7 @@ fun NewOrderCard(
         targetValue = when {
             isAccepted -> Color(0xFF4CAF50)
             isRejected -> Color.Red
-            else -> Color(0xFFFF4A08)
+            else -> Color(0xFF4CAF50)
         },
         animationSpec = tween(300),
         label = "acceptBtnColor"

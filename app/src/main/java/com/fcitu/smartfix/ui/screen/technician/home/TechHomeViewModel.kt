@@ -53,7 +53,11 @@ class TechHomeViewModel(
                     )
                 }
                 if (!technician.isOnJob) {
-                    startObservingOrders()
+                    if (ordersObserverJob?.isActive != true) {
+                        startObservingOrders()
+                    }
+                } else {
+                    stopObservingOrders()
                 }
                 loadActiveJob()
             },
@@ -80,7 +84,8 @@ class TechHomeViewModel(
                     )
                 }
                 if (state.value.isOnJob && state.value.acceptedOrder == null) {
-                    throw IllegalStateException("It's unacceptable for a technician to have work but no orders.")                }
+                    throw IllegalStateException("It's unacceptable for a technician to have work but no orders.")
+                }
             },
             onError = {
                 updateState {
@@ -94,7 +99,8 @@ class TechHomeViewModel(
     }
 
     private fun startObservingOrders() {
-        ordersObserverJob?.cancel()
+        if (ordersObserverJob?.isActive == true) return
+
         ordersObserverJob = viewModelScope.launch {
             orderRepository.observeAvailableOrders().onEach { newOrder ->
                 if (newOrder.id !in state.value.rejectedOrderIds
@@ -102,10 +108,15 @@ class TechHomeViewModel(
                     && state.value.isAvailable
                 ) {
                     updateState {
-                        it.copy(
-                            pendingOrders = it.pendingOrders + newOrder,
-                            isLoadingOrders = false
-                        )
+                        //  We make sure the order isn't already on the list so it doesn't get duplicated.
+                        if (it.pendingOrders.none { order -> order.id == newOrder.id }) {
+                            it.copy(
+                                pendingOrders = it.pendingOrders + newOrder,
+                                isLoadingOrders = false
+                            )
+                        } else {
+                            it // If the order exists, revert the state to its original state without modification.
+                        }
                     }
                 }
             }.launchIn(this)
@@ -346,7 +357,7 @@ class TechHomeViewModel(
         viewModelScope.launch {
             try {
                 orderRepository.declineOrder(orderId)
-            } catch (e: Exception) { /* silent fail */
+            } catch (e: Exception) {
             }
 
             delay(3_000) // Requirement: 3 seconds
