@@ -15,4 +15,13 @@ object NetworkConstants {
     const val SUBMIT_REVIEW: String = "api/v1/reviews"
     const val BOOKING_REVIEW: String = "api/v1/reviews/booking"
     // endregion
+
+    // region Booking endpoints
+    const val BOOKINGS: String = "api/v1/bookings"
+    const val ACTIVE_ORDERS: String = "api/v1/bookings/active"
+    // endregion
+
+    // region Technician endpoints
+    const val TECHNICIANS: String = "api/v1/technicians"
+    // endregion
 }
