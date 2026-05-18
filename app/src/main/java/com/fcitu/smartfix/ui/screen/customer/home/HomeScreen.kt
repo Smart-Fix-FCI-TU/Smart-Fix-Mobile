@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.fcitu.smartfix.R
 import com.fcitu.smartfix.ui.designSystem.components.scaffold.Scaffold
 import com.fcitu.smartfix.ui.screen.customer.home.component.HomeAppBar
@@ -27,22 +28,14 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
-    onNavigateToBooking: (String) -> Unit = {},
-    onNavigateToOrderDetails: (String) -> Unit = {},
-    onNavigateToNotifications: () -> Unit = {},
-    onNavigateToAllOrders: () -> Unit = {},
-    onNavigateToTechniciansList: (String) -> Unit = {},
+    navController: NavController,
     viewModel: HomeViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
 
     HomeEffectsHandler(
         effects = viewModel.effect,
-        onNavigateToBooking = onNavigateToBooking,
-        onNavigateToOrderDetails = onNavigateToOrderDetails,
-        onNavigateToNotifications = onNavigateToNotifications,
-        onNavigateToAllOrders = onNavigateToAllOrders,
-        onNavigateToTechniciansList = onNavigateToTechniciansList
+        navController = navController
     )
 
     HomeContent(
@@ -95,7 +88,7 @@ private fun HomeContent(
                 ServicesSection(state, listener, Modifier.padding(horizontal = 16.dp))
             }
         } else {
-            NetworkOutageScreen()
+            NetworkOutageScreen(onTryAgain = { listener.onTryAgainClicked() })
         }
     }
 }

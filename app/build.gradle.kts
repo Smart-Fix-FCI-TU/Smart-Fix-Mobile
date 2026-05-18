@@ -97,6 +97,7 @@ dependencies {
 
     // ── Image Loading ─────────────────────────────────
     implementation(libs.coil.compose)
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     // ── Testing ───────────────────────────────────────
     testImplementation(libs.junit)
