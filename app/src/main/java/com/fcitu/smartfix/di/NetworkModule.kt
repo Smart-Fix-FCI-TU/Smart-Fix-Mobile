@@ -3,7 +3,9 @@ package com.fcitu.smartfix.di
 import com.fcitu.smartfix.BuildConfig
 import com.fcitu.smartfix.data.remote.NetworkConstants
 import com.fcitu.smartfix.data.remote.service.AuthService
+import com.fcitu.smartfix.data.remote.service.BookingApiService
 import com.fcitu.smartfix.data.remote.service.ReviewService
+import com.fcitu.smartfix.data.remote.service.TechnicianService
 import com.fcitu.smartfix.data.remote.util.AuthInterceptor
 import com.fcitu.smartfix.data.remote.util.TokenAuthenticator
 import kotlinx.serialization.json.Json
@@ -15,6 +17,7 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import java.util.concurrent.TimeUnit
+import kotlin.jvm.java
 
 val networkModule = module {
     single {
@@ -83,7 +86,8 @@ val networkModule = module {
             .addConverterFactory(get<Json>().asConverterFactory(contentType))
             .build()
     }
-
+    single { get<Retrofit>().create(BookingApiService::class.java) }
+    single { get<Retrofit>().create(TechnicianService::class.java) }
     single { get<Retrofit>().create(AuthService::class.java) }
     single { get<Retrofit>().create(ReviewService::class.java) }
 }

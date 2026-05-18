@@ -99,7 +99,7 @@ fun OrderDetailsBottomSheetContent(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(bottom = 12.dp)
             ) {
-                items(problemPhotos, key = { it.toString() }) { uri ->
+                items(problemPhotos, key = { it }) { uri ->
                     Box(
                         modifier = Modifier
                             .size(80.dp)
