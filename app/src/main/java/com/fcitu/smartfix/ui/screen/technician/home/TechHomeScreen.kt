@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -88,9 +87,15 @@ fun TechHomeContent(
                 isVisible = state.isOrderDetailsVisible, order = state.selectedOrderForSheet,
                 onDismiss = { listener.onDismissDetailsSheet() },
                 onAcceptClick = {
-                    state.selectedOrderForSheet.let { listener.onAcceptOrder(it?.id.toString()) }
+                    state.selectedOrderForSheet?.id?.let { ordersId ->
+                        listener.onAcceptOrder(ordersId)
+                    }
                 },
-                onDelineClick = { state.selectedOrderForSheet.let { listener.onRejectOrder(it?.id.toString()) } }
+                onDelineClick = {
+                    state.selectedOrderForSheet?.id?.let { orderId ->
+                        listener.onRejectOrder(orderId)
+                    }
+                }
             )
         }
 
@@ -126,8 +131,8 @@ fun TechHomeContent(
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
 
-            // ── Active Job Banner (لو عنده job نشط) ──────────────────────────
-            if (state.isOnJob && !state.isTransitioning) {
+            // ── Active Job Banner  ──────────────────────────
+            if (state.isOnJob) {
                 ActiveJobSection(
                     order = state.acceptedOrder!!,
                     onClick = listener::onContinueActiveJob,

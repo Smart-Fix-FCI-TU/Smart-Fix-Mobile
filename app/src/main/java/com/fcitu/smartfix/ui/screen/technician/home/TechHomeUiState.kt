@@ -8,10 +8,10 @@ data class TechHomeUiState(
     val isAvailable: Boolean = false,
     val isTogglingAvailability: Boolean = false,
     val isOnJob: Boolean = false,
+    val canToggleAvailability: Boolean = true,
     val pendingOrders: List<Order> = emptyList(),
     val acceptedOrder: Order? = null,
     val acceptedOrderId: String? = null,
-    val isTransitioning: Boolean = false,
     val selectedOrderForSheet: Order? = null,
     val rejectedOrderIds: Set<String> = emptySet(),
     val isLoadingOrders: Boolean = false,
@@ -20,11 +20,4 @@ data class TechHomeUiState(
     val isLoadingTechnicianInfo: Boolean = false,
     val hasNetworkConnection: Boolean = true,
     val error: String? = null
-) {
-    val canToggleAvailability: Boolean
-        get() = !isOnJob
-    val visiblePendingOrders: List<Order>
-        get() = pendingOrders.filter { it.id !in rejectedOrderIds }
-    val hasOrders: Boolean
-        get() = visiblePendingOrders.isNotEmpty()
-}
+)

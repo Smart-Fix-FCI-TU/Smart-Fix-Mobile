@@ -1,5 +1,6 @@
 package com.fcitu.smartfix.ui.screen.technician.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.repository.OrderRepository
@@ -10,6 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 
@@ -30,26 +32,31 @@ class TechHomeViewModel(
         loadTechnicianInfo()
     }
 
-    private fun loadTechnicianInfo() {
+    // Network Check
+    private fun requireNetwork(action: () -> Unit) {
         if (!networkConnection.isNetworkAvailable()) {
             updateState { it.copy(hasNetworkConnection = false) }
             emitEffect(TechHomeUiEffect.ShowError("No Internet Connection"))
-            updateState { it.copy(error = "No Internet Connection") }
             return
         }
         updateState { it.copy(hasNetworkConnection = true) }
+        action()
+    }
 
+    //--------------------------------------------------------------------
+    private fun loadTechnicianInfo() = requireNetwork {
         tryToExecute(
             onStart = { updateState { it.copy(isLoadingTechnicianInfo = true) } },
             execute = { technicianRepository.getMyProfile() },
             onSuccess = { technician ->
                 updateState {
                     it.copy(
+                        isLoadingOrders = true,
+                        canToggleAvailability = !technician.isOnJob,
                         isLoadingTechnicianInfo = false,
                         technician = technician,
                         isAvailable = technician.isAvailable,
                         isOnJob = technician.isOnJob,
-                        isTransitioning = false
                     )
                 }
                 if (!technician.isOnJob) {
@@ -84,7 +91,7 @@ class TechHomeViewModel(
                     )
                 }
                 if (state.value.isOnJob && state.value.acceptedOrder == null) {
-                    throw IllegalStateException("It's unacceptable for a technician to have work but no orders.")
+                    emitEffect(TechHomeUiEffect.ShowError("Failed to load active job details."))
                 }
             },
             onError = {
@@ -102,24 +109,27 @@ class TechHomeViewModel(
         if (ordersObserverJob?.isActive == true) return
 
         ordersObserverJob = viewModelScope.launch {
-            orderRepository.observeAvailableOrders().onEach { newOrder ->
-                if (newOrder.id !in state.value.rejectedOrderIds
-                    && !state.value.isTransitioning
-                    && state.value.isAvailable
-                ) {
-                    updateState {
-                        //  We make sure the order isn't already on the list so it doesn't get duplicated.
-                        if (it.pendingOrders.none { order -> order.id == newOrder.id }) {
-                            it.copy(
-                                pendingOrders = it.pendingOrders + newOrder,
-                                isLoadingOrders = false
-                            )
-                        } else {
-                            it // If the order exists, revert the state to its original state without modification.
+            orderRepository.observeAvailableOrders()
+                .onStart {
+                    updateState { it.copy(isLoadingOrders = false) }
+                }
+                .onEach { newOrder ->
+                    if (newOrder.id !in state.value.rejectedOrderIds
+                        && state.value.isAvailable
+                    ) {
+                        updateState {
+                            //  We make sure the order isn't already on the list so it doesn't get duplicated.
+                            if (it.pendingOrders.none { order -> order.id == newOrder.id }) {
+                                it.copy(
+                                    pendingOrders = it.pendingOrders + newOrder,
+                                    isLoadingOrders = false
+                                )
+                            } else {
+                                it // If the order exists, revert the state to its original state without modification.
+                            }
                         }
                     }
-                }
-            }.launchIn(this)
+                }.launchIn(this)
         }
     }
 
@@ -163,6 +173,7 @@ class TechHomeViewModel(
     }
 
     private fun handleAutoRejectOnToggleOff() {
+        Log.e("Handle Auto Reject", "")
         val pendingOrders = state.value.pendingOrders
         if (pendingOrders.isEmpty()) return
 
@@ -173,7 +184,6 @@ class TechHomeViewModel(
                 rejectedOrderIds = pendingOrderIds,
                 isAvailable = false,
                 isTogglingAvailability = true,
-                isTransitioning = true
             )
         }
 
@@ -189,7 +199,7 @@ class TechHomeViewModel(
         }
 
         viewModelScope.launch {
-            delay(5_000)
+            delay(2_000)
 
             updateState {
                 it.copy(pendingOrders = emptyList())
@@ -201,18 +211,12 @@ class TechHomeViewModel(
                 it.copy(
                     rejectedOrderIds = emptySet(),
                     isTogglingAvailability = false,
-                    isTransitioning = false
                 )
             }
         }
     }
 
-    override fun onAcceptOrder(orderId: String) {
-        if (!networkConnection.isNetworkAvailable()) {
-            updateState { it.copy(hasNetworkConnection = false) }
-            emitEffect(TechHomeUiEffect.ShowError("Order Not Accepted\n No Internet Connection"))
-            return
-        }
+    override fun onAcceptOrder(orderId: String) = requireNetwork {
         tryToExecute(
             execute = { orderRepository.acceptOrder(orderId = orderId) },
             onSuccess = {
@@ -225,12 +229,11 @@ class TechHomeViewModel(
                 //  Update UI immediately - show accepted (green) & rejected (red)
                 updateState {
                     it.copy(
+                        canToggleAvailability = false,
                         acceptedOrder = acceptedOrder,
                         acceptedOrderId = orderId,
                         rejectedOrderIds = otherOrdersIds, // Keep rejected IDs set
                         isAvailable = false,
-                        isOnJob = true,
-                        isTransitioning = true,
                     )
                 }
 
@@ -247,8 +250,8 @@ class TechHomeViewModel(
 
                 //  Handle animations & cleanup with correct timing
                 viewModelScope.launch {
-                    // Wait for user to see rejected state (3 seconds as per requirement)
-                    delay(3_000)
+                    // Wait for user to see rejected state (2s)
+                    delay(2_000)
 
                     // Remove rejected orders from list → triggers exit animation completion
                     // Keep only the accepted order in the list
@@ -258,15 +261,16 @@ class TechHomeViewModel(
                         )
                     }
 
-                    // Wait for exit animation to complete (~300-500ms)
-                    delay(5000)
+                    // Wait for exit animation to complete (2s)
+                    delay(2_000)
 
                     //  Final cleanup - NOW safe to clear rejected IDs
                     updateState {
                         it.copy(
+                            pendingOrders = emptyList(),
+                            isOnJob = true,
                             acceptedOrderId = null,
                             rejectedOrderIds = emptySet(), // Clear after removal
-                            isTransitioning = false // Reset transition flag
                         )
                     }
 
@@ -310,12 +314,7 @@ class TechHomeViewModel(
         }
     }
 
-    override fun onViewOrderDetails(order: Order) {
-        if (!networkConnection.isNetworkAvailable()) {
-            updateState { it.copy(hasNetworkConnection = false) }
-            emitEffect(TechHomeUiEffect.ShowError("No Internet Connection"))
-            return
-        }
+    override fun onViewOrderDetails(order: Order) = requireNetwork {
         updateState {
             it.copy(
                 selectedOrderForSheet = order,
@@ -333,12 +332,7 @@ class TechHomeViewModel(
         }
     }
 
-    override fun onNotificationClicked() {
-        if (!networkConnection.isNetworkAvailable()) {
-            updateState { it.copy(hasNetworkConnection = false) }
-            emitEffect(TechHomeUiEffect.ShowError("No Internet Connection"))
-            return
-        }
+    override fun onNotificationClicked() = requireNetwork {
         emitEffect(TechHomeUiEffect.NavigateToNotifications)
     }
 
@@ -375,14 +369,7 @@ class TechHomeViewModel(
         }
     }
 
-    override fun onTryAgainClicked() {
-        if (!networkConnection.isNetworkAvailable()) {
-            updateState { it.copy(hasNetworkConnection = false) }
-            emitEffect(TechHomeUiEffect.ShowError("No Internet Connection"))
-            return
-        }
-
-        updateState { it.copy(hasNetworkConnection = true) }
+    override fun onTryAgainClicked() = requireNetwork {
         loadTechnicianInfo()
     }
 

@@ -73,33 +73,7 @@ fun NewOrdersSection(
                     )
                 }
             }
-
-            state.isTransitioning -> {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    state.pendingOrders.forEach { order ->
-                        key(order.id) {
-                            val isRejected = order.id in state.rejectedOrderIds
-                            val isAccepted = order.id == state.acceptedOrderId
-
-                            NewOrderCard(
-                                order = order,
-                                isRejected = isRejected,
-                                isAccepted = isAccepted,
-                                onAccept = { listener.onAcceptOrder(order.id) },
-                                onReject = { listener.onRejectOrder(order.id) },
-                                onViewDetails = { listener.onViewOrderDetails(order) },
-                                onTimeout = { orderId ->
-                                    if (!isRejected && !isAccepted) {
-                                        listener.onOrderTimeout(orderId)
-                                    }
-                                },
-                            )
-                        }
-                    }
-                }
-            }
-
-            !state.isAvailable || !state.hasOrders -> {
+            state.isOnJob || state.pendingOrders.isEmpty()-> {
                 NoOrdersCard()
             }
 

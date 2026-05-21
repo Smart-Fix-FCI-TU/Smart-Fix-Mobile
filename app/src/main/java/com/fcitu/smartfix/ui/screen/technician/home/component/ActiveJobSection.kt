@@ -45,7 +45,7 @@ fun ActiveJobSection(
         HomeSection(title = "Active Job")
 
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .border(1.dp, Color(0xFFFF4501), RoundedCornerShape(16.dp))
                 .background(Color(0xFFFFF3E0), RoundedCornerShape(16.dp))
