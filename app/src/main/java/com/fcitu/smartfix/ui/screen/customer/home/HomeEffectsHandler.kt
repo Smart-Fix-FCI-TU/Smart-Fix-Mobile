@@ -15,15 +15,14 @@ fun HomeEffectsHandler(
     //TODO: Navigate to the rest of the screens when there are finished.
     EffectHandler(effects = effects) { effect ->
         when (effect) {
-            is HomeUiEffect.NavigateToBooking -> {}//Booking
-            is HomeUiEffect.NavigateToOrderDetails -> {}//Tracking
+            is HomeUiEffect.NavigateToBooking -> { navController.navigate(Route.Booking(effect.selectedCategory))}//Booking
+            is HomeUiEffect.NavigateToOrderDetails -> {navController.navigate(Route.OrderDetail(effect.orderId))}//Tracking
             is HomeUiEffect.NavigateToNotifications -> {}//Notification
             is HomeUiEffect.NavigateToAllActiveOrders -> {
                 navController.navigate(Route.CustomerOrders)
             }
             is HomeUiEffect.NavigateToAvailableTechnicianList -> {}
             is HomeUiEffect.ShowError -> {
-
             }
         }
     }

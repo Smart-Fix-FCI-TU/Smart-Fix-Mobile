@@ -106,7 +106,7 @@ class HomeViewModel(
     }
 
     private suspend fun getUserInfo(): User {
-        return customerRepository.getProfile()
+        return customerRepository.getMyProfile()
     }
     //------------------------------------------------------------------------------------
 

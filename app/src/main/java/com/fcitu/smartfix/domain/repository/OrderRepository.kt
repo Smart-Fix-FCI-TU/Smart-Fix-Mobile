@@ -2,6 +2,7 @@ package com.fcitu.smartfix.domain.repository
 
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.model.OrderStatus
+import kotlinx.coroutines.flow.Flow
 
 interface OrderRepository {
     suspend fun getCustomerOrders(): List<Order>
@@ -14,7 +15,9 @@ interface OrderRepository {
     suspend fun acceptOrder(orderId: String)
 
     suspend fun declineOrder(orderId: String)
+    fun observeAvailableOrders(): Flow<Order>
 
+    suspend fun getTechnicianActiveOrder(): Order?
     suspend fun updateOrderStatus(orderId: String, status: OrderStatus)
 
     suspend fun uploadBeforeRepairPhotos(orderId: String, photos: List<String>)
