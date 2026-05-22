@@ -43,7 +43,7 @@ fun ActiveJobTab(
         }
 
         state.hasActiveJob -> {
-            if (state.activeJob !== null) {
+            if (state.activeJob != null) {
 
                 Column(
                     modifier = modifier.padding(16.dp).fillMaxSize(),
