@@ -39,6 +39,7 @@ import com.fcitu.smartfix.ui.screen.customer.myorders.MyOrdersScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileScreen
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileViewModel
 import com.fcitu.smartfix.ui.screen.customer.profile.ServiceHistoryScreen
+import com.fcitu.smartfix.ui.screen.customer.techniciansList.TechnicianListScreen
 import com.fcitu.smartfix.ui.screen.shared.login.LoginScreen
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.OrderDetailsScreen
 import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
@@ -221,7 +222,7 @@ fun SmartFixNavGraph() {
 
                     composable<Route.TechnicianList> {
                         TechnicianListScreen(
-                            onBack = { navController.popBackStack() }
+                            onBackClicked = { navController.popBackStack() },
                         )
                     }
                     // TODO: Write the screen navigation functions when implementation is complete.

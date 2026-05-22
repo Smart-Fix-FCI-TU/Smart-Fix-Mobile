@@ -4,6 +4,7 @@ import com.fcitu.smartfix.ui.screen.customer.booking.BookingViewModel
 import com.fcitu.smartfix.ui.screen.customer.home.HomeViewModel
 import com.fcitu.smartfix.ui.screen.customer.myorders.MyOrdersViewModel
 import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileViewModel
+import com.fcitu.smartfix.ui.screen.customer.techniciansList.TechnicianListViewModel
 import com.fcitu.smartfix.ui.screen.shared.login.LoginScreenViewModel
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.OrderDetailsViewModel
 import com.fcitu.smartfix.ui.screen.technician.home.TechHomeViewModel
@@ -17,6 +18,7 @@ val viewModelsModule = module {
     viewModelOf(::LoginScreenViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::BookingViewModel)
+    viewModelOf(::TechnicianListViewModel)
     viewModelOf(::MyOrdersViewModel)
     viewModelOf(::OrderDetailsViewModel)
     viewModelOf(::CustomerProfileViewModel)
