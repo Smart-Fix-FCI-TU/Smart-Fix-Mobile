@@ -31,4 +31,25 @@ class CustomerRepositoryImpl: CustomerRepository {
                 apartmentNo = "2"
             ))
     }
+
+    override suspend fun getCustomerById(customerId: String): User {
+       return User(
+           id = "5425425",
+           phoneNumber = "563767567262",
+           firstName = "Fouad",
+           lastName = "Elmeligy",
+           username = "Fouad Elmeligy",
+           birthOfDate = "2/2/2002",
+           nationalId = "25362627246",
+           email = "fouad@gmail.com",
+           role = UserRole.CUSTOMER,
+           profilePhotoUrl = "",
+           address = Address(
+               id = "523455",
+               fullAddress = "Tanta",
+               location = Address.Location(30.0, 31.0),
+               floor = "1",
+               apartmentNo = "2"
+           ))
+    }
 }
