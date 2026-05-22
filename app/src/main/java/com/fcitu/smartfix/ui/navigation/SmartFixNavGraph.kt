@@ -44,6 +44,7 @@ import com.fcitu.smartfix.ui.screen.shared.orderDetails.OrderDetailsScreen
 import com.fcitu.smartfix.ui.screen.shared.splash.SplashScreen
 import com.fcitu.smartfix.ui.screen.technician.home.TechHomeScreen
 import com.fcitu.smartfix.ui.screen.customer.booking.BookingScreen
+import com.fcitu.smartfix.ui.screen.technician.myjobs.TechJobsScreen
 import com.fcitu.smartfix.ui.screen.technician.profile.AllReviewsScreen
 import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileScreen
 import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileViewModel
@@ -179,7 +180,8 @@ fun SmartFixNavGraph() {
                         val route = backStackEntry.toRoute<Route.Booking>()
 
                         // استلام البيانات من الخريطة
-                        val address = backStackEntry.savedStateHandle.get<String>("selected_location")
+                        val address =
+                            backStackEntry.savedStateHandle.get<String>("selected_location")
                         val lat = backStackEntry.savedStateHandle.get<Double>("selected_lat")
                         val lng = backStackEntry.savedStateHandle.get<Double>("selected_lng")
 
@@ -200,9 +202,18 @@ fun SmartFixNavGraph() {
                         MapScreen(
                             onBack = { navController.popBackStack() },
                             onLocationSelected = { address, lat, lng ->
-                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_location", address)
-                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_lat", lat)
-                                navController.previousBackStackEntry?.savedStateHandle?.set("selected_lng", lng)
+                                navController.previousBackStackEntry?.savedStateHandle?.set(
+                                    "selected_location",
+                                    address
+                                )
+                                navController.previousBackStackEntry?.savedStateHandle?.set(
+                                    "selected_lat",
+                                    lat
+                                )
+                                navController.previousBackStackEntry?.savedStateHandle?.set(
+                                    "selected_lng",
+                                    lng
+                                )
                                 navController.popBackStack()
                             }
                         )
@@ -261,11 +272,7 @@ fun SmartFixNavGraph() {
                     }
 
                     composable<Route.TechnicianOrders> {
-                        TechnicianOrdersScreen(
-                            onOrderClick = { orderId ->
-                                navController.navigate(Route.TechnicianOrderDetail(orderId))
-                            }
-                        )
+                        TechJobsScreen(navController = navController)
                     }
 
                     composable<Route.OrderDetail> {
