@@ -284,7 +284,7 @@ fun NewOrderCard(
 fun TimerChip(
     order: Order,
     onTimeout: (String) -> Unit,
-    timeoutMinutes: Int = 1,
+    timeoutMinutes: Int = 2,
 ) {
     var remainingSeconds by remember(order.id) {
         mutableIntStateOf(timeoutMinutes * 60)
