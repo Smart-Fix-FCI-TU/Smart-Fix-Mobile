@@ -1,16 +1,12 @@
 package com.fcitu.smartfix.ui.screen.technician.home.component
 
-import android.content.Intent
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -21,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -34,21 +29,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
-import androidx.core.net.toUri
 import coil.compose.AsyncImage
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.ui.designSystem.components.bottomSheet.BottomSheet
-import com.fcitu.smartfix.ui.designSystem.components.button.PrimaryButton
 import com.fcitu.smartfix.ui.designSystem.components.scaffold.ScaffoldScope
 import com.fcitu.smartfix.ui.designSystem.components.text.Text
 import com.fcitu.smartfix.ui.screen.technician.home.TechHomeUiState
-import kotlinx.coroutines.Dispatchers
+import com.fcitu.smartfix.ui.utils.openImageInExternalApp
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-import java.net.HttpURLConnection
-import java.net.URL
 
 fun ScaffoldScope.orderDetailsSheet(
     state: TechHomeUiState,
@@ -56,8 +44,6 @@ fun ScaffoldScope.orderDetailsSheet(
     isVisible: Boolean,
     order: Order?,
     onDismiss: () -> Unit,
-    onAcceptClick: () -> Unit,
-    onDelineClick: () -> Unit
 ) {
 
 
@@ -70,47 +56,6 @@ fun ScaffoldScope.orderDetailsSheet(
             onDismissRequest = onDismiss,
             skipPartiallyExpanded = true,
             paddingFromTop = 64.dp,
-            stickyFooterContent = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                ) {
-                    HorizontalDivider(color = Color(0xFFF2F4F7), thickness = 1.dp)
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 16.dp)
-                            .navigationBarsPadding()
-                    ) {
-                        PrimaryButton(
-                            text = "Reject",
-                            containerColor = Color.Red,
-                            disabledContainerColor = Color.Red,
-                            contentColor = Color.White,
-                            disabledContentColor = Color.White,
-                            modifier = Modifier.weight(1f),
-                            onClick = {
-                                onDelineClick()
-                                onDismiss()
-                            },
-                        )
-                        Spacer(modifier = Modifier.padding(horizontal = 6.dp))
-                        PrimaryButton(
-                            text = "Accept Order",
-                            containerColor = Color(0xFF4CAF50),
-                            disabledContainerColor = Color(0xFF4CAF50),
-                            contentColor = Color.White,
-                            disabledContentColor = Color.White,
-                            modifier = Modifier.weight(2f),
-                            onClick = {
-                                onAcceptClick()
-                                onDismiss()
-                            },
-                        )
-                    }
-                }
-            },
             sheetContent = {
                 if (order == null) return@BottomSheet
 
@@ -257,60 +202,3 @@ fun ScaffoldScope.orderDetailsSheet(
     }
 }
 
-private suspend fun openImageInExternalApp(context: android.content.Context, imageUrl: String) {
-    try {
-        val imageFile = withContext(Dispatchers.IO) {
-            val url = URL(imageUrl)
-            val connection = url.openConnection() as HttpURLConnection
-            connection.requestMethod = "GET"
-
-            // We tell the server we're a regular browser so they don't reject us.
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
-            connection.instanceFollowRedirects = true
-
-            connection.connectTimeout = 15000
-            connection.readTimeout = 15000
-            connection.doInput = true
-            connection.connect()
-
-            if (connection.responseCode != HttpURLConnection.HTTP_OK) {
-                throw Exception("Server returned HTTP ${connection.responseCode}")
-            }
-
-            val fileName = "shared_image_${System.currentTimeMillis()}.jpg"
-            val file = File(context.cacheDir, fileName)
-
-            connection.inputStream.use { input ->
-                file.outputStream().use { output ->
-                    input.copyTo(output)
-                }
-            }
-            file
-        }
-
-        val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", imageFile)
-
-        withContext(Dispatchers.Main) {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, "image/*")
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
-            context.startActivity(Intent.createChooser(intent, "Open image with"))
-        }
-
-    } catch (e: Exception) {
-        e.printStackTrace()
-//  If the download fails, open it in the browser        withContext(Dispatchers.Main) {
-        Toast.makeText(context, "Cannot open in Gallery, opening in browser...", Toast.LENGTH_SHORT)
-            .show()
-
-        try {
-            val browserIntent = Intent(Intent.ACTION_VIEW, imageUrl.toUri())
-            browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(browserIntent)
-        } catch (ex: Exception) {
-            Toast.makeText(context, "Failed to open image", Toast.LENGTH_SHORT).show()
-        }
-    }
-}

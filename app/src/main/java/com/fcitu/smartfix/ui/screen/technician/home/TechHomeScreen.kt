@@ -85,17 +85,7 @@ fun TechHomeContent(
             orderDetailsSheet(
                 state = state,
                 isVisible = state.isOrderDetailsVisible, order = state.selectedOrderForSheet,
-                onDismiss = { listener.onDismissDetailsSheet() },
-                onAcceptClick = {
-                    state.selectedOrderForSheet?.id?.let { ordersId ->
-                        listener.onAcceptOrder(ordersId)
-                    }
-                },
-                onDelineClick = {
-                    state.selectedOrderForSheet?.id?.let { orderId ->
-                        listener.onRejectOrder(orderId)
-                    }
-                }
+                onDismiss = { listener.onDismissDetailsSheet() }
             )
         }
 
