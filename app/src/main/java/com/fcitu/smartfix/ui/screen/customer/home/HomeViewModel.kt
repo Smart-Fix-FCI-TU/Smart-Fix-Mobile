@@ -190,7 +190,7 @@ class HomeViewModel(
     }
 
     override fun onOrderClicked(orderId: String) {
-        emitEffect(HomeUiEffect.NavigateToOrderDetails(orderId))
+        emitEffect(HomeUiEffect.NavigateToTrackingOrder(orderId))
     }
 
     override fun onNotificationClicked() {

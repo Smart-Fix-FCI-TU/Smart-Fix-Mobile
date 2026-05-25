@@ -7,10 +7,7 @@ sealed interface HomeUiEffect {
         val selectedCategory: String,
     ) : HomeUiEffect
 
-    data class NavigateToOrderDetails(
-        val orderId: String,
-    ) : HomeUiEffect
-
+    data class NavigateToTrackingOrder(val orderId: String) : HomeUiEffect
     data class NavigateToAllActiveOrders(val orders: List<Order>) : HomeUiEffect
 
     data object NavigateToNotifications : HomeUiEffect
