@@ -7,6 +7,7 @@ import com.fcitu.smartfix.ui.screen.customer.profile.CustomerProfileViewModel
 import com.fcitu.smartfix.ui.screen.customer.techniciansList.TechnicianListViewModel
 import com.fcitu.smartfix.ui.screen.shared.login.LoginScreenViewModel
 import com.fcitu.smartfix.ui.screen.shared.orderDetails.OrderDetailsViewModel
+import com.fcitu.smartfix.ui.screen.technician.home.TechHomeViewModel
 import com.fcitu.smartfix.ui.screen.technician.profile.TechnicianProfileViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -21,4 +22,6 @@ val viewModelsModule = module {
     viewModelOf(::OrderDetailsViewModel)
     viewModelOf(::CustomerProfileViewModel)
     viewModelOf(::TechnicianProfileViewModel)
+    viewModelOf(::CustomerProfileViewModel)
+    viewModelOf(::TechHomeViewModel)
 }

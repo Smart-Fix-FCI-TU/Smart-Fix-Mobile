@@ -106,7 +106,7 @@ class HomeViewModel(
     }
 
     private suspend fun getUserInfo(): User {
-        return customerRepository.getProfile()
+        return customerRepository.getMyProfile()
     }
     //------------------------------------------------------------------------------------
 
@@ -190,7 +190,7 @@ class HomeViewModel(
     }
 
     override fun onOrderClicked(orderId: String) {
-        emitEffect(HomeUiEffect.NavigateToOrderDetails(orderId))
+        emitEffect(HomeUiEffect.NavigateToTrackingOrder(orderId))
     }
 
     override fun onNotificationClicked() {
