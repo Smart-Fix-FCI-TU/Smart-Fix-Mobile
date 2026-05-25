@@ -1,6 +1,5 @@
 package com.fcitu.smartfix.ui.screen.technician.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.fcitu.smartfix.domain.entity.Order
 import com.fcitu.smartfix.domain.repository.OrderRepository
@@ -32,7 +31,8 @@ class TechHomeViewModel(
         loadTechnicianInfo()
     }
 
-    // Network Check
+    // ─── Network ──────────────────────────────────────────────────────────────
+
     private fun requireNetwork(action: () -> Unit) {
         if (!networkConnection.isNetworkAvailable()) {
             updateState { it.copy(hasNetworkConnection = false) }
@@ -43,7 +43,8 @@ class TechHomeViewModel(
         action()
     }
 
-    //--------------------------------------------------------------------
+    // ─── Technician Info ──────────────────────────────────────────────────────
+
     private fun loadTechnicianInfo() = requireNetwork {
         tryToExecute(
             onStart = { updateState { it.copy(isLoadingTechnicianInfo = true) } },
@@ -51,7 +52,6 @@ class TechHomeViewModel(
             onSuccess = { technician ->
                 updateState {
                     it.copy(
-                        isLoadingOrders = true,
                         canToggleAvailability = !technician.isOnJob,
                         isLoadingTechnicianInfo = false,
                         technician = technician,
@@ -59,77 +59,70 @@ class TechHomeViewModel(
                         isOnJob = technician.isOnJob,
                     )
                 }
-                if (!technician.isOnJob) {
-                    if (ordersObserverJob?.isActive != true) {
-                        startObservingOrders()
-                    }
-                } else {
-                    stopObservingOrders()
-                }
+                handleOrderObservingAfterProfileLoad(isOnJob = technician.isOnJob)
                 loadActiveJob()
             },
             onError = { error ->
-                updateState {
-                    it.copy(
-                        isLoadingTechnicianInfo = false,
-                        error = error.message
-                    )
-                }
+                updateState { it.copy(isLoadingTechnicianInfo = false, error = error.message) }
             }
         )
     }
+
+    private fun handleOrderObservingAfterProfileLoad(isOnJob: Boolean) {
+        if (!isOnJob) {
+            if (ordersObserverJob?.isActive != true) startObservingOrders()
+        } else {
+            stopObservingOrders()
+        }
+    }
+
+    // ─── Active Job ───────────────────────────────────────────────────────────
 
     private fun loadActiveJob() {
         tryToExecute(
             onStart = { updateState { it.copy(isLoadingActiveOrder = true) } },
             execute = { orderRepository.getTechnicianActiveOrder() },
             onSuccess = { order ->
-                updateState {
-                    it.copy(
-                        acceptedOrder = order,
-                        isLoadingActiveOrder = false
-                    )
-                }
-                if (state.value.isOnJob && state.value.acceptedOrder == null) {
-                    emitEffect(TechHomeUiEffect.ShowError("Failed to load active job details."))
-                }
+                updateState { it.copy(acceptedOrder = order, isLoadingActiveOrder = false) }
+                warnIfActiveJobMissing()
             },
             onError = {
-                updateState {
-                    it.copy(
-                        acceptedOrder = null,
-                        isLoadingActiveOrder = false
-                    )
-                }
+                updateState { it.copy(acceptedOrder = null, isLoadingActiveOrder = false) }
             }
         )
     }
+
+    private fun warnIfActiveJobMissing() {
+        if (state.value.isOnJob && state.value.acceptedOrder == null) {
+            emitEffect(TechHomeUiEffect.ShowError("Failed to load active job details."))
+        }
+    }
+
+    // ─── Orders Observer ──────────────────────────────────────────────────────
 
     private fun startObservingOrders() {
         if (ordersObserverJob?.isActive == true) return
 
         ordersObserverJob = viewModelScope.launch {
             orderRepository.observeAvailableOrders()
-                .onStart {
-                    updateState { it.copy(isLoadingOrders = false) }
-                }
                 .onEach { newOrder ->
-                    if (newOrder.id !in state.value.rejectedOrderIds
-                        && state.value.isAvailable
-                    ) {
-                        updateState {
-                            //  We make sure the order isn't already on the list so it doesn't get duplicated.
-                            if (it.pendingOrders.none { order -> order.id == newOrder.id }) {
-                                it.copy(
-                                    pendingOrders = it.pendingOrders + newOrder,
-                                    isLoadingOrders = false
-                                )
-                            } else {
-                                it // If the order exists, revert the state to its original state without modification.
-                            }
-                        }
-                    }
-                }.launchIn(this)
+                    handleIncomingOrder(newOrder)
+                }
+                .launchIn(this)
+        }
+    }
+
+    private fun handleIncomingOrder(newOrder: Order) {
+        val isNotRejected = newOrder.id !in state.value.rejectedOrderIds
+        val isAvailable = state.value.isAvailable
+        if (!isNotRejected || !isAvailable) return
+
+        updateState {
+            val alreadyExists = it.pendingOrders.any { order -> order.id == newOrder.id }
+            if (alreadyExists) it
+            else it.copy(
+                pendingOrders = it.pendingOrders + newOrder,
+            )
         }
     }
 
@@ -138,32 +131,33 @@ class TechHomeViewModel(
         ordersObserverJob = null
     }
 
+    // ─── Availability Toggle ──────────────────────────────────────────────────
+
     override fun onToggleAvailability(isAvailable: Boolean) {
         if (isAvailable && state.value.isOnJob) {
             emitEffect(TechHomeUiEffect.ShowToast("Complete your current job first"))
             return
         }
-
         if (!isAvailable && !state.value.isOnJob && state.value.pendingOrders.isNotEmpty()) {
             handleAutoRejectOnToggleOff()
             return
         }
+        toggleAvailabilityOnServer(isAvailable)
+    }
 
+    private fun toggleAvailabilityOnServer(isAvailable: Boolean) {
         tryToExecute(
-            onStart = { updateState { it.copy(isTogglingAvailability = true) } },
-            execute = { technicianRepository.toggleAvailability(isAvailable) },
-            onSuccess = { newStatus ->
+            onStart = {
                 updateState {
                     it.copy(
-                        isAvailable = newStatus,
-                        isTogglingAvailability = false
+                        isTogglingAvailability = true,
                     )
                 }
-                if (newStatus) {
-                    startObservingOrders()
-                } else {
-                    stopObservingOrders()
-                }
+            },
+            execute = { technicianRepository.toggleAvailability(isAvailable) },
+            onSuccess = { newStatus ->
+                updateState { it.copy(isAvailable = newStatus, isTogglingAvailability = false) }
+                if (newStatus) startObservingOrders() else stopObservingOrders()
             },
             onError = { error ->
                 updateState { it.copy(isTogglingAvailability = false) }
@@ -173,200 +167,164 @@ class TechHomeViewModel(
     }
 
     private fun handleAutoRejectOnToggleOff() {
-        Log.e("Handle Auto Reject", "")
-        val pendingOrders = state.value.pendingOrders
-        if (pendingOrders.isEmpty()) return
+        val pendingOrderIds = state.value.pendingOrders.map { it.id }.toSet()
+        if (pendingOrderIds.isEmpty()) return
 
-        val pendingOrderIds = pendingOrders.map { it.id }.toSet()
+        markAllPendingAsRejected(pendingOrderIds)
+        stopObservingOrders()
+        declineOrdersInBackground(pendingOrderIds)
+        clearRejectedOrdersWithDelay()
+    }
 
+    private fun markAllPendingAsRejected(orderIds: Set<String>) {
         updateState {
             it.copy(
-                rejectedOrderIds = pendingOrderIds,
+                rejectedOrderIds = orderIds,
                 isAvailable = false,
                 isTogglingAvailability = true,
             )
         }
+    }
 
-        stopObservingOrders()
-
-        viewModelScope.launch {
-            pendingOrderIds.forEach { orderId ->
-                try {
-                    orderRepository.declineOrder(orderId)
-                } catch (e: Exception) {
-                }
-            }
-        }
-
+    private fun clearRejectedOrdersWithDelay() {
         viewModelScope.launch {
             delay(2_000)
-
-            updateState {
-                it.copy(pendingOrders = emptyList())
-            }
+            updateState { it.copy(pendingOrders = emptyList()) }
 
             delay(500)
-
-            updateState {
-                it.copy(
-                    rejectedOrderIds = emptySet(),
-                    isTogglingAvailability = false,
-                )
-            }
+            updateState { it.copy(rejectedOrderIds = emptySet(), isTogglingAvailability = false) }
         }
     }
+
+    // ─── Accept Order ─────────────────────────────────────────────────────────
 
     override fun onAcceptOrder(orderId: String) = requireNetwork {
         tryToExecute(
             execute = { orderRepository.acceptOrder(orderId = orderId) },
-            onSuccess = {
-                val acceptedOrder = state.value.pendingOrders.find { it.id == orderId }
-                val otherOrdersIds = state.value.pendingOrders
-                    .filter { it.id != orderId }
-                    .map { it.id }
-                    .toSet()
-
-                //  Update UI immediately - show accepted (green) & rejected (red)
-                updateState {
-                    it.copy(
-                        canToggleAvailability = false,
-                        acceptedOrder = acceptedOrder,
-                        acceptedOrderId = orderId,
-                        rejectedOrderIds = otherOrdersIds, // Keep rejected IDs set
-                        isAvailable = false,
-                    )
-                }
-
-                stopObservingOrders()
-
-                viewModelScope.launch {
-                    otherOrdersIds.forEach { rejectedId ->
-                        try {
-                            orderRepository.declineOrder(rejectedId)
-                        } catch (e: Exception) {
-                        }
-                    }
-                }
-
-                //  Handle animations & cleanup with correct timing
-                viewModelScope.launch {
-                    // Wait for user to see rejected state (2s)
-                    delay(2_000)
-
-                    // Remove rejected orders from list → triggers exit animation completion
-                    // Keep only the accepted order in the list
-                    updateState {
-                        it.copy(
-                            pendingOrders = it.pendingOrders.filter { order -> order.id == orderId }
-                        )
-                    }
-
-                    // Wait for exit animation to complete (2s)
-                    delay(2_000)
-
-                    //  Final cleanup - NOW safe to clear rejected IDs
-                    updateState {
-                        it.copy(
-                            pendingOrders = emptyList(),
-                            isOnJob = true,
-                            acceptedOrderId = null,
-                            rejectedOrderIds = emptySet(), // Clear after removal
-                        )
-                    }
-
-                    // Navigate to active job screen
-                    acceptedOrder?.let { order ->
-                        emitEffect(TechHomeUiEffect.NavigateToActiveJob(order.id))
-                    }
-                }
-            },
+            onSuccess = { handleOrderAccepted(orderId) },
             onError = { error ->
                 emitEffect(TechHomeUiEffect.ShowError(error.message ?: "Failed to accept order"))
             },
         )
     }
 
-    override fun onRejectOrder(orderId: String) {
-        //  Mark as rejected visually immediately
-        updateState { it.copy(rejectedOrderIds = it.rejectedOrderIds + orderId) }
+    private fun handleOrderAccepted(acceptedId: String) {
+        val acceptedOrder = state.value.pendingOrders.find { it.id == acceptedId }
+        val otherOrderIds = state.value.pendingOrders
+            .filter { it.id != acceptedId }
+            .map { it.id }
+            .toSet()
 
+        updateStateForAcceptedOrder(acceptedOrder, acceptedId, otherOrderIds)
+        stopObservingOrders()
+        declineOrdersInBackground(otherOrderIds)
+        runAcceptanceAnimationSequence(acceptedId, acceptedOrder)
+    }
+
+    private fun updateStateForAcceptedOrder(
+        acceptedOrder: Order?,
+        acceptedId: String,
+        otherOrderIds: Set<String>
+    ) {
+        updateState {
+            it.copy(
+                canToggleAvailability = false,
+                acceptedOrder = acceptedOrder,
+                acceptedOrderId = acceptedId,
+                rejectedOrderIds = otherOrderIds,
+                isAvailable = false,
+            )
+        }
+    }
+
+    private fun runAcceptanceAnimationSequence(acceptedId: String, acceptedOrder: Order?) {
         viewModelScope.launch {
-            try {
-                orderRepository.declineOrder(orderId)
-            } catch (e: Exception) {
-            }
+            delay(2_000)
+            // Remove rejected orders, keep only accepted → triggers exit animation
+            updateState { it.copy(pendingOrders = it.pendingOrders.filter { o -> o.id == acceptedId }) }
 
-            //  Show rejected state for 2-3 seconds
-            delay(2_500)
-
-            //  Remove from list (triggers exit animation)
+            delay(2_000)
+            // Final cleanup after exit animation completes
             updateState {
                 it.copy(
-                    pendingOrders = it.pendingOrders.filter { o -> o.id != orderId }
+                    pendingOrders = emptyList(),
+                    isOnJob = true,
+                    acceptedOrderId = null,
+                    rejectedOrderIds = emptySet(),
                 )
             }
+            acceptedOrder?.let { emitEffect(TechHomeUiEffect.NavigateToActiveJob(it.id)) }
+        }
+    }
 
-            //  Wait for animation, then cleanup
+    // ─── Reject Order ─────────────────────────────────────────────────────────
+
+    override fun onRejectOrder(orderId: String) {
+        markOrderAsRejected(orderId)
+        declineOrdersInBackground(setOf(orderId))
+        removeRejectedOrderWithDelay(orderId)
+    }
+
+    private fun markOrderAsRejected(orderId: String) {
+        updateState { it.copy(rejectedOrderIds = it.rejectedOrderIds + orderId) }
+    }
+
+    private fun removeRejectedOrderWithDelay(orderId: String) {
+        viewModelScope.launch {
+            delay(2_500)
+            updateState { it.copy(pendingOrders = it.pendingOrders.filter { o -> o.id != orderId }) }
+
             delay(500)
-            updateState {
-                it.copy(rejectedOrderIds = it.rejectedOrderIds - orderId)
+            updateState { it.copy(rejectedOrderIds = it.rejectedOrderIds - orderId) }
+        }
+    }
+
+    // ─── Order Timeout ────────────────────────────────────────────────────────
+
+    override fun onOrderTimeout(orderId: String) {
+        markOrderAsRejected(orderId)
+        declineOrdersInBackground(setOf(orderId))
+        removeTimedOutOrderWithDelay(orderId)
+    }
+
+    private fun removeTimedOutOrderWithDelay(orderId: String) {
+        viewModelScope.launch {
+            delay(3_000)
+            updateState { it.copy(pendingOrders = it.pendingOrders.filter { o -> o.id != orderId }) }
+
+            delay(500)
+            updateState { it.copy(rejectedOrderIds = it.rejectedOrderIds - orderId) }
+        }
+    }
+
+    // ─── Shared Helpers ───────────────────────────────────────────────────────
+
+    private fun declineOrdersInBackground(orderIds: Set<String>) {
+        viewModelScope.launch {
+            orderIds.forEach { id ->
+                runCatching { orderRepository.declineOrder(id) }
             }
         }
     }
 
+    // ─── Order Details Sheet ──────────────────────────────────────────────────
+
     override fun onViewOrderDetails(order: Order) = requireNetwork {
-        updateState {
-            it.copy(
-                selectedOrderForSheet = order,
-                isOrderDetailsVisible = true
-            )
-        }
+        updateState { it.copy(selectedOrderForSheet = order, isOrderDetailsVisible = true) }
     }
 
     override fun onDismissDetailsSheet() {
-        updateState {
-            it.copy(
-                selectedOrderForSheet = null,
-                isOrderDetailsVisible = false
-            )
-        }
+        updateState { it.copy(selectedOrderForSheet = null, isOrderDetailsVisible = false) }
     }
+
+    // ─── Navigation & Misc ───────────────────────────────────────────────────
 
     override fun onNotificationClicked() = requireNetwork {
         emitEffect(TechHomeUiEffect.NavigateToNotifications)
     }
 
-    override fun onContinueActiveJob() {
-        if (!networkConnection.isNetworkAvailable()) {
-            updateState { it.copy(hasNetworkConnection = false) }
-            emitEffect(TechHomeUiEffect.ShowError("No Internet Connection"))
-            return
-        }
+    override fun onContinueActiveJob() = requireNetwork {
         state.value.acceptedOrder?.let { emitEffect(TechHomeUiEffect.NavigateToActiveJob(it.id)) }
-    }
-
-    override fun onOrderTimeout(orderId: String) {
-        updateState { it.copy(rejectedOrderIds = it.rejectedOrderIds + orderId) }
-
-        viewModelScope.launch {
-            try {
-                orderRepository.declineOrder(orderId)
-            } catch (e: Exception) {
-            }
-
-            delay(3_000) // Requirement: 3 seconds
-
-            updateState {
-                it.copy(
-                    pendingOrders = it.pendingOrders.filter { o -> o.id != orderId }
-                )
-            }
-
-            delay(500)
-            updateState {
-                it.copy(rejectedOrderIds = it.rejectedOrderIds - orderId)
-            }
-        }
     }
 
     override fun onTryAgainClicked() = requireNetwork {
@@ -376,6 +334,5 @@ class TechHomeViewModel(
     override fun onCleared() {
         super.onCleared()
         ordersObserverJob?.cancel()
-
     }
 }
