@@ -14,7 +14,6 @@ data class TechHomeUiState(
     val acceptedOrderId: String? = null,
     val selectedOrderForSheet: Order? = null,
     val rejectedOrderIds: Set<String> = emptySet(),
-    val isLoadingOrders: Boolean = false,
     val isOrderDetailsVisible: Boolean = false,
     val isLoadingActiveOrder: Boolean = false,
     val isLoadingTechnicianInfo: Boolean = false,

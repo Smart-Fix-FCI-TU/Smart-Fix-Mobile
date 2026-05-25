@@ -1,12 +1,15 @@
 package com.fcitu.smartfix.ui.screen.technician.home.component
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,13 +22,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -62,18 +65,8 @@ fun NewOrdersSection(
         HomeSection(title = "New Orders")
 
         when {
-            state.isLoadingOrders -> {
-                Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    CircularProgressIndicator(
-                        color = Color(0xFFFF4501),
-                        modifier = Modifier.padding(32.dp),
-                    )
-                }
-            }
-            state.isOnJob || state.pendingOrders.isEmpty()-> {
+
+            state.isOnJob || state.pendingOrders.isEmpty() -> {
                 NoOrdersCard()
             }
 
@@ -83,20 +76,39 @@ fun NewOrdersSection(
                         key(order.id) {
                             val isRejected = order.id in state.rejectedOrderIds
                             val isAccepted = order.id == state.acceptedOrderId
+                            var visible by remember { mutableStateOf(false) }
 
-                            NewOrderCard(
-                                order = order,
-                                isRejected = isRejected,
-                                isAccepted = isAccepted,
-                                onAccept = { listener.onAcceptOrder(order.id) },
-                                onReject = { listener.onRejectOrder(order.id) },
-                                onViewDetails = { listener.onViewOrderDetails(order) },
-                                onTimeout = { orderId ->
-                                    if (!isRejected && !isAccepted) {
-                                        listener.onOrderTimeout(orderId)
-                                    }
-                                },
-                            )
+                            LaunchedEffect(Unit) {
+                                visible = true
+                            }
+
+                            AnimatedVisibility(
+                                visible = visible && !isRejected,
+                                enter = fadeIn(tween(1_000)) +
+                                        slideInVertically(
+                                            animationSpec = tween(300),
+                                            initialOffsetY = { -it }
+                                        ),
+                                exit = fadeOut(tween(1_000)) +
+                                        slideOutVertically(
+                                            animationSpec = tween(300),
+                                            targetOffsetY = { -it / 2 }
+                                        ),
+                            ) {
+                                NewOrderCard(
+                                    order = order,
+                                    isRejected = isRejected,
+                                    isAccepted = isAccepted,
+                                    onAccept = { listener.onAcceptOrder(order.id) },
+                                    onReject = { listener.onRejectOrder(order.id) },
+                                    onViewDetails = { listener.onViewOrderDetails(order) },
+                                    onTimeout = { orderId ->
+                                        if (!isRejected && !isAccepted) {
+                                            listener.onOrderTimeout(orderId)
+                                        }
+                                    },
+                                )
+                            }
                         }
                     }
                 }
@@ -127,19 +139,12 @@ fun NewOrderCard(
         animationSpec = tween(300),
         label = "acceptBtnColor"
     )
-
     Box(
         modifier = modifier
             .padding(10.dp)
             .shadow(elevation = 2.dp, shape = RoundedCornerShape(16.dp))
             .fillMaxWidth()
             .background(color = Color.White, shape = RoundedCornerShape(16.dp))
-            .clickable(
-                enabled = !isRejected,
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = { onViewDetails() }
-            )
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -348,13 +353,13 @@ private fun NoOrdersCard() {
             )
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
             Text(
-                text = "There are no available orders right now.\nActivate your status to start receiving jobs.",
+                text = "There are no available orders right now,Activate your status to start receiving jobs.",
                 style = TextStyle(
                     color = Color(0xFF49454E),
                     fontWeight = FontWeight.Normal,
                     fontSize = 16.sp,
                     lineHeight = 26.sp
-                )
+                ), textAlign = TextAlign.Center
             )
 
         }
